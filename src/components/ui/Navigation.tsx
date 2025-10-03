@@ -38,11 +38,11 @@ export default function Navigation() {
   }, [isMobileMenuOpen])
 
   const navItems = [
-    { href: '#quiz', label: 'Квиз' },
-    { href: '#proof', label: 'Кейсы' },
-    { href: '#faq', label: 'FAQ' },
-    { href: '#reviews', label: 'Отзывы клиентов' },
-    { href: '#adress', label: 'Адрес' },
+    { href: '#quiz', label: t.menu_quiz },
+    { href: '#proof', label: t.menu_success },
+    { href: '#faq', label: t.menu_faq },
+    { href: '#reviews', label: t.menu_reviews },
+    { href: '#adress', label: t.menu_address },
   ]
 
   const scrollToBooking = () => {
@@ -74,7 +74,7 @@ export default function Navigation() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="h-12 w-12 rounded-2xl  flex items-center justify-center border border-yellow-300">
+              <div className="h-12 w-12 rounded-2xl flex items-center justify-center border border-yellow-300">
                 <Image 
                   src="/logo.png" 
                   width={30} 
@@ -87,7 +87,7 @@ export default function Navigation() {
                   {t.brand}
                 </span>
                 <span className="text-xs text-neutral-500 dark:text-neutral-400 -mt-1">
-                  Кредитное сопровождение
+                  {t.credit_support}
                 </span>
               </div>
             </motion.div>
@@ -122,7 +122,7 @@ export default function Navigation() {
                   className="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white shadow-lg shadow-blue-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/30 hover:scale-105 font-semibold"
                 >
                   <CalendarDays className="mr-2 h-4 w-4" />
-                  Записаться
+                  {t.book_consultation_short}
                 </Button>
               </motion.div>
             </nav>
@@ -188,7 +188,7 @@ export default function Navigation() {
               {/* Menu Header */}
               <div className="flex items-center justify-between p-6 border-b border-neutral-200 dark:border-neutral-800">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl border border-yellow-300  flex items-center justify-center">
+                  <div className="h-10 w-10 rounded-xl border border-yellow-300 flex items-center justify-center">
                     <Image 
                       src="/logo.png" 
                       width={24} 
@@ -201,7 +201,7 @@ export default function Navigation() {
                       {t.brand}
                     </span>
                     <span className="text-xs text-neutral-500 dark:text-neutral-400">
-                      Кредитное сопровождение
+                      {t.credit_support}
                     </span>
                   </div>
                 </div>
@@ -246,7 +246,7 @@ export default function Navigation() {
                   className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white shadow-lg shadow-blue-500/25 transition-all duration-300 hover:shadow-xl hover:scale-105 font-semibold h-12 text-base"
                 >
                   <CalendarDays className="mr-2 h-5 w-5" />
-                  Записаться на консультацию
+                  {t.book_consultation_full}
                 </Button>
                 
                 {/* <Button 

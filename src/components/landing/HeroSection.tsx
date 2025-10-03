@@ -9,6 +9,11 @@ import { Play, ChevronRight, ShieldCheck, Building2, Star, Volume2, VolumeX, X, 
 import { useApp } from '@/components/providers/AppProvider'
 import { dict } from '@/lib/dictionary'
 
+// Простая функция для замены шаблонов вида {{key}}
+const interpolate = (text: string, values: Record<string, string>): string => {
+  return text.replace(/{{(\w+)}}/g, (_, key) => values[key] || `{{${key}}}`)
+}
+
 export default function HeroSection() {
   const { lang } = useApp()
   const t = dict[lang]
@@ -41,6 +46,12 @@ export default function HeroSection() {
   const scrollToQuiz = () => {
     document.getElementById('quiz')?.scrollIntoView({ behavior: 'smooth' })
   }
+
+  // Подготовка текста с подстановкой
+  const introText = interpolate(t.intro_text, {
+    years: t.intro_years,
+    company: t.intro_company,
+  })
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-neutral-50 via-blue-50/30 to-green-50/20 dark:from-neutral-950 dark:via-blue-950/20 dark:to-green-950/10">
@@ -91,7 +102,7 @@ export default function HeroSection() {
             >
               <Badge className="bg-gradient-to-r from-blue-500/10 to-green-500/10 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-700/50 px-4 py-2 text-sm font-semibold backdrop-blur-sm">
                 <Star className="w-4 h-4 mr-2" />
-                Pattern Interrupt
+                {t.pattern_interrupt}
               </Badge>
             </motion.div>
 
@@ -104,13 +115,13 @@ export default function HeroSection() {
                 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight"
               >
                 <span className="block text-neutral-900 dark:text-white leading-tight">
-                  Знаете ли вы, что
+                  {t.headline_part1}
                 </span>
                 <span className="block text-neutral-900 dark:text-white leading-tight mt-2 lg:mt-4">
-                  8 из 10 людей,
+                  {t.headline_part2}
                 </span>
                 <span className="block text-neutral-900 dark:text-white leading-tight">
-                  которые получают отказ в банке,
+                  {t.headline_part3}
                 </span>
                 <motion.span
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -118,7 +129,7 @@ export default function HeroSection() {
                   transition={{ duration: 0.8, delay: 0.8 }}
                   className="block bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent leading-tight mt-2 lg:mt-4"
                 >
-                  делают одну и ту же ошибку?
+                  {t.headline_part4}
                 </motion.span>
               </motion.h1>
             </div>
@@ -131,9 +142,9 @@ export default function HeroSection() {
               className="space-y-4"
             >
               <p className="text-xl sm:text-2xl lg:text-3xl font-semibold text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                Я покажу вам, как получить в{' '}
-                <span className="text-green-600 dark:text-green-400">2-3 раза больше денег</span>, 
-                {' '}чем предлагает банк
+                {t.solution_teaser}{' '}
+                <span className="text-green-600 dark:text-green-400">{t.solution_highlight}</span>, 
+                {' '}{t.solution_continuation}
               </p>
             </motion.div>
 
@@ -145,10 +156,10 @@ export default function HeroSection() {
               className="space-y-4"
             >
               <p className="text-lg sm:text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                Меня зовут <span className="font-semibold text-blue-600 dark:text-blue-400">[Имя]</span>, 
-                и за последние <span className="font-semibold text-green-600 dark:text-green-400">[X] лет</span> наша компания 
-                <span className="font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent"> "Гарант Ипотеки" </span>
-                помогла тысячам людей по всему Казахстану получить максимальные суммы кредитов.
+                Меня зовут <span className="font-semibold text-blue-600 dark:text-blue-400">{t.intro_name}</span>, 
+                и за последние <span className="font-semibold text-green-600 dark:text-green-400">{t.intro_years}</span> лет наша компания 
+                <span className="font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent"> {t.intro_company} </span>
+                {introText}
               </p>
             </motion.div>
 
@@ -162,12 +173,12 @@ export default function HeroSection() {
               <div className="text-center p-4 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700">
                 <Users className="h-8 w-8 text-blue-600 mx-auto mb-2" />
                 <div className="text-2xl font-bold text-neutral-900 dark:text-white">1000+</div>
-                <div className="text-sm text-neutral-600 dark:text-neutral-400">клиентов</div>
+                <div className="text-sm text-neutral-600 dark:text-neutral-400">{t.stats_clients}</div>
               </div>
               <div className="text-center p-4 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700">
                 <Clock className="h-8 w-8 text-green-600 mx-auto mb-2" />
                 <div className="text-2xl font-bold text-neutral-900 dark:text-white">[X]</div>
-                <div className="text-sm text-neutral-600 dark:text-neutral-400">лет опыта</div>
+                <div className="text-sm text-neutral-600 dark:text-neutral-400">{t.stats_experience}</div>
               </div>
             </motion.div>
 
@@ -184,7 +195,7 @@ export default function HeroSection() {
                 className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105"
               >
                 <ChevronRight className="mr-2 h-5 w-5" />
-                Пройти квиз 60 сек
+                {t.cta_quiz}
               </Button>
             </motion.div>
 
@@ -197,11 +208,11 @@ export default function HeroSection() {
             >
               <div className="flex items-center gap-3 text-sm text-neutral-600 dark:text-neutral-400 bg-white/50 dark:bg-neutral-800/50 rounded-lg px-4 py-2 backdrop-blur-sm">
                 <ShieldCheck className="h-5 w-5 text-green-500" />
-                <span>Безопасность данных</span>
+                <span>{t.trust_security}</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-neutral-600 dark:text-neutral-400 bg-white/50 dark:bg-neutral-800/50 rounded-lg px-4 py-2 backdrop-blur-sm">
                 <Building2 className="h-5 w-5 text-blue-500" />
-                <span>Партнер банков РК</span>
+                <span>{t.trust_bank_partner}</span>
               </div>
             </motion.div>
           </motion.div>
@@ -240,10 +251,10 @@ export default function HeroSection() {
                           
                           <div className="space-y-4">
                             <h3 className="text-xl sm:text-2xl font-bold text-white">
-                              Pattern Interrupt
+                              {t.video_title}
                             </h3>
                             <p className="text-neutral-200 text-base sm:text-lg leading-relaxed">
-                              Узнайте главную ошибку при получении кредита и как её избежать
+                              {t.video_description}
                             </p>
                           </div>
                           
@@ -251,11 +262,11 @@ export default function HeroSection() {
                           <div className="flex items-center justify-center gap-4 sm:gap-6 text-white/80 text-xs sm:text-sm">
                             <div className="flex items-center gap-2">
                               <Play className="h-3 w-3 sm:h-4 sm:w-4" />
-                              <span>2:30</span>
+                              <span>{t.video_duration}</span>
                             </div>
                             <div className="flex items-center gap-2">
                               <Star className="h-3 w-3 sm:h-4 sm:w-4" />
-                              <span>Эксклюзив</span>
+                              <span>{t.video_exclusive}</span>
                             </div>
                           </div>
                         </motion.div>
@@ -329,7 +340,7 @@ export default function HeroSection() {
                             onClick={handlePauseVideo}
                           >
                             <X className="h-4 w-4 mr-2" />
-                            Закрыть
+                            {t.video_close}
                           </Button>
                         </div>
                       </motion.div>
@@ -363,11 +374,11 @@ export default function HeroSection() {
                   </div>
                   
                   <h4 className="font-bold text-lg mb-2">
-                    Быстрый квиз
+                    {t.floating_quiz_title}
                   </h4>
                   
                   <p className="text-white/80 text-sm mb-4">
-                    Узнайте вашу сумму за 60 сек
+                    {t.floating_quiz_desc}
                   </p>
 
                   <Button 
@@ -375,7 +386,7 @@ export default function HeroSection() {
                     className="w-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm border border-white/20"
                     size="sm"
                   >
-                    Начать сейчас
+                    {t.floating_quiz_cta}
                   </Button>
                 </CardContent>
               </Card>
@@ -397,7 +408,7 @@ export default function HeroSection() {
           className="flex flex-col items-center gap-2 text-neutral-500 dark:text-neutral-400 cursor-pointer"
           onClick={scrollToQuiz}
         >
-          <span className="text-sm">Узнать больше</span>
+          <span className="text-sm">{t.scroll_indicator}</span>
           <ChevronRight className="h-5 w-5 rotate-90" />
         </motion.div>
       </motion.div>

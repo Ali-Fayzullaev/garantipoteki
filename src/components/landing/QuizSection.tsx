@@ -26,6 +26,11 @@ import {
 import { useApp } from '@/components/providers/AppProvider'
 import { dict } from '@/lib/dictionary'
 
+// Простая интерполяция
+const interpolate = (text: string, values: Record<string, string | number>): string => {
+  return text.replace(/{{(\w+)}}/g, (_, key) => String(values[key] || `{{${key}}}`))
+}
+
 export default function QuizSection() {
   const { lang } = useApp()
   const t = dict[lang]
@@ -39,52 +44,53 @@ export default function QuizSection() {
   const totalSteps = 4
   const progress = (Math.min(step - 1, totalSteps) / totalSteps) * 100
 
+  // Вопросы и опции — теперь через t.*
   const questions = [
     {
       id: 1,
-      question: "Какая сумма вам нужна?",
+      question: t.q1,
       icon: CreditCard,
       options: [
-        { value: 'a', label: 'До 5 млн ₸', emoji: '💰', description: 'Базовая сумма' },
-        { value: 'b', label: '5-10 млн ₸', emoji: '💵', description: 'Средняя сумма' },
-        { value: 'c', label: '10-15 млн ₸', emoji: '💎', description: 'Крупная сумма' },
-        { value: 'd', label: 'Более 15 млн ₸', emoji: '🏦', description: 'Максимальная сумма' },
+        { value: 'a', label: t.q1_a, emoji: '💰', description: t.q1_a_desc },
+        { value: 'b', label: t.q1_b, emoji: '💵', description: t.q1_b_desc },
+        { value: 'c', label: t.q1_c, emoji: '💎', description: t.q1_c_desc },
+        { value: 'd', label: t.q1_d, emoji: '🏦', description: t.q1_d_desc },
       ],
-      hint: "83% наших клиентов получают больше, чем изначально планировали"
+      hint: t.q1_hint
     },
     {
       id: 2,
-      question: "У вас есть официальное трудоустройство?",
+      question: t.q2,
       icon: UserCheck,
       options: [
-        { value: 'a', label: 'Да, работаю официально', emoji: '✅', description: 'Стабильный доход' },
-        { value: 'b', label: 'Нет, но есть стабильный доход', emoji: '📊', description: 'Неофициальный доход' },
-        { value: 'c', label: 'Временно не работаю', emoji: '⏸️', description: 'Поиск работы' },
+        { value: 'a', label: t.q2_a, emoji: '✅', description: t.q2_a_desc },
+        { value: 'b', label: t.q2_b, emoji: '📊', description: t.q2_b_desc },
+        { value: 'c', label: t.q2_c, emoji: '⏸️', description: t.q2_c_desc },
       ],
-      hint: "Даже без официального трудоустройства мы можем помочь получить до 5 млн тенге"
+      hint: t.q2_hint
     },
     {
       id: 3,
-      question: "Проверьте ваши пенсионные отчисления за последние 6 месяцев",
+      question: t.q3,
       icon: FileText,
       options: [
-        { value: 'a', label: 'Есть отчисления все 6 месяцев', emoji: '📈', description: 'Идеальная история' },
-        { value: 'b', label: 'Есть отчисления, но не за все месяцы', emoji: '📉', description: 'Неполная история' },
-        { value: 'c', label: 'Нет отчислений', emoji: '❓', description: 'Нет истории' },
+        { value: 'a', label: t.q3_a, emoji: '📈', description: t.q3_a_desc },
+        { value: 'b', label: t.q3_b, emoji: '📉', description: t.q3_b_desc },
+        { value: 'c', label: t.q3_c, emoji: '❓', description: t.q3_c_desc },
       ],
-      hint: "Как проверить свои отчисления?"
+      hint: t.q3_hint
     },
     {
       id: 4,
-      question: "Последний вопрос о текущих обязательствах",
+      question: t.q4,
       icon: Shield,
       options: [
-        { value: 'a', label: 'Нет действующих кредитов', emoji: '🆓', description: 'Чистая история' },
-        { value: 'b', label: 'Есть кредиты, плачу вовремя', emoji: '⏰', description: 'Хорошая история' },
-        { value: 'c', label: 'Есть действующие микрозаймы', emoji: '⚡', description: 'Рискованно' },
-        { value: 'd', label: 'Есть просрочки по платежам', emoji: '⚠️', description: 'Проблемная история' },
+        { value: 'a', label: t.q4_a, emoji: '🆓', description: t.q4_a_desc },
+        { value: 'b', label: t.q4_b, emoji: '⏰', description: t.q4_b_desc },
+        { value: 'c', label: t.q4_c, emoji: '⚡', description: t.q4_c_desc },
+        { value: 'd', label: t.q4_d, emoji: '⚠️', description: t.q4_d_desc },
       ],
-      hint: "Наличие текущих кредитов не проблема, если платежи вносятся вовремя"
+      hint: t.q4_hint
     }
   ]
 
@@ -99,7 +105,6 @@ export default function QuizSection() {
 
   const score = useMemo(() => {
     let s = 0
-    // Scoring logic based on answers
     if (answers.amount === 'd') s += 2
     if (answers.amount === 'c') s += 3
     if (answers.amount === 'b') s += 4
@@ -125,11 +130,13 @@ export default function QuizSection() {
   const handlePhoneSubmit = async () => {
     if (!phoneNumber) return
     setIsSubmitting(true)
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000))
     setIsSubmitting(false)
     setPhoneNumber('')
-    alert('Спасибо! Мы напомним вам, когда лучше подать заявку.')
+    alert(lang === 'ru' 
+      ? 'Спасибо! Мы напомним вам, когда лучше подать заявку.' 
+      : 'Рақмет! Сізге өтініш беру үшін қашан қолайлы екенін еске саламыз.'
+    )
   }
 
   const formatPhone = (value: string) => {
@@ -142,28 +149,16 @@ export default function QuizSection() {
   }
 
   const getPersonalizedRecommendations = () => {
-    const recommendations = []
+    const recs = []
+    if (answers.job === 'c') recs.push(t.rec_job)
+    if (['b', 'c'].includes(answers.pension)) recs.push(t.rec_pension_partial)
+    if (['c', 'd'].includes(answers.debt)) recs.push(t.rec_debt_clear)
+    if (answers.amount === 'd' && score < 15) recs.push(t.rec_amount_lower)
     
-    if (answers.job === 'c') {
-      recommendations.push('Найдите официальное трудоустройство или подготовьте документы, подтверждающие доход')
-    }
-    
-    if (answers.pension === 'b' || answers.pension === 'c') {
-      recommendations.push('Нарастите пенсионные отчисления в течение 2-3 месяцев')
-    }
-    
-    if (answers.debt === 'c' || answers.debt === 'd') {
-      recommendations.push('Погасите текущие микрозаймы и просрочки перед подачей заявки')
-    }
-    
-    if (answers.amount === 'd' && score < 15) {
-      recommendations.push('Рассмотрите возможность запроса меньшей суммы для повышения шансов одобрения')
-    }
-    
-    return recommendations.length > 0 ? recommendations : [
-      'Увеличьте прозрачность дохода (официальный доход/выписки)',
-      'Погасите просрочки и удерживайте DTI < 45%',
-      'Нарастите пенсионные отчисления 2–3 месяца'
+    return recs.length > 0 ? recs : [
+      t.rec_income,
+      t.rec_dti,
+      t.rec_pension
     ]
   }
 
@@ -171,18 +166,23 @@ export default function QuizSection() {
     document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  // Get current question data
   const currentQuestion = questions[step - 1]
   const CurrentIcon = currentQuestion?.icon
 
+  // Форматирование суммы в результате
+  const getMaxAmountText = () => {
+    if (answers.amount === 'a') return '7'
+    if (answers.amount === 'b') return '15'
+    if (answers.amount === 'c') return '25'
+    return '30'
+  }
+
   return (
     <section id="quiz" className="py-20 bg-gradient-to-b from-white to-neutral-50 dark:from-neutral-950 dark:to-neutral-900 relative overflow-hidden">
-      {/* Background Elements */}
       <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl" />
       
       <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -192,17 +192,16 @@ export default function QuizSection() {
         >
           <Badge className="bg-gradient-to-r from-blue-500/10 to-orange-500/10 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-700/50 px-4 py-3 mb-4 backdrop-blur-sm">
             <Zap className="w-4 h-4 mr-2" />
-            Квалификационный квиз
+            {t.quiz_badge}
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white mb-4">
-            Узнайте за 60 секунд, сколько денег вы можете получить уже сегодня
+            {t.quiz_title}
           </h2>
           <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-            Ответьте на 4 простых вопроса и получите персональный расчет вашей максимальной суммы
+            {t.quiz_subtitle}
           </p>
         </motion.div>
 
-        {/* Quiz Card */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -211,7 +210,6 @@ export default function QuizSection() {
         >
           <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm overflow-hidden">
             <CardContent className="p-8">
-              {/* Progress Section */}
               <div className="space-y-6 mb-8">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -220,16 +218,16 @@ export default function QuizSection() {
                     </div>
                     <div>
                       <div className="font-semibold text-neutral-900 dark:text-white">
-                        Вопрос {step} из {totalSteps}
+                        {interpolate(t.question_of, { step, total: totalSteps })}
                       </div>
                       <div className="text-sm text-neutral-500">
-                        {Math.round(progress)}% завершено
+                        {interpolate(t.completed, { percent: Math.round(progress) })}
                       </div>
                     </div>
                   </div>
                   <Badge variant="secondary" className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
                     <Clock className="h-3 w-3 mr-1" />
-                    60 сек
+                    {t.time_badge}
                   </Badge>
                 </div>
                 <Progress 
@@ -248,7 +246,6 @@ export default function QuizSection() {
                     transition={{ duration: 0.4 }}
                     className="space-y-8"
                   >
-                    {/* Question */}
                     <div className="text-center space-y-4">
                       {CurrentIcon && (
                         <div className="w-16 h-16 mx-auto bg-gradient-to-br from-blue-500/10 to-orange-500/10 rounded-2xl flex items-center justify-center">
@@ -260,7 +257,6 @@ export default function QuizSection() {
                       </h3>
                     </div>
 
-                    {/* Options */}
                     <div className="grid gap-4">
                       {currentQuestion?.options.map((option, index) => (
                         <motion.div
@@ -296,7 +292,6 @@ export default function QuizSection() {
                       ))}
                     </div>
 
-                    {/* Hint */}
                     {currentQuestion?.hint && (
                       <motion.div
                         initial={{ opacity: 0 }}
@@ -314,28 +309,21 @@ export default function QuizSection() {
                             </DialogTrigger>
                             <DialogContent>
                               <DialogHeader>
-                                <DialogTitle>Как проверить пенсионные отчисления?</DialogTitle>
-                                <DialogDescription>
-                                  Инструкция по проверке отчислений через eGov
-                                </DialogDescription>
+                                <DialogTitle>{t.dialog_title}</DialogTitle>
+                                <DialogDescription>{t.dialog_desc}</DialogDescription>
                               </DialogHeader>
                               <div className="space-y-4 text-sm">
-                                <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">1</div>
-                                  <span>Зайдите на портал eGov</span>
-                                </div>
-                                <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">2</div>
-                                  <span>Перейдите в раздел «Электронные услуги»</span>
-                                </div>
-                                <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">3</div>
-                                  <span>Выберите «Пенсионные отчисления»</span>
-                                </div>
-                                <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">4</div>
-                                  <span>Скачайте выписку за последние 6 месяцев</span>
-                                </div>
+                                {[
+                                  t.dialog_step1,
+                                  t.dialog_step2,
+                                  t.dialog_step3,
+                                  t.dialog_step4
+                                ].map((text, idx) => (
+                                  <div key={idx} className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">{idx + 1}</div>
+                                    <span>{text}</span>
+                                  </div>
+                                ))}
                               </div>
                             </DialogContent>
                           </Dialog>
@@ -356,7 +344,6 @@ export default function QuizSection() {
                     className="text-center space-y-8"
                   >
                     {isTop20 ? (
-                      /* SUCCESS RESULT */
                       <>
                         <div className="space-y-6">
                           <div className="w-24 h-24 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-2xl shadow-green-500/25">
@@ -365,19 +352,17 @@ export default function QuizSection() {
                           
                           <div className="space-y-4">
                             <h3 className="text-3xl md:text-4xl font-bold text-green-600 dark:text-green-400">
-                              Поздравляем! 🎉
+                              {t.result_success_title}
                             </h3>
                             <p className="text-xl text-neutral-600 dark:text-neutral-400">
-                              Вы входите в ТОП-20% заемщиков, которые могут получить максимальную сумму
+                              {t.result_success_text1}
                             </p>
                             <p className="text-lg text-neutral-700 dark:text-neutral-300 font-semibold">
-                              Наш эксперт готов показать, как получить до{' '}
+                              {t.result_success_text2}{' '}
                               <span className="text-2xl text-green-600 dark:text-green-400">
-                                {answers.amount === 'a' ? '7' : 
-                                 answers.amount === 'b' ? '15' : 
-                                 answers.amount === 'c' ? '25' : '30'} млн ₸
+                                {getMaxAmountText()} млн ₸
                               </span>{' '}
-                              уже сегодня
+                              бүгін
                             </p>
                           </div>
                         </div>
@@ -389,7 +374,7 @@ export default function QuizSection() {
                             className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105"
                           >
                             <CalendarDays className="mr-2 h-5 w-5" />
-                            Выберите время для консультации в офисе
+                            {t.result_success_cta}
                           </Button>
                           
                           <div className="p-4 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200 dark:border-yellow-700">
@@ -397,10 +382,10 @@ export default function QuizSection() {
                               <Zap className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                               <div>
                                 <div className="font-semibold text-yellow-800 dark:text-yellow-300">
-                                  ⚡ Бонус при записи прямо сейчас
+                                  {t.result_bonus_title}
                                 </div>
                                 <div className="text-yellow-700 dark:text-yellow-400 text-sm">
-                                  Приоритетное рассмотрение вашей заявки
+                                  {t.result_bonus_desc}
                                 </div>
                               </div>
                             </div>
@@ -408,7 +393,6 @@ export default function QuizSection() {
                         </div>
                       </>
                     ) : (
-                      /* IMPROVEMENT NEEDED RESULT */
                       <>
                         <div className="space-y-6">
                           <div className="w-24 h-24 mx-auto bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center shadow-2xl shadow-amber-500/25">
@@ -417,10 +401,10 @@ export default function QuizSection() {
                           
                           <div className="space-y-4">
                             <h3 className="text-3xl md:text-4xl font-bold text-amber-600 dark:text-amber-400">
-                              Важная информация!
+                              {t.result_improve_title}
                             </h3>
                             <p className="text-xl text-neutral-600 dark:text-neutral-400">
-                              Сейчас не самое удачное время для подачи заявки. Но мы знаем, как улучшить ваши шансы
+                              {t.result_improve_text}
                             </p>
                           </div>
                         </div>
@@ -429,10 +413,10 @@ export default function QuizSection() {
                           <div className="text-left space-y-4 bg-white/50 dark:bg-neutral-800/50 rounded-2xl p-6">
                             <h4 className="font-semibold text-neutral-900 dark:text-white text-lg flex items-center gap-2">
                               <Star className="h-5 w-5 text-blue-500" />
-                              Вот что нужно сделать:
+                              {t.result_recommendations_title}
                             </h4>
                             <ul className="space-y-3">
-                              {getPersonalizedRecommendations().map((recommendation, index) => (
+                              {getPersonalizedRecommendations().map((rec, index) => (
                                 <motion.li
                                   key={index}
                                   initial={{ opacity: 0, x: -10 }}
@@ -441,7 +425,7 @@ export default function QuizSection() {
                                   className="flex items-start gap-3 text-neutral-700 dark:text-neutral-300"
                                 >
                                   <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                                  <span>{recommendation}</span>
+                                  <span>{rec}</span>
                                 </motion.li>
                               ))}
                             </ul>
@@ -450,11 +434,11 @@ export default function QuizSection() {
                           <div className="space-y-4">
                             <div className="text-center">
                               <p className="text-neutral-600 dark:text-neutral-400 mb-4">
-                                Оставьте свой номер, и мы напомним вам, когда лучше подать заявку:
+                                {t.result_phone_prompt}
                               </p>
                               <div className="flex gap-3 max-w-md mx-auto">
                                 <Input
-                                  placeholder="+7 (___) ___-__-__"
+                                  placeholder={lang === 'ru' ? "+7 (___) ___-__-__" : "+7 (___) ___-__-__"}
                                   value={phoneNumber}
                                   onChange={(e) => setPhoneNumber(formatPhone(e.target.value))}
                                   className="flex-1"
@@ -483,7 +467,6 @@ export default function QuizSection() {
           </Card>
         </motion.div>
 
-        {/* Trust Badges */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -492,10 +475,10 @@ export default function QuizSection() {
           className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12"
         >
           {[
-            { icon: Shield, text: 'Конфиденциально', color: 'text-blue-500' },
-            { icon: Clock, text: '60 секунд', color: 'text-green-500' },
-            { icon: CheckCircle2, text: 'Без спама', color: 'text-emerald-500' },
-            { icon: Star, text: 'Точный расчет', color: 'text-amber-500' },
+            { icon: Shield, text: t.trust_confidential, color: 'text-blue-500' },
+            { icon: Clock, text: t.trust_60sec, color: 'text-green-500' },
+            { icon: CheckCircle2, text: t.trust_no_spam, color: 'text-emerald-500' },
+            { icon: Star, text: t.trust_accurate, color: 'text-amber-500' },
           ].map((item, index) => (
             <motion.div
               key={index}
