@@ -243,6 +243,7 @@ export default function HeroSection() {
                 <DialogContent className="max-w-4xl p-0 bg-transparent border-0">
                   <div className="relative aspect-video bg-black rounded-2xl overflow-hidden">
                     <video
+                      src={"grand.mp4"}
                       className="w-full h-full object-cover"
                       autoPlay
                       controls
@@ -363,6 +364,8 @@ export default function HeroSection() {
                       >
                         <video
                           ref={videoRef}
+                          src={"/grand.mp4"}
+                          autoPlay
                           className="w-full h-full object-cover"
                           muted={isMuted}
                           loop
