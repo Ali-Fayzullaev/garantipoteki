@@ -6,8 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { 
-  Play, 
-  ThumbsUp, 
+  Play,
   TrendingUp, 
   Clock, 
   ShieldCheck, 
@@ -368,33 +367,7 @@ export default function EducationSection() {
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button 
-                      size="lg" 
-                      className="bg-gradient-to-r from-blue-500 to-orange-500 hover:from-blue-600 hover:to-orange-600 text-white px-8 py-4 text-lg font-semibold shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300"
-                    >
-                      <Play className="mr-2 h-5 w-5" />
-                      Смотреть видео
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-4xl p-0 bg-transparent border-0">
-                    <div className="relative aspect-video bg-black rounded-2xl overflow-hidden">
-                      <video
-                        src={"/grand.mp4"}
-                        className="w-full h-full object-cover"
-                        autoPlay
-                        controls
-                        muted={false}
-                      >
-                        <source src="/videos/bank-secrets.mp4" type="video/mp4" />
-                        Ваш браузер не поддерживает видео.
-                      </video>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-                
+              <div className="flex">
                 <Button 
                   onClick={scrollToBooking}
                   variant="outline"

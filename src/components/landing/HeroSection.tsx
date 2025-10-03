@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Play, ChevronRight, ShieldCheck, Building2, Star, Volume2, VolumeX, X, Clock, Users } from 'lucide-react'
 import { useApp } from '@/components/providers/AppProvider'
 import { dict } from '@/lib/dictionary'
@@ -16,7 +15,6 @@ export default function HeroSection() {
   
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(true)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   const handlePlayVideo = () => {

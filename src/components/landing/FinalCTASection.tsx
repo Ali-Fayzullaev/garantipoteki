@@ -23,6 +23,7 @@ import {
 } from 'lucide-react'
 import { useApp } from '@/components/providers/AppProvider'
 import { dict } from '@/lib/dictionary'
+import CountdownTimer from '../ui/CountdownTimer'
 
 export default function FinalCTASection() {
   const { lang } = useApp()
@@ -39,6 +40,12 @@ export default function FinalCTASection() {
     hours: 0,
     minutes: 0
   })
+
+  // Target date - end of current month
+  const targetDate = new Date()
+  targetDate.setMonth(targetDate.getMonth() + 1)
+  targetDate.setDate(1)
+  targetDate.setHours(0, 0, 0, 0)
 
   // Target date - end of current month
   useEffect(() => {
@@ -196,26 +203,7 @@ export default function FinalCTASection() {
               <CardContent>
                 <div className="text-center space-y-6">
                   <div className="flex justify-center gap-4">
-                    <div className="text-center">
-                      <div className="text-3xl font-bold  dark:text-white bg-gradient-to-br from-blue-500 to-green-500 text-transparent bg-clip-text">
-                        {timeLeft.days}
-                      </div>
-                      <div className="text-sm text-neutral-600 dark:text-neutral-400">дней</div>
-                    </div>
-                    <div className="text-2xl font-bold text-neutral-900 dark:text-white">:</div>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold  dark:text-white bg-gradient-to-br from-blue-500 to-green-500 text-transparent bg-clip-text">
-                        {timeLeft.hours}
-                      </div>
-                      <div className="text-sm text-neutral-600 dark:text-neutral-400">часов</div>
-                    </div>
-                    <div className="text-2xl font-bold text-neutral-900 dark:text-white">:</div>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold  dark:text-white bg-gradient-to-br from-blue-500 to-green-500 text-transparent bg-clip-text">
-                        {timeLeft.minutes}
-                      </div>
-                      <div className="text-sm text-neutral-600 dark:text-neutral-400">минут</div>
-                    </div>
+                     <CountdownTimer targetDate={targetDate} className='text-3xl font-bold  dark:text-white bg-gradient-to-br from-blue-500 to-green-500 text-transparent bg-clip-text' />
                   </div>
                   
                   <div className="p-4 rounded-xl bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border border-orange-200 dark:border-orange-700">
@@ -232,6 +220,7 @@ export default function FinalCTASection() {
                     </div>
                   </div>
                 </div>
+               
               </CardContent>
             </Card>
 

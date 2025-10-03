@@ -349,22 +349,6 @@ export default function FooterSection() {
           </div>
         </div>
       </div>
-
-      {/* Floating WhatsApp Button */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: 1.2 }}
-        className="fixed bottom-6 right-6 z-50"
-      >
-        <Button
-          size="icon"
-          className="w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 shadow-2xl shadow-green-500/25"
-        >
-          <MessageCircle className="h-6 w-6" />
-        </Button>
-      </motion.div>
     </footer>
   )
 }
