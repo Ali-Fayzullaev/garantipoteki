@@ -77,7 +77,7 @@ export default function SuccessStoriesCarousel() {
   }, [currentIndex, isAutoPlaying])
 
   return (
-    <section className="py-16 md:py-20 bg-gradient-to-b from-neutral-50 to-white dark:from-neutral-900 dark:to-neutral-800">
+    <section id='reviews' className="py-16 md:py-20 bg-gradient-to-b from-neutral-50 to-white dark:from-neutral-900 dark:to-neutral-800">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div

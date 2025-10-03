@@ -311,7 +311,7 @@ export default function BookingSection() {
             </Card>
 
             {/* Office Locations */}
-            <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm">
+            <Card id='adress' className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-xl">
                   <MapPin className="h-5 w-5 text-blue-500" />
@@ -326,6 +326,7 @@ export default function BookingSection() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
+                    
                     className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:border-blue-500/50 transition-colors duration-300"
                   >
                     <div className="flex items-start justify-between mb-3">
@@ -545,17 +546,6 @@ export default function BookingSection() {
                     </p>
                   </div>
                 </form>
-
-                {/* Alternative Contact */}
-                <div className="text-center pt-4 border-t border-neutral-200 dark:border-neutral-700">
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-3">
-                    Или свяжитесь с нами напрямую:
-                  </p>
-                  <Button variant="outline" className="w-full h-12">
-                    <Phone className="mr-2 h-4 w-4" />
-                    +7 (777) 123-45-67
-                  </Button>
-                </div>
               </CardContent>
             </Card>
           </motion.div>
