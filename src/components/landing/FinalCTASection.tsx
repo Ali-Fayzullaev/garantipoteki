@@ -16,11 +16,13 @@ import {
   CalendarDays,
   Phone,
   ArrowRight,
-  Shield
+  Shield,
+  Star,
+  Target,
+  Crown
 } from 'lucide-react'
 import { useApp } from '@/components/providers/AppProvider'
 import { dict } from '@/lib/dictionary'
-import CountdownTimer from '@/components/ui/CountdownTimer'
 
 export default function FinalCTASection() {
   const { lang } = useApp()
@@ -32,56 +34,86 @@ export default function FinalCTASection() {
     comment: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0
+  })
 
   // Target date - end of current month
-  const targetDate = new Date()
-  targetDate.setMonth(targetDate.getMonth() + 1)
-  targetDate.setDate(1)
-  targetDate.setHours(0, 0, 0, 0)
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const now = new Date()
+      const targetDate = new Date(now.getFullYear(), now.getMonth() + 1, 1)
+      const difference = targetDate.getTime() - now.getTime()
+      
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))
+        })
+      }
+    }
+
+    calculateTimeLeft()
+    const timer = setInterval(calculateTimeLeft, 60000)
+    return () => clearInterval(timer)
+  }, [])
 
   const steps = [
     {
       step: 1,
-      title: t.step1,
-      description: 'Выберите удобное время и оставьте заявку',
+      title: "Запишитесь на бесплатную консультацию",
+      description: "Выберите удобное время и оставьте заявку",
       icon: CalendarDays
     },
     {
       step: 2,
-      title: t.step2,
-      description: 'Приходите в офис с паспортом',
+      title: "Приходите в офис в выбранное время",
+      description: "Только удостоверение личности",
       icon: Users
     },
     {
       step: 3,
-      title: t.step3,
-      description: 'Получите одобрение и деньги в тот же день',
+      title: "Получите деньги в тот же день",
+      description: "Одобрение и получение средств",
       icon: CheckCircle2
     }
   ]
 
   const weekStats = [
-    { label: 'Записей', value: '47', icon: Users },
-    { label: 'Одобрений', value: '39', icon: CheckCircle2 },
-    { label: 'Средняя сумма', value: '12 млн ₸', icon: TrendingUp }
+    { label: 'Записей на консультацию', value: '47', icon: Users, color: 'text-blue-500' },
+    { label: 'Получили одобрение', value: '39', icon: CheckCircle2, color: 'text-green-500' },
+    { label: 'Средняя сумма одобрения', value: '12 млн ₸', icon: TrendingUp, color: 'text-purple-500' }
   ]
 
   const specialOffers = [
     {
-      icon: Zap,
+      icon: Crown,
       title: 'Приоритетное рассмотрение',
-      description: 'Ваша заявка будет обработана в первую очередь'
+      description: 'Ваша заявка будет обработана в первую очередь',
+      color: 'text-yellow-500'
     },
     {
-      icon: Shield,
+      icon: Target,
       title: 'Специальные условия',
-      description: 'Доступ к эксклюзивным предложениям банков'
+      description: 'Доступ к эксклюзивным предложениям банков-партнеров',
+      color: 'text-blue-500'
     },
     {
-      icon: Clock,
+      icon: Star,
       title: 'Персональный менеджер',
-      description: 'Индивидуальное сопровождение на всех этапах'
+      description: 'Индивидуальное сопровождение на весь срок оформления',
+      color: 'text-purple-500'
     }
+  ]
+
+  const trustBadges = [
+    { text: 'Более 1000 успешных сделок', icon: CheckCircle2 },
+    { text: 'Официальный партнер ведущих банков', icon: Shield },
+    { text: 'Гарантия конфиденциальности', icon: Shield },
+    { text: 'Бесплатная консультация', icon: CheckCircle2 }
   ]
 
   const handleInputChange = (field: string, value: string) => {
@@ -115,10 +147,10 @@ export default function FinalCTASection() {
   }
 
   return (
-    <section className="py-20 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 dark:from-primary/20 dark:to-accent/10 relative overflow-hidden">
+    <section id="final-cta" className="py-20 bg-gradient-to-br from-blue-50 via-green-50 to-blue-100 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900 relative overflow-hidden">
       {/* Background Elements */}
-      <div className="absolute top-0 left-0 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+      <div className="absolute top-0 left-0 w-72 h-72 bg-blue-200/30 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-green-200/30 rounded-full blur-3xl" />
       
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
@@ -129,15 +161,15 @@ export default function FinalCTASection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <Badge className="bg-primary/20 text-primary border-primary/30 px-4 py-2 mb-4">
+          <Badge className="bg-gradient-to-r from-blue-500/20 to-green-500/20 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-700/50 px-4 py-3 mb-4 backdrop-blur-sm">
             <Zap className="w-4 h-4 mr-2" />
             Специальное предложение
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white mb-4">
-            {t.final_title}
+            Сделайте первый шаг к получению нужной суммы
           </h2>
           <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto">
-            {t.final_text}
+            Банки меняют условия одобрения каждый месяц. Прямо сейчас у нас есть информация о банках, которые готовы одобрить максимальные суммы.
           </p>
         </motion.div>
 
@@ -150,27 +182,51 @@ export default function FinalCTASection() {
             transition={{ duration: 0.8 }}
             className="space-y-8"
           >
-            {/* Countdown Timer */}
+            {/* Countdown Timer - Секция срочности */}
             <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm">
               <CardHeader className="text-center">
                 <CardTitle className="flex items-center justify-center gap-2 text-xl">
-                  <Clock className="h-5 w-5 text-primary" />
-                  {t.countdown}
+                  <Zap className="h-5 w-5 text-blue-500" />
+                  Важное напоминание
                 </CardTitle>
+                <p className="text-neutral-600 dark:text-neutral-400">
+                  До следующего обновления банковских условий осталось:
+                </p>
               </CardHeader>
               <CardContent>
                 <div className="text-center space-y-6">
-                  <CountdownTimer targetDate={targetDate} className="justify-center" />
+                  <div className="flex justify-center gap-4">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold  dark:text-white bg-gradient-to-br from-blue-500 to-green-500 text-transparent bg-clip-text">
+                        {timeLeft.days}
+                      </div>
+                      <div className="text-sm text-neutral-600 dark:text-neutral-400">дней</div>
+                    </div>
+                    <div className="text-2xl font-bold text-neutral-900 dark:text-white">:</div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold  dark:text-white bg-gradient-to-br from-blue-500 to-green-500 text-transparent bg-clip-text">
+                        {timeLeft.hours}
+                      </div>
+                      <div className="text-sm text-neutral-600 dark:text-neutral-400">часов</div>
+                    </div>
+                    <div className="text-2xl font-bold text-neutral-900 dark:text-white">:</div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold  dark:text-white bg-gradient-to-br from-blue-500 to-green-500 text-transparent bg-clip-text">
+                        {timeLeft.minutes}
+                      </div>
+                      <div className="text-sm text-neutral-600 dark:text-neutral-400">минут</div>
+                    </div>
+                  </div>
                   
-                  <div className="p-4 rounded-xl bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200 dark:border-red-700">
+                  <div className="p-4 rounded-xl bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border border-orange-200 dark:border-orange-700">
                     <div className="flex items-center gap-3">
-                      <Zap className="h-5 w-5 text-red-600 dark:text-red-400" />
+                      <Zap className="h-5 w-5 text-orange-600 dark:text-orange-400" />
                       <div>
-                        <div className="font-semibold text-red-800 dark:text-red-300 text-sm">
+                        <div className="font-semibold text-orange-800 dark:text-orange-300 text-sm">
                           Важно: ограниченное количество мест
                         </div>
-                        <div className="text-red-700 dark:text-red-400 text-xs">
-                          На этой неделе осталось 3 свободных слота для консультаций
+                        <div className="text-orange-700 dark:text-orange-400 text-xs">
+                          Мы принимаем ограниченное количество клиентов каждый день, чтобы гарантировать качество обслуживания
                         </div>
                       </div>
                     </div>
@@ -179,16 +235,16 @@ export default function FinalCTASection() {
               </CardContent>
             </Card>
 
-            {/* Week Stats */}
+            {/* Week Stats - Мотивирующая статистика */}
             <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-primary" />
-                  Статистика недели
+                  <TrendingUp className="h-5 w-5 text-blue-500" />
+                  Статистика этой недели
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   {weekStats.map((stat, index) => (
                     <motion.div
                       key={stat.label}
@@ -196,30 +252,29 @@ export default function FinalCTASection() {
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.4, delay: index * 0.1 }}
-                      className="text-center p-4 rounded-xl bg-gradient-to-br from-neutral-50 to-white dark:from-neutral-700 dark:to-neutral-800 border border-neutral-200 dark:border-neutral-600"
+                      className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-neutral-50 to-white dark:from-neutral-700 dark:to-neutral-800 border border-neutral-200 dark:border-neutral-600"
                     >
-                      <stat.icon className="h-6 w-6 text-primary mx-auto mb-2" />
-                      <div className="text-lg font-bold text-neutral-900 dark:text-white">
-                        {stat.value}
-                      </div>
-                      <div className="text-xs text-neutral-600 dark:text-neutral-400">
-                        {stat.label}
+                      <stat.icon className={`h-8 w-8 ${stat.color}`} />
+                      <div className="flex-1">
+                        <div className="text-lg font-bold text-neutral-900 dark:text-white">
+                          {stat.value}
+                        </div>
+                        <div className="text-sm text-neutral-600 dark:text-neutral-400">
+                          {stat.label}
+                        </div>
                       </div>
                     </motion.div>
                   ))}
                 </div>
-                <p className="text-center text-sm text-neutral-500 dark:text-neutral-400 mt-4">
-                  {t.week_stats}
-                </p>
               </CardContent>
             </Card>
 
-            {/* Steps */}
+            {/* Steps - Три простых шага */}
             <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-primary" />
-                  {t.steps_title}
+                  <CheckCircle2 className="h-5 w-5 text-blue-500" />
+                  Как получить деньги
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -232,12 +287,12 @@ export default function FinalCTASection() {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="flex items-start gap-4"
                   >
-                    <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                      <step.icon className="h-5 w-5 text-primary" />
+                    <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500/10 to-green-500/10 rounded-full flex items-center justify-center">
+                      <step.icon className="h-5 w-5 text-blue-500" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">
+                        <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                           {step.step}
                         </div>
                         <h4 className="font-semibold text-neutral-900 dark:text-white">
@@ -254,9 +309,12 @@ export default function FinalCTASection() {
             </Card>
 
             {/* Special Offers */}
-            <Card className="border-0 shadow-2xl bg-gradient-to-r from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10">
+            <Card className="border-0 shadow-2xl bg-gradient-to-r from-blue-500/5 to-green-500/5 dark:from-blue-500/10 dark:to-green-500/10">
               <CardHeader>
-                <CardTitle className="text-lg">Специальные условия при записи сегодня</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Crown className="h-5 w-5 text-yellow-500" />
+                  Только при записи сегодня
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {specialOffers.map((offer, index) => (
@@ -268,7 +326,7 @@ export default function FinalCTASection() {
                     transition={{ duration: 0.4, delay: index * 0.1 }}
                     className="flex items-center gap-3 p-3 rounded-xl bg-white/50 dark:bg-neutral-800/50"
                   >
-                    <offer.icon className="h-5 w-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
+                    <offer.icon className={`h-5 w-5 ${offer.color} flex-shrink-0`} />
                     <div>
                       <div className="font-semibold text-neutral-900 dark:text-white text-sm">
                         {offer.title}
@@ -292,14 +350,14 @@ export default function FinalCTASection() {
           >
             <Card className="border-0 shadow-2xl bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 sticky top-8">
               <CardHeader className="text-center">
-                <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-green-500 rounded-2xl flex items-center justify-center shadow-lg">
                   <Zap className="h-8 w-8 text-white" />
                 </div>
                 <CardTitle className="text-2xl font-bold text-neutral-900 dark:text-white">
-                  {t.final_form_title}
+                  Оставьте заявку прямо сейчас
                 </CardTitle>
                 <p className="text-neutral-600 dark:text-neutral-400">
-                  Оставьте заявку и получите бесплатную консультацию в приоритетном порядке
+                  И получите бесплатную консультацию в приоритетном порядке
                 </p>
               </CardHeader>
 
@@ -311,7 +369,7 @@ export default function FinalCTASection() {
                         placeholder="Ваше имя"
                         value={formData.name}
                         onChange={(e) => handleInputChange('name', e.target.value)}
-                        className="h-14 text-lg pl-12"
+                        className="h-14 text-lg pl-12 border-neutral-200 dark:border-neutral-700"
                         required
                       />
                       <Users className="absolute left-4 top-4 h-5 w-5 text-neutral-400" />
@@ -322,29 +380,29 @@ export default function FinalCTASection() {
                         placeholder="Номер телефона"
                         value={formData.phone}
                         onChange={(e) => handleInputChange('phone', formatPhone(e.target.value))}
-                        className="h-14 text-lg pl-12"
+                        className="h-14 text-lg pl-12 border-neutral-200 dark:border-neutral-700"
                         required
                       />
                       <Phone className="absolute left-4 top-4 h-5 w-5 text-neutral-400" />
                     </div>
 
                     <Textarea
-                      placeholder="Комментарий или пожелания"
+                      placeholder="Удобное время для консультации или комментарий"
                       value={formData.comment}
                       onChange={(e) => handleInputChange('comment', e.target.value)}
-                      className="min-h-[120px] resize-none text-lg p-4"
+                      className="min-h-[120px] resize-none text-lg p-4 border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
 
                   {/* Urgency Banner */}
-                  <div className="p-4 rounded-xl bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border border-orange-200 dark:border-orange-700">
+                  <div className="p-4 rounded-xl bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border border-green-200 dark:border-green-700">
                     <div className="flex items-center gap-3">
-                      <Clock className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                      <Clock className="h-5 w-5 text-green-600 dark:text-green-400" />
                       <div>
-                        <div className="font-semibold text-orange-800 dark:text-orange-300 text-sm">
+                        <div className="font-semibold text-green-800 dark:text-green-300 text-sm">
                           Срочная запись
                         </div>
-                        <div className="text-orange-700 dark:text-orange-400 text-xs">
+                        <div className="text-green-700 dark:text-green-400 text-xs">
                           При записи в течение 15 минут — гарантия консультации сегодня
                         </div>
                       </div>
@@ -354,7 +412,7 @@ export default function FinalCTASection() {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full h-16 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white text-lg font-bold shadow-2xl shadow-primary/25 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full h-16 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white  font-bold shadow-2xl shadow-blue-500/25 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <div className="flex items-center gap-2">
@@ -363,39 +421,54 @@ export default function FinalCTASection() {
                       </div>
                     ) : (
                       <>
-                        {t.final_cta}
+                        ПОЛУЧИТЬ КОНСУЛЬТАЦИЮ И МАКСИМАЛЬНУЮ СУММУ
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </>
                     )}
                   </Button>
 
-                  <div className="text-center space-y-2">
-                    <div className="flex items-center justify-center gap-4 text-sm text-neutral-500 dark:text-neutral-400">
-                      <div className="flex items-center gap-1">
-                        <Shield className="h-4 w-4 text-green-500" />
-                        <span>Конфиденциально</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <CheckCircle2 className="h-4 w-4 text-blue-500" />
-                        <span>Бесплатно</span>
-                      </div>
-                    </div>
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                      Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
-                    </p>
+                  {/* Trust Badges */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {trustBadges.map((badge, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                        className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400"
+                      >
+                        <badge.icon className="h-3 w-3 text-green-500 flex-shrink-0" />
+                        <span>{badge.text}</span>
+                      </motion.div>
+                    ))}
                   </div>
+
+                  <p className="text-center text-xs text-neutral-500 dark:text-neutral-400">
+                    Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
+                  </p>
                 </form>
 
-                {/* Alternative Contact */}
-                <div className="mt-6 p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+                {/* Micro Form - Последнее напоминание */}
+                <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-neutral-50 to-white dark:from-neutral-800 dark:to-neutral-700 border border-neutral-200 dark:border-neutral-600">
                   <div className="text-center">
                     <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-3">
-                      Нужна срочная консультация?
+                      ❗️ Нужна консультация прямо сейчас? Оставьте номер телефона, и мы перезвоним в течение 5 минут
                     </p>
-                    <Button variant="outline" className="w-full h-12">
-                      <Phone className="mr-2 h-4 w-4" />
-                      Позвонить прямо сейчас
-                    </Button>
+                    <div className="flex gap-2">
+                      <Input 
+                        placeholder="+7 (___) ___ __ __" 
+                        className="flex-1"
+                        value={formData.phone}
+                        onChange={(e) => handleInputChange('phone', formatPhone(e.target.value))}
+                      />
+                      <Button 
+                        className="bg-gradient-to-r from-blue-500 to-green-500 text-white"
+                        onClick={() => formData.phone && handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
+                      >
+                        <Phone className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardContent>
