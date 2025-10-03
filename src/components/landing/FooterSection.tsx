@@ -10,213 +10,275 @@ import {
   Clock, 
   Shield, 
   Award,
-  Facebook,
-  Instagram,
-  Youtube,
-  MessageCircle
+  Calculator,
+  FileText,
+  MessageCircle,
+  CheckCircle,
+  Star
 } from 'lucide-react'
 import { useApp } from '@/components/providers/AppProvider'
 import { dict } from '@/lib/dictionary'
+import Image from 'next/image'
 
 export default function FooterSection() {
   const { lang } = useApp()
   const t = dict[lang]
 
-  const officeLocations = [
+  const companyInfo = {
+    name: 'ТОО Гарант Ипотеки',
+    description: 'Помогаем получить максимальную сумму кредита на лучших условиях с 2015 года.',
+    bin: 'БИН: 123456789012',
+    founded: '2015'
+  }
+
+  const contactInfo = {
+    phone: '+7 (777) 123-45-67',
+    email: 'info@garantipoteki.kz',
+    address: 'г. Астана, пр. Кабанбай батыра, 15',
+    hours: 'Пн-Пт: 9:00-18:00, Сб: 10:00-16:00'
+  }
+
+  const usefulLinks = [
     {
-      name: 'Офис на левом берегу',
-      address: 'г. Астана, пр. Кабанбай батыра, 15',
-      hours: 'Пн-Пт: 9:00-18:00, Сб: 10:00-16:00',
-      phone: '+7 (7172) 123-456',
-      features: ['Бесплатная парковка', 'Рядом с метро', 'Лифт']
+      icon: Calculator,
+      name: 'Калькулятор кредита',
+      href: '#calculator'
     },
     {
-      name: 'Офис на правом берегу',
-      address: 'г. Астана, ул. Достык, 12',
-      hours: 'Пн-Пт: 9:00-18:00, Сб: 10:00-16:00',
-      phone: '+7 (7172) 123-457',
-      features: ['Парковка', 'Центр города', 'Кондиционер']
+      icon: CheckCircle,
+      name: 'Проверить статус заявки',
+      href: '#status'
+    },
+    {
+      icon: FileText,
+      name: 'Частые вопросы',
+      href: '#faq'
+    },
+    {
+      icon: Star,
+      name: 'Отзывы клиентов',
+      href: '#reviews'
     }
   ]
 
-  const quickLinks = [
-    { name: 'Главная', href: '#home' },
-    { name: 'Квиз', href: '#quiz' },
-    { name: 'Кейсы', href: '#proof' },
-    { name: 'FAQ', href: '#faq' },
-    { name: 'Контакты', href: '#contact' }
-  ]
-
-  const services = [
-    'Кредиты наличными',
-    'Ипотечное кредитование',
-    'Рефинансирование кредитов',
-    'Кредиты для бизнеса',
-    'Экспресс-кредиты'
-  ]
-
-  const partnerBanks = [
-    'Halyk Bank',
-    'Kaspi Bank',
-    'ForteBank',
-    'Jusan Bank',
-    'Eurasian Bank',
-    'Bank CenterCredit'
-  ]
-
-  const socialLinks = [
-    { icon: Facebook, name: 'Facebook', href: '#' },
-    { icon: Instagram, name: 'Instagram', href: '#' },
-    { icon: Youtube, name: 'YouTube', href: '#' },
-    { icon: MessageCircle, name: 'WhatsApp', href: '#' }
+  const documents = [
+    {
+      name: 'Политика конфиденциальности',
+      href: '/privacy'
+    },
+    {
+      name: 'Пользовательское соглашение',
+      href: '/terms'
+    },
+    {
+      name: 'Согласие на обработку персональных данных',
+      href: '/consent'
+    },
+    {
+      name: 'Правила использования сайта',
+      href: '/rules'
+    }
   ]
 
   const trustBadges = [
     { icon: Shield, text: 'Официальный партнер банков' },
-    { icon: Award, text: 'Работаем с 2015 года' },
+    { icon: Award, text: `Работаем с ${companyInfo.founded} года` },
     { icon: Clock, text: 'Более 1000 успешных сделок' }
   ]
+
+  const scrollToBooking = () => {
+    document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   return (
     <footer className="bg-gradient-to-b from-neutral-900 to-neutral-950 text-white">
       {/* Main Footer */}
       <div className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 mb-12">
-            {/* Company Info & Contacts */}
+          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
+            {/* Колонка 1: О компании */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="space-y-8"
+              className="space-y-6"
             >
               {/* Logo & Description */}
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-brand-yellow to-brand-orange rounded-xl flex items-center justify-center">
-                    <span className="font-bold text-white text-lg">GI</span>
+                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
+                    <Image 
+                      src="/logo.png" 
+                      alt="Гарант Ипотеки"
+                      width={40}
+                      height={40}
+                      className="object-contain"
+                    />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold">{t.brand}</h3>
+                    <h3 className="text-xl font-bold text-white">Гарант Ипотеки</h3>
                     <p className="text-neutral-400 text-sm">
                       Профессиональное кредитное сопровождение
                     </p>
                   </div>
                 </div>
-                <p className="text-neutral-300 max-w-md">
-                  Помогаем получить максимальные суммы кредитов на лучших условиях 
-                  с 2015 года. Более 1000 довольных клиентов по всему Казахстану.
+                <p className="text-neutral-300 text-sm leading-relaxed">
+                  {companyInfo.description}
                 </p>
+                <div className="space-y-2">
+                  <p className="text-neutral-400 text-sm font-medium">
+                    {companyInfo.name}
+                  </p>
+                  <p className="text-neutral-500 text-xs">
+                    {companyInfo.bin}
+                  </p>
+                </div>
               </div>
 
               {/* Trust Badges */}
               <div className="space-y-3">
                 {trustBadges.map((badge, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <badge.icon className="h-5 w-5 text-brand-yellow flex-shrink-0" />
+                  <motion.div 
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="flex items-center gap-3"
+                  >
+                    <badge.icon className="h-4 w-4 text-blue-400 flex-shrink-0" />
                     <span className="text-neutral-300 text-sm">{badge.text}</span>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
-
-              {/* Social Links */}
-              <div>
-                <h4 className="font-semibold text-white mb-4">Мы в соцсетях</h4>
-                <div className="flex gap-4">
-                  {socialLinks.map((social, index) => (
-                    <Button
-                      key={social.name}
-                      variant="outline"
-                      size="icon"
-                      className="w-10 h-10 border-neutral-700 hover:border-brand-yellow hover:bg-brand-yellow/10 text-neutral-400 hover:text-brand-yellow"
-                    >
-                      <social.icon className="h-4 w-4" />
-                    </Button>
-                  ))}
-                </div>
               </div>
             </motion.div>
 
-            {/* Offices & Links Grid */}
+            {/* Колонка 2: Контакты */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="space-y-6"
+            >
+              <h4 className="font-semibold text-white text-lg flex items-center gap-2">
+                <Phone className="h-5 w-5 text-blue-400" />
+                Контакты
+              </h4>
+              
+              <div className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <Phone className="h-4 w-4 text-green-400 flex-shrink-0" />
+                    <div>
+                      <p className="text-white text-sm font-medium">{contactInfo.phone}</p>
+                      <p className="text-neutral-400 text-xs">Основной телефон</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-4 w-4 text-blue-400 flex-shrink-0" />
+                    <div>
+                      <p className="text-white text-sm font-medium">{contactInfo.email}</p>
+                      <p className="text-neutral-400 text-xs">Электронная почта</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3 pt-4 border-t border-neutral-800">
+                  <div className="flex items-start gap-3">
+                    <MapPin className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-white text-sm font-medium">Адрес офиса</p>
+                      <p className="text-neutral-400 text-xs">{contactInfo.address}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <Clock className="h-4 w-4 text-yellow-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-white text-sm font-medium">Режим работы</p>
+                      <p className="text-neutral-400 text-xs">{contactInfo.hours}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Button 
+                onClick={scrollToBooking}
+                className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white font-semibold"
+              >
+                <Phone className="mr-2 h-4 w-4" />
+                Бесплатная консультация
+              </Button>
+            </motion.div>
+
+            {/* Колонка 3: Полезное */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="grid md:grid-cols-2 gap-8"
+              className="space-y-6"
             >
-              {/* Office Locations */}
-              <div className="space-y-6">
-                <h4 className="font-semibold text-white text-lg flex items-center gap-2">
-                  <MapPin className="h-5 w-5 text-brand-yellow" />
-                  Наши офисы
-                </h4>
-                <div className="space-y-6">
-                  {officeLocations.map((office, index) => (
-                    <div key={index} className="space-y-3">
-                      <div>
-                        <h5 className="font-semibold text-white mb-1">{office.name}</h5>
-                        <p className="text-neutral-400 text-sm mb-2">{office.address}</p>
-                        <div className="flex items-center gap-2 text-neutral-400 text-sm mb-1">
-                          <Clock className="h-4 w-4" />
-                          <span>{office.hours}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-neutral-400 text-sm">
-                          <Phone className="h-4 w-4" />
-                          <span>{office.phone}</span>
-                        </div>
-                      </div>
-                      <div className="flex flex-wrap gap-1">
-                        {office.features.map((feature, featureIndex) => (
-                          <span 
-                            key={featureIndex}
-                            className="px-2 py-1 bg-neutral-800 rounded text-xs text-neutral-300"
-                          >
-                            {feature}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <h4 className="font-semibold text-white text-lg">Полезное</h4>
+              
+              <div className="space-y-3">
+                {usefulLinks.map((link, index) => (
+                  <motion.a
+                    key={index}
+                    href={link.href}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                    className="flex items-center gap-3 group text-neutral-400 hover:text-white transition-all duration-200 p-2 rounded-lg hover:bg-neutral-800/50"
+                  >
+                    <link.icon className="h-4 w-4 text-blue-400 group-hover:text-blue-300 transition-colors duration-200" />
+                    <span className="text-sm">{link.name}</span>
+                  </motion.a>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Колонка 4: Документы */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="space-y-6"
+            >
+              <h4 className="font-semibold text-white text-lg">Документы</h4>
+              
+              <div className="space-y-3">
+                {documents.map((doc, index) => (
+                  <motion.a
+                    key={index}
+                    href={doc.href}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                    className="block text-neutral-400 hover:text-white   text-sm py-1 hover:pl-2 transition-all duration-200"
+                  >
+                    {doc.name}
+                  </motion.a>
+                ))}
               </div>
 
-              {/* Quick Links & Services */}
-              <div className="space-y-6">
-                <div>
-                  <h4 className="font-semibold text-white text-lg mb-4">Быстрые ссылки</h4>
-                  <div className="space-y-2">
-                    {quickLinks.map((link, index) => (
-                      <a
-                        key={index}
-                        href={link.href}
-                        className="block text-neutral-400 hover:text-brand-yellow transition-colors duration-200 text-sm"
-                      >
-                        {link.name}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-white text-lg mb-4">Услуги</h4>
-                  <div className="space-y-2">
-                    {services.map((service, index) => (
-                      <span
-                        key={index}
-                        className="block text-neutral-400 text-sm"
-                      >
-                        {service}
-                      </span>
-                    ))}
-                  </div>
+              {/* Additional Info */}
+              <div className="pt-4 border-t border-neutral-800">
+                <div className="space-y-2 text-xs text-neutral-500">
+                  <p>Лицензия №1234567890</p>
+                  <p>Официальный партнёр банков Казахстана</p>
                 </div>
               </div>
             </motion.div>
           </div>
 
-          {/* Partner Banks */}
+          {/* Trust Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -224,23 +286,29 @@ export default function FooterSection() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="border-t border-neutral-800 pt-12"
           >
-            <h4 className="text-center font-semibold text-white mb-8">
-              Банки-партнеры
-            </h4>
-            <div className="flex flex-wrap justify-center gap-8">
-              {partnerBanks.map((bank, index) => (
-                <div
-                  key={index}
-                  className="text-center group cursor-pointer"
-                >
-                  <div className="w-16 h-16 bg-neutral-800 rounded-2xl flex items-center justify-center mb-2 group-hover:bg-brand-yellow/10 transition-colors duration-200">
-                    <div className="text-2xl">🏦</div>
-                  </div>
-                  <span className="text-neutral-400 text-sm group-hover:text-white transition-colors duration-200">
-                    {bank}
-                  </span>
-                </div>
-              ))}
+            <div className="text-center">
+              <h4 className="font-semibold text-white mb-8 text-lg">
+                Официальные партнеры ведущих банков Казахстана
+              </h4>
+              <div className="flex flex-wrap justify-center gap-8 opacity-60">
+                {['Halyk Bank', 'Kaspi Bank', 'ForteBank', 'Jusan Bank', 'Eurasian Bank', 'Bank CenterCredit'].map((bank, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                    className="text-center"
+                  >
+                    <div className="w-12 h-12 bg-neutral-800 rounded-xl flex items-center justify-center mb-2">
+                      <div className="text-lg">🏦</div>
+                    </div>
+                    <span className="text-neutral-400 text-xs">
+                      {bank}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>
@@ -259,58 +327,26 @@ export default function FooterSection() {
               className="text-center md:text-left"
             >
               <p className="text-neutral-400 text-sm">
-                © {new Date().getFullYear()} {t.brand}. Все права защищены.
+                © {new Date().getFullYear()} Гарант Ипотеки. Все права защищены.
               </p>
               <p className="text-neutral-500 text-xs mt-1">
-                ИНН/БИН • Официальный партнёр банков Казахстана
+                Информация на сайте не является публичной офертой
               </p>
             </motion.div>
 
-            {/* Contact CTA */}
+            {/* Additional Links */}
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="flex items-center gap-4"
+              className="flex items-center gap-4 text-neutral-400 text-sm"
             >
-              <Button 
-                size="sm"
-                className="bg-brand-yellow hover:bg-brand-yellow/90 text-neutral-900"
-              >
-                <Phone className="mr-2 h-4 w-4" />
-                Бесплатная консультация
-              </Button>
-              
-              <div className="hidden sm:flex items-center gap-2 text-neutral-400 text-sm">
-                <Mail className="h-4 w-4" />
-                <span>info@garantipoteki.kz</span>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Additional Info */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 1 }}
-            className="text-center mt-6 pt-6 border-t border-neutral-800"
-          >
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-neutral-500 text-xs">
-              <span>{t.footer_addr}</span>
+              <span>{contactInfo.address}</span>
               <span className="hidden md:block">•</span>
               <span>Лицензия №1234567890</span>
-              <span className="hidden md:block">•</span>
-              <a href="#" className="hover:text-brand-yellow transition-colors duration-200">
-                Политика конфиденциальности
-              </a>
-              <span className="hidden md:block">•</span>
-              <a href="#" className="hover:text-brand-yellow transition-colors duration-200">
-                Пользовательское соглашение
-              </a>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
       </div>
 
