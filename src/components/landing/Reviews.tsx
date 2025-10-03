@@ -15,41 +15,46 @@ import {
   TrendingUp,
   Shield
 } from 'lucide-react'
-
-const successStories = [
-  {
-    id: 2,
-    name: "Марат К., предприниматель",
-    location: "Астана",
-    amount: "12 000 000 ₸",
-    duration: "1 день",
-    rating: 5,
-    story: "Нужны были деньги на расширение бизнеса. Банки давали только 4 миллиона, хотя просил 15. Через Гарант Ипотеки получил 12 миллионов за один день!",
-    badges: ["Бизнес-кредит", "Сложный случай", "Быстрое решение"],
-  },
-  {
-    id: 3,
-    name: "Динара Т., врач",
-    location: "Астана",
-    amount: "8 000 000 ₸",
-    duration: "2 часа",
-    rating: 5,
-    story: "Спасибо команде за профессионализм! Помогли получить 8 миллионов, хотя другие говорили, что это невозможно с моей зарплатой",
-    badges: ["Специальность", "Подтверждение дохода", "Оптимальная ставка"],
-  },
-  {
-    id: 4,
-    name: "Асхат М., менеджер",
-    location: "Астана",
-    amount: "15 000 000 ₸",
-    duration: "3 часа",
-    rating: 5,
-    story: "Честно не верил, что можно получить такую сумму без залога. Но ваши специалисты знают своё дело!",
-    badges: ["Без залога", "Крупная сумма", "Профессионализм"],
-  }
-]
+import { useApp } from '@/components/providers/AppProvider'
+import { dict } from '@/lib/dictionary'
 
 export default function SuccessStoriesCarousel() {
+  const { lang } = useApp()
+  const t = dict[lang]
+
+  const successStories = [
+    {
+      id: 2,
+      name: t.story1_name,
+      location: t.story1_location,
+      amount: t.story1_amount,
+      duration: t.story1_duration,
+      rating: 5,
+      story: t.story1_story,
+      badges: [t.story1_badge1, t.story1_badge2, t.story1_badge3],
+    },
+    {
+      id: 3,
+      name: t.story2_name,
+      location: t.story2_location,
+      amount: t.story2_amount,
+      duration: t.story2_duration,
+      rating: 5,
+      story: t.story2_story,
+      badges: [t.story2_badge1, t.story2_badge2, t.story2_badge3],
+    },
+    {
+      id: 4,
+      name: t.story3_name,
+      location: t.story3_location,
+      amount: t.story3_amount,
+      duration: t.story3_duration,
+      rating: 5,
+      story: t.story3_story,
+      badges: [t.story3_badge1, t.story3_badge2, t.story3_badge3],
+    }
+  ]
+
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
 
@@ -77,7 +82,7 @@ export default function SuccessStoriesCarousel() {
   }, [currentIndex, isAutoPlaying])
 
   return (
-    <section id='reviews' className="py-16 md:py-20 bg-gradient-to-b from-neutral-50 to-white dark:from-neutral-900 dark:to-neutral-800">
+    <section id='reviews' className="py-16 mb-4 md:py-20 bg-gradient-to-b from-neutral-50 to-white dark:from-neutral-900 dark:to-neutral-800">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -89,13 +94,13 @@ export default function SuccessStoriesCarousel() {
         >
           <Badge className="bg-gradient-to-r from-blue-500/10 to-green-500/10 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-700/50 px-4 py-2 md:py-3 mb-4 backdrop-blur-sm">
             <TrendingUp className="w-4 h-4 mr-2" />
-            Реальные истории успеха
+            {t.carousel_badge}
           </Badge>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 dark:text-white mb-4">
-            Последние успешные кейсы
+            {t.carousel_title}
           </h2>
           <p className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto px-4">
-            Реальные истории клиентов, получивших крупные суммы благодаря нашему сопровождению
+            {t.carousel_subtitle}
           </p>
         </motion.div>
 
@@ -182,7 +187,7 @@ export default function SuccessStoriesCarousel() {
 
                         <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 shadow-lg text-sm md:text-base">
                           <Shield className="h-3 w-3 md:h-4 md:w-4 mr-1" />
-                          Одобрено
+                          {t.carousel_approved}
                         </Badge>
                       </div>
 
@@ -257,10 +262,10 @@ export default function SuccessStoriesCarousel() {
         >
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 max-w-4xl mx-auto">
             {[
-              { value: "47+", label: "Успешных кейсов" },
-              { value: "92%", label: "Одобрения" },
-              { value: "1 день", label: "Среднее время" },
-              { value: "9.8 млн ₸", label: "Средняя сумма" }
+              { value: "47+", label: t.stat_cases },
+              { value: "92%", label: t.stat_approval },
+              { value: lang === 'ru' ? "1 день" : "1 күн", label: t.stat_time },
+              { value: "9.8 млн ₸", label: t.stat_amount }
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}

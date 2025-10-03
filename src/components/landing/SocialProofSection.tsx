@@ -30,82 +30,81 @@ export default function SocialProofSection() {
     {
       icon: TrendingUp,
       value: "8/10",
-      label: "Клиентов получают больше",
-      description: "чем просили изначально",
+      label: t.stat1_label,
+      description: t.stat1_descSo,
     },
     {
       icon: CheckCircle2,
       value: "93%",
-      label: "Заявок одобряются",
-      description: "с первого раза",
+      label: t.stat2_label,
+      description: t.stat2_descSo,
     },
     {
       icon: Star,
       value: "2.5x",
-      label: "Средняя сумма",
-      description: "выше банковской",
+      label: t.stat3_label,
+      description: t.stat3_descSo,
     },
     {
       icon: Users,
       value: "1000+",
-      label: "Успешных сделок",
-      description: "с 2015 года",
+      label: t.stat4_label,
+      description: t.stat4_desc,
     },
   ];
 
   const latestCases = [
     {
-      name: "Гульнара С., учитель",
+      name: t.case1_name,
       amount: "6 500 000 ₸",
-      description:
-        "Банки отказывали из-за возраста, нашли оптимальное решение.",
+      description: t.case1_desc,
     },
     {
-      name: "Арман Ж., инженер",
+      name: t.case2_name,
       amount: "9 000 000 ₸",
-      description: "С действующими кредитами одобрили дополнительную сумму.",
+      description: t.case2_desc,
     },
     {
-      name: "Алия К., фрилансер",
+      name: t.case3_name,
       amount: "5 000 000 ₸",
-      description: "Без официального трудоустройства, по справкам о доходах.",
+      description: t.case3_desc,
     },
     {
-      name: "Ербол Н., таксист",
+      name: t.case4_name,
       amount: "7 200 000 ₸",
-      description: "С сезонным доходом получил стабильное финансирование.",
+      description: t.case4_desc,
     },
   ];
 
   const banks = [
-    { name: "Halyk Bank", logo: "H" },
-    { name: "Kaspi Bank", logo: "K" },
-    { name: "ForteBank", logo: "F" },
-    { name: "Jusan Bank", logo: "J" },
-    { name: "Eurasian Bank", logo: "E" },
-    { name: "Bank CenterCredit", logo: "BCC" },
+    { name: t.bank_halyk, logo: "H" },
+    { name: t.bank_kaspi, logo: "K" },
+    { name: t.bank_forte, logo: "F" },
+    { name: t.bank_jusan, logo: "J" },
+    { name: t.bank_eurasian, logo: "E" },
+    { name: t.bank_centercredit, logo: "BCC" },
   ];
 
   const securityFeatures = [
     {
       icon: Shield,
-      title: "Гарантия безопасности ваших данных",
-      description: "Полная конфиденциальность и защита информации",
+      title: t.security1_title,
+      description: t.security1_desc,
     },
     {
       icon: FileText,
-      title: "Возможность проверить все документы",
-      description: "Прозрачность на всех этапах работы",
+      title: t.security2_title,
+      description: t.security2_desc,
     },
     {
       icon: Users,
-      title: "Детальный разбор вашей ситуации",
-      description: "Индивидуальный подход к каждому клиенту",
+      title: t.security3_title,
+      description: t.security3_desc,
     },
     {
       icon: CheckCircle2,
-      title: "Прозрачность всех условий",
-      description: "Никаких скрытых комиссий и платежей",
+      title: t.security4_title,
+      description: t.security4_desc,
     },
   ];
 
@@ -117,12 +116,10 @@ export default function SocialProofSection() {
       id="proof"
       className="py-20 bg-gradient-to-b from-white to-neutral-50 dark:from-neutral-900 dark:to-neutral-800 relative overflow-hidden"
     >
-      {/* Background Elements */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-0 w-80 h-80 bg-green-500/5 rounded-full blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -132,18 +129,16 @@ export default function SocialProofSection() {
         >
           <Badge className="bg-gradient-to-r from-blue-500/10 to-green-500/10 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-700/50 px-4 py-3 mb-4 backdrop-blur-sm">
             <Award className="w-4 h-4 mr-2" />
-            Вот почему нам доверяют
+            {t.social_badge}
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white mb-4">
-            Реальные истории успеха
+            {t.social_title}
           </h2>
           <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto">
-            Более 1000 довольных клиентов по всему Казахстану уже получили
-            максимальные суммы
+            {t.social_subtitle}
           </p>
         </motion.div>
 
-        {/* Main Success Story */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -154,7 +149,6 @@ export default function SocialProofSection() {
           <Card className="border-0 shadow-2xl bg-gradient-to-r from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20 overflow-hidden">
             <div className="lg:grid lg:grid-cols-2 lg:gap-8">
               <CardContent className="p-8 lg:p-12">
-                {/* Quote */}
                 <div className="mb-6">
                   <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 mb-2">
                     <Star className="h-5 w-5 fill-current" />
@@ -164,56 +158,45 @@ export default function SocialProofSection() {
                     <Star className="h-5 w-5 fill-current" />
                   </div>
                   <p className="text-lg italic text-neutral-700 dark:text-neutral-300">
-                    "Я думала, что из-за действующих кредитов мне никто не
-                    поможет..."
+                    {t.story_quote}
                   </p>
                 </div>
 
-                {/* Client Info */}
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-green-500 rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-lg">АК</span>
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-neutral-900 dark:text-white">
-                      История Айгуль, бухгалтера из Алматы
+                      {t.story_name}
                     </h3>
                     <div className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
                       <MapPin className="h-4 w-4" />
-                      <span>Алматы</span>
+                      <span>{t.story_city}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Story */}
                 <p className="text-lg text-neutral-700 dark:text-neutral-300 mb-6 leading-relaxed">
-                  У меня была хорошая кредитная история, но банки предлагали
-                  максимум 3 миллиона, хотя мне нужно было 10. В Гарант Ипотеки
-                  мне объяснили, что дело не в моей платежеспособности, а в
-                  неправильном выборе банка и времени подачи заявки. После
-                  консультации мы подали заявку в нужный банк, и через час я
-                  получила одобрение на 10 миллионов тенге! Самое удивительное -
-                  ставка оказалась даже ниже, чем предлагали другие банки на
-                  меньшую сумму.
+                  {t.story_text}
                 </p>
 
-                {/* Results */}
                 <div className="space-y-4">
                   <div className="flex flex-wrap gap-3 mb-4">
                     <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 border-0 px-4 py-2">
                       <CheckCircle2 className="h-4 w-4 mr-1" />
-                      Одобрено: 10 миллионов тенге!
+                      {t.story_approved}
                     </Badge>
                     <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 border-0 px-4 py-2">
                       <Clock className="h-4 w-4 mr-1" />
-                      Срок рассмотрения: 1 час
+                      {t.story_time}
                     </Badge>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="text-center p-3 rounded-lg bg-white/50 dark:bg-neutral-800/50">
                       <div className="text-neutral-600 dark:text-neutral-400">
-                        Было предложено банками:
+                        {t.story_bank_offer}
                       </div>
                       <div className="font-semibold text-neutral-900 dark:text-white">
                         3 000 000 ₸
@@ -221,7 +204,7 @@ export default function SocialProofSection() {
                     </div>
                     <div className="text-center p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700">
                       <div className="text-green-600 dark:text-green-400">
-                        Получили через нас:
+                        {t.story_our_result}
                       </div>
                       <div className="font-bold text-green-600 dark:text-green-400">
                         10 000 000 ₸
@@ -231,7 +214,6 @@ export default function SocialProofSection() {
                 </div>
               </CardContent>
 
-              {/* Stats Side */}
               <div className="bg-gradient-to-br from-blue-500/10 to-green-500/10 flex items-center justify-center p-8 lg:p-12">
                 <div className="text-center space-y-8 w-full">
                   <div>
@@ -242,11 +224,10 @@ export default function SocialProofSection() {
                       +233%
                     </div>
                     <div className="text-neutral-600 dark:text-neutral-400">
-                      Выше первоначального предложения
+                      {t.story_increase}
                     </div>
                   </div>
 
-                  {/* Mini Stats */}
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center p-4 rounded-xl bg-white/50 dark:bg-neutral-800/50">
                       <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
@@ -271,7 +252,7 @@ export default function SocialProofSection() {
                     className="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white shadow-lg shadow-green-500/25"
                   >
                     <ArrowRight className="mr-2 h-4 w-4" />
-                    Узнать свою сумму
+                    {t.cta_know_amount}
                   </Button>
                 </div>
               </div>
@@ -279,7 +260,6 @@ export default function SocialProofSection() {
           </Card>
         </motion.div>
 
-        {/* Statistics Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -291,7 +271,7 @@ export default function SocialProofSection() {
             <CardHeader className="text-center">
               <CardTitle className="flex items-center justify-center gap-2 text-2xl">
                 <TrendingUp className="h-6 w-6 text-blue-500" />
-                Наши результаты в цифрах
+                {t.stats_title}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -326,8 +306,6 @@ export default function SocialProofSection() {
 
         <SuccessStoriesCarousel/>
 
-
-        {/* Latest Cases */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -338,7 +316,7 @@ export default function SocialProofSection() {
           <Card className="border-0 shadow-2xl bg-gradient-to-r from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl font-bold text-neutral-900 dark:text-white">
-                Свежие одобрения на этой неделе
+                {t.latest_cases_title}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -368,7 +346,6 @@ export default function SocialProofSection() {
           </Card>
         </motion.div>
 
-        {/* Security & Offices Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -377,12 +354,11 @@ export default function SocialProofSection() {
           className="mb-16"
         >
           <div className="grid lg:grid-cols-2 gap-8">
-            {/* Security Features */}
             <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-xl">
                   <Shield className="h-5 w-5 text-blue-500" />
-                  Почему мы проводим консультации только в офисе
+                  {t.security_title}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -409,12 +385,11 @@ export default function SocialProofSection() {
               </CardContent>
             </Card>
 
-            {/* Office Info */}
             <Card className="border-0 shadow-2xl bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-xl">
                   <Building2 className="h-5 w-5 text-green-500" />
-                  Наши офисы в Астане
+                  {t.office_title}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -422,10 +397,10 @@ export default function SocialProofSection() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="font-semibold text-neutral-900 dark:text-white">
-                        Левый берег
+                        {t.office_left}
                       </h4>
                       <p className="text-neutral-600 dark:text-neutral-400 text-sm">
-                        пр. Кабанбай батыра, 15
+                        {t.office_left_address}
                       </p>
                     </div>
                     <Badge
@@ -433,17 +408,17 @@ export default function SocialProofSection() {
                       className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
                     >
                       <MapPin className="h-3 w-3 mr-1" />
-                      Карта
+                      {t.office_map}
                     </Badge>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="font-semibold text-neutral-900 dark:text-white">
-                        Правый берег
+                        {t.office_right}
                       </h4>
                       <p className="text-neutral-600 dark:text-neutral-400 text-sm">
-                        ул. Достык, 12
+                        {t.office_right_address}
                       </p>
                     </div>
                     <Badge
@@ -451,26 +426,25 @@ export default function SocialProofSection() {
                       className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
                     >
                       <MapPin className="h-3 w-3 mr-1" />
-                      Карта
+                      {t.office_map}
                     </Badge>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
                   <Clock className="h-4 w-4" />
-                  <span>Работаем ежедневно с 9:00 до 18:00</span>
+                  <span>{t.office_hours}</span>
                 </div>
 
                 <Button className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white">
                   <CalendarDays className="mr-2 h-4 w-4" />
-                  Записаться на консультацию
+                  {t.office_cta}
                 </Button>
               </CardContent>
             </Card>
           </div>
         </motion.div>
 
-        {/* Partner Banks */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -479,7 +453,7 @@ export default function SocialProofSection() {
           className="mb-16 text-center"
         >
           <h3 className="text-2xl font-bold text-neutral-900 dark:text-white mb-8">
-            Работаем со всеми ведущими банками Казахстана
+            {t.partner_title}
           </h3>
           <div className="flex flex-wrap justify-center gap-6">
             {banks.map((bank, index) => (
@@ -504,7 +478,6 @@ export default function SocialProofSection() {
           </div>
         </motion.div>
 
-        {/* Final CTA */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -515,11 +488,10 @@ export default function SocialProofSection() {
           <Card className="border-0 shadow-2xl bg-gradient-to-r from-blue-500 to-green-500 text-white">
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold text-white mb-4">
-                Узнайте, какую сумму можете получить вы
+                {t.final_title}
               </h3>
               <p className="text-white/80 mb-6 max-w-2xl mx-auto">
-                Присоединяйтесь к тысячам довольных клиентов, которые уже
-                получили максимальные суммы на лучших условиях
+                {t.final_subtitle}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
@@ -528,7 +500,7 @@ export default function SocialProofSection() {
                   className="bg-white text-blue-600 hover:bg-white/90 px-8 font-semibold"
                 >
                   <CalendarDays className="mr-2 h-5 w-5" />
-                  Записаться на консультацию
+                  {t.final_cta1}
                 </Button>
                 <Button
                   variant="outline"
@@ -536,7 +508,7 @@ export default function SocialProofSection() {
                   className="border-white text-white hover:bg-white/10 px-8"
                 >
                   <FileText className="mr-2 h-5 w-5" />
-                  Посмотреть все кейсы
+                  {t.final_cta2}
                 </Button>
               </div>
             </CardContent>
