@@ -298,8 +298,9 @@ export default function FAQSection() {
                   size="lg" 
                   className="bg-white text-blue-600 hover:bg-white/90 px-8 font-semibold"
                 >
-                  <CalendarDays className="mr-2 h-5 w-5" />
-                  {t.faq_cta_button}
+                  <CalendarDays className="mr-1 h-5 w-5" />
+                  
+                  <span className='text-[10px] md:text-[15px]'>{t.faq_cta_button}</span>
                 </Button>
               </div>
             </CardContent>

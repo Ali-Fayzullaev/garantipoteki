@@ -436,7 +436,7 @@ export default function QuizSection() {
                             className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105"
                           >
                             <CalendarDays className="mr-2 h-5 w-5" />
-                            {t.result_success_cta}
+                            <span className='text-[12px] md:text-[20px]'>{t.result_success_cta}</span>
                           </Button>
                           
                           <div className="p-4 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200 dark:border-yellow-700">

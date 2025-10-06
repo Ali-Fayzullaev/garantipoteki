@@ -13,7 +13,7 @@ import FooterSection from '@/components/landing/FooterSection'
 export default function Home() {
   return (
     <AppProvider>
-      <div className="min-h-screen bg-background text-foreground">
+      <div className="min-h-screen bg-background text-foreground overflow-y-hidden">
         <Navigation />
         <main>
           <HeroSection />
