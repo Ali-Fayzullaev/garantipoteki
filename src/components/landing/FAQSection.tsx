@@ -16,94 +16,67 @@ export default function FAQSection() {
 
   const faqItems = [
     {
-      question: "Почему нельзя получить консультацию по телефону?",
-      answer: "К сожалению, в последнее время участились случаи мошенничества в сфере кредитования. Встреча в офисе - это гарантия вашей безопасности. Кроме того, для точного расчета максимальной суммы нам нужно детально изучить вашу ситуацию и документы, что невозможно сделать по телефону.",
+      question: t.faq_q1,
+      answer: t.faq_a1,
       icon: Shield,
-      category: 'Безопасность'
+      category: t.faq_cat_security
     },
     {
-      question: "Какие документы нужны для консультации?",
-      answer: "Только удостоверение личности. Остальные документы мы можем собрать на самой консультации.",
+      question: t.faq_q2,
+      answer: t.faq_a2,
       icon: FileText,
-      category: 'Документы'
+      category: t.faq_cat_docs
     },
     {
-      question: "Сколько времени занимает весь процесс?",
-      answer: "• Консультация: 30-40 минут\n• Подача заявки: 15-20 минут\n• Получение решения: от 1 часа до 1 дня\n\nПри правильно подготовленной заявке большинство клиентов получают деньги в тот же день.",
+      question: t.faq_q3,
+      answer: t.faq_a3,
       icon: Clock,
-      category: 'Процесс'
+      category: t.faq_cat_process
     },
     {
-      question: "Сколько стоит консультация?",
-      answer: "Консультация абсолютно бесплатная. Мы зарабатываем только когда помогаем вам получить кредит, и только от банков-партнеров.",
+      question: t.faq_q4,
+      answer: t.faq_a4,
       icon: HelpCircle,
-      category: 'Стоимость'
+      category: t.faq_cat_cost
     },
     {
-      question: "Что если у меня есть действующие кредиты?",
-      answer: "Наличие текущих кредитов - не проблема, если платежи вносятся вовремя. Мы знаем, как правильно структурировать заявку, чтобы получить одобрение даже с действующими кредитами.",
+      question: t.faq_q5,
+      answer: t.faq_a5,
       icon: CheckCircle2,
-      category: 'Условия'
+      category: t.faq_cat_terms
     },
     {
-      question: "С какими банками вы работаете?",
-      answer: "Мы сотрудничаем со всеми крупными банками Казахстана. На консультации подберем банк с лучшими условиями именно для вашей ситуации.",
+      question: t.faq_q6,
+      answer: t.faq_a6,
       icon: Building2,
-      category: 'Сотрудничество'
+      category: t.faq_cat_partners
     },
     {
-      question: "Что если мне откажут?",
-      answer: "До подачи заявки мы проводим полный анализ вашей ситуации и подаем заявку только если уверены в одобрении. Если по каким-то причинам произойдет отказ, мы бесплатно подготовим новую заявку в другой банк.",
+      question: t.faq_q7,
+      answer: t.faq_a7,
       icon: Zap,
-      category: 'Гарантии'
-    }
-  ]
-
-  const supportChannels = [
-    {
-      icon: Phone,
-      title: 'Телефон',
-      description: 'Быстрая консультация по телефону',
-      contact: '+7 (777) 123-45-67',
-      responseTime: '5-10 минут',
-      color: 'text-blue-500'
-    },
-    {
-      icon: MessageCircle,
-      title: 'WhatsApp',
-      description: 'Напишите нам в мессенджер',
-      contact: '+7 (777) 123-45-67',
-      responseTime: '2-5 минут',
-      color: 'text-green-500'
-    },
-    {
-      icon: CalendarDays,
-      title: 'Онлайн-запись',
-      description: 'Запишитесь на консультацию',
-      contact: '24/7',
-      responseTime: 'Подтверждение за 1 час',
-      color: 'text-purple-500'
+      category: t.faq_cat_guarantee
     }
   ]
 
   const processSteps = [
     {
       step: "1",
-      title: "Консультация",
-      duration: "30-40 минут",
-      description: "Детальный разбор вашей ситуации"
+      title: t.process_step1_title,
+      duration: t.process_step1_duration,
+      description: t.process_step1_desc
     },
     {
       step: "2",
-      title: "Подача заявки",
-      duration: "15-20 минут",
-      description: "Оформление документов"
+      title: t.process_step2_title,
+      duration: t.process_step2_duration,
+      description: t.process_step2_desc
     },
     {
       step: "3",
-      title: "Получение решения",
-      duration: "1 час - 1 день",
-      description: "Одобрение от банка"
+      title: t.process_step3_title,
+      duration: t.process_step3_duration,
+      description: t.process_step3_desc
     }
   ]
 
@@ -124,13 +97,13 @@ export default function FAQSection() {
         >
           <Badge className="bg-gradient-to-r from-blue-500/10 to-green-500/10 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-700/50 px-4 py-3 mb-4 backdrop-blur-sm">
             <HelpCircle className="w-4 h-4 mr-2" />
-            Ответы на частые вопросы
+            {t.faq_badge}
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white mb-4">
-            Часто задаваемые вопросы
+            {t.faq_title}
           </h2>
           <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto">
-            Всё, что вам нужно знать о процессе получения кредита и нашей работе
+            {t.faq_subtitle}
           </p>
         </motion.div>
 
@@ -147,7 +120,7 @@ export default function FAQSection() {
               <CardHeader>
                 <CardTitle className="text-2xl flex items-center gap-2">
                   <HelpCircle className="h-6 w-6 text-blue-500" />
-                  Частые вопросы
+                  {t.faq_main_title}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -207,7 +180,7 @@ export default function FAQSection() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Clock className="h-5 w-5 text-blue-500" />
-                  Время процесса
+                  {t.time_process_title}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -242,7 +215,7 @@ export default function FAQSection() {
                   <div className="flex items-center gap-2">
                     <Zap className="h-4 w-4 text-green-500" />
                     <span className="text-sm font-semibold text-green-700 dark:text-green-300">
-                      Большинство клиентов получают деньги в тот же день!
+                      {t.process_fast_result}
                     </span>
                   </div>
                 </div>
@@ -253,30 +226,30 @@ export default function FAQSection() {
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Shield className="h-5 w-5 text-green-500" />
-                  Наши гарантии
+                  {t.security_titleBook || "Наши гарантии"} {/* fallback на случай, если нет */}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {[
                   { 
-                    text: 'Конфиденциальность данных', 
+                    text: t.trust_data_privacy, 
                     icon: Shield,
-                    description: 'Полная защита вашей информации' 
+                    description: t.trust_data_desc 
                   },
                   { 
-                    text: 'Бесплатная консультация', 
+                    text: t.trust_free_consult, 
                     icon: HelpCircle,
-                    description: 'Никаких предоплат' 
+                    description: t.trust_free_desc 
                   },
                   { 
-                    text: 'Официальный договор', 
+                    text: t.trust_official_contract, 
                     icon: FileText,
-                    description: 'Прозрачные условия' 
+                    description: t.trust_contract_desc 
                   },
                   { 
-                    text: 'Работаем с 2015 года', 
+                    text: t.trust_experience, 
                     icon: Clock,
-                    description: '10 лет успешной работы' 
+                    description: t.trust_exp_desc 
                   }
                 ].map((item, index) => (
                   <motion.div
@@ -314,10 +287,10 @@ export default function FAQSection() {
           <Card className="border-0 shadow-2xl bg-gradient-to-r from-blue-500 to-green-500 text-white">
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold text-white mb-4">
-                Остались вопросы?
+                {t.faq_cta_title}
               </h3>
               <p className="text-white/80 mb-6 max-w-2xl mx-auto">
-                Задайте их нашему специалисту на консультации и получите персональные ответы на все ваши вопросы
+                {t.faq_cta_subtitle}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
@@ -326,7 +299,7 @@ export default function FAQSection() {
                   className="bg-white text-blue-600 hover:bg-white/90 px-8 font-semibold"
                 >
                   <CalendarDays className="mr-2 h-5 w-5" />
-                  Записаться и получить ответы на все вопросы
+                  {t.faq_cta_button}
                 </Button>
               </div>
             </CardContent>

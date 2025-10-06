@@ -21,6 +21,8 @@ import {
 import { useApp } from "@/components/providers/AppProvider";
 import { dict } from "@/lib/dictionary";
 import SuccessStoriesCarousel from "./Reviews";
+import Partners from "@/lib/partners";
+import Image from "next/image";
 
 export default function SocialProofSection() {
   const { lang } = useApp();
@@ -74,15 +76,6 @@ export default function SocialProofSection() {
       amount: "7 200 000 ₸",
       description: t.case4_desc,
     },
-  ];
-
-  const banks = [
-    { name: t.bank_halyk, logo: "H" },
-    { name: t.bank_kaspi, logo: "K" },
-    { name: t.bank_forte, logo: "F" },
-    { name: t.bank_jusan, logo: "J" },
-    { name: t.bank_eurasian, logo: "E" },
-    { name: t.bank_centercredit, logo: "BCC" },
   ];
 
   const securityFeatures = [
@@ -456,7 +449,7 @@ export default function SocialProofSection() {
             {t.partner_title}
           </h3>
           <div className="flex flex-wrap justify-center gap-6">
-            {banks.map((bank, index) => (
+            {Partners.map((bank, index) => (
               <motion.div
                 key={bank.name}
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -465,10 +458,14 @@ export default function SocialProofSection() {
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 className="flex flex-col items-center gap-3 group"
               >
-                <div className="w-16 h-16 bg-white dark:bg-neutral-800 rounded-2xl shadow-lg flex items-center justify-center group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
-                  <span className="font-bold text-blue-600 dark:text-blue-400 text-lg">
-                    {bank.logo}
-                  </span>
+                <div className="rounded-2xl shadow-lg flex items-center justify-center group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                  <Image
+                    src={bank.logoUrl}
+                    alt={bank.name}
+                    width={48}
+                    height={48}
+                    className="object-contain max-h-10 max-w-10 rounded-lg"
+                  />
                 </div>
                 <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                   {bank.name}
@@ -501,14 +498,6 @@ export default function SocialProofSection() {
                 >
                   <CalendarDays className="mr-2 h-5 w-5" />
                   {t.final_cta1}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-white text-white hover:bg-white/10 px-8"
-                >
-                  <FileText className="mr-2 h-5 w-5" />
-                  {t.final_cta2}
                 </Button>
               </div>
             </CardContent>

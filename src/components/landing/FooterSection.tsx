@@ -26,65 +26,70 @@ export default function FooterSection() {
   const t = dict[lang]
 
   const companyInfo = {
-    name: 'ТОО Гарант Ипотеки',
-    description: 'Помогаем получить максимальную сумму кредита на лучших условиях с 2015 года.',
-    bin: 'БИН: 123456789012',
-    founded: '2015'
+    name: t.footer_company_name,
+    description: t.footer_company_desc,
+    bin: t.footer_bin,
+    founded: t.footer_founded_year
   }
 
   const contactInfo = {
     phone: '+7 (777) 123-45-67',
     email: 'info@garantipoteki.kz',
-    address: 'г. Астана, пр. Кабанбай батыра, 15',
-    hours: 'Пн-Пт: 9:00-18:00, Сб: 10:00-16:00'
+    address: t.footer_address_short,
+    hours: lang === 'ru' 
+      ? 'Пн-Пт: 9:00-18:00, Сб: 10:00-16:00' 
+      : 'Дс-Жм: 9:00-18:00, Сб: 10:00-16:00'
   }
 
   const usefulLinks = [
     {
       icon: Calculator,
-      name: 'Профессиональная консультация',
+      name: t.footer_link1,
       href: '#booking'
     },
     {
       icon: CheckCircle,
-      name: 'Узнайте за 60 секунд',
+      name: t.footer_link2,
       href: '#quiz'
     },
     {
       icon: FileText,
-      name: 'Частые вопросы',
+      name: t.footer_link3,
       href: '#faq'
     },
     {
       icon: Star,
-      name: 'Отзывы клиентов',
+      name: t.footer_link4,
       href: '#reviews'
     }
   ]
 
   const documents = [
     {
-      name: 'Политика конфиденциальности',
+      name: t.footer_doc1,
       href: '/privacy'
     },
     {
-      name: 'Пользовательское соглашение',
+      name: t.footer_doc2,
       href: '/terms'
     },
     {
-      name: 'Согласие на обработку персональных данных',
+      name: t.footer_doc3,
       href: '/consent'
     },
     {
-      name: 'Правила использования сайта',
+      name: t.footer_doc4,
       href: '/rules'
     }
   ]
 
   const trustBadges = [
-    { icon: Shield, text: 'Официальный партнер банков' },
-    { icon: Award, text: `Работаем с ${companyInfo.founded} года` },
-    { icon: Clock, text: 'Более 1000 успешных сделок' }
+    { icon: Shield, text: t.footer_trust1 },
+    { 
+      icon: Award, 
+      text: t.footer_trust2.replace('{{year}}', companyInfo.founded) 
+    },
+    { icon: Clock, text: t.footer_trust3 }
   ]
 
   const scrollToBooking = () => {
@@ -93,7 +98,6 @@ export default function FooterSection() {
 
   return (
     <footer className="bg-gradient-to-b from-neutral-900 to-neutral-950 text-white">
-      {/* Main Footer */}
       <div className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
@@ -105,7 +109,6 @@ export default function FooterSection() {
               transition={{ duration: 0.8 }}
               className="space-y-6"
             >
-              {/* Logo & Description */}
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
@@ -120,7 +123,7 @@ export default function FooterSection() {
                   <div>
                     <h3 className="text-xl font-bold text-white">Гарант Ипотеки</h3>
                     <p className="text-neutral-400 text-sm">
-                      Профессиональное кредитное сопровождение
+                      {lang === 'ru' ? 'Профессиональное кредитное сопровождение' : 'Кәсіби несиелік қолдау'}
                     </p>
                   </div>
                 </div>
@@ -137,7 +140,6 @@ export default function FooterSection() {
                 </div>
               </div>
 
-              {/* Trust Badges */}
               <div className="space-y-3">
                 {trustBadges.map((badge, index) => (
                   <motion.div 
@@ -165,7 +167,7 @@ export default function FooterSection() {
             >
               <h4 className="font-semibold text-white text-lg flex items-center gap-2">
                 <Phone className="h-5 w-5 text-blue-400" />
-                Контакты
+                {t.footer_contact_title}
               </h4>
               
               <div className="space-y-4">
@@ -174,7 +176,7 @@ export default function FooterSection() {
                     <Phone className="h-4 w-4 text-green-400 flex-shrink-0" />
                     <div>
                       <p className="text-white text-sm font-medium">{contactInfo.phone}</p>
-                      <p className="text-neutral-400 text-xs">Основной телефон</p>
+                      <p className="text-neutral-400 text-xs">{t.footer_phone_label}</p>
                     </div>
                   </div>
                   
@@ -182,7 +184,7 @@ export default function FooterSection() {
                     <Mail className="h-4 w-4 text-blue-400 flex-shrink-0" />
                     <div>
                       <p className="text-white text-sm font-medium">{contactInfo.email}</p>
-                      <p className="text-neutral-400 text-xs">Электронная почта</p>
+                      <p className="text-neutral-400 text-xs">{t.footer_email_label}</p>
                     </div>
                   </div>
                 </div>
@@ -191,7 +193,7 @@ export default function FooterSection() {
                   <div className="flex items-start gap-3">
                     <MapPin className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-white text-sm font-medium">Адрес офиса</p>
+                      <p className="text-white text-sm font-medium">{t.footer_address_label}</p>
                       <p className="text-neutral-400 text-xs">{contactInfo.address}</p>
                     </div>
                   </div>
@@ -199,7 +201,7 @@ export default function FooterSection() {
                   <div className="flex items-start gap-3">
                     <Clock className="h-4 w-4 text-yellow-400 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-white text-sm font-medium">Режим работы</p>
+                      <p className="text-white text-sm font-medium">{t.footer_hours_label}</p>
                       <p className="text-neutral-400 text-xs">{contactInfo.hours}</p>
                     </div>
                   </div>
@@ -211,7 +213,7 @@ export default function FooterSection() {
                 className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white font-semibold"
               >
                 <Phone className="mr-2 h-4 w-4" />
-                Бесплатная консультация
+                {t.footer_cta_button}
               </Button>
             </motion.div>
 
@@ -223,7 +225,7 @@ export default function FooterSection() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="space-y-6"
             >
-              <h4 className="font-semibold text-white text-lg">Полезное</h4>
+              <h4 className="font-semibold text-white text-lg">{t.footer_useful_title}</h4>
               
               <div className="space-y-3">
                 {usefulLinks.map((link, index) => (
@@ -251,7 +253,7 @@ export default function FooterSection() {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="space-y-6"
             >
-              <h4 className="font-semibold text-white text-lg">Документы</h4>
+              <h4 className="font-semibold text-white text-lg">{t.footer_docs_title}</h4>
               
               <div className="space-y-3">
                 {documents.map((doc, index) => (
@@ -269,11 +271,10 @@ export default function FooterSection() {
                 ))}
               </div>
 
-              {/* Additional Info */}
               <div className="pt-4 border-t border-neutral-800">
                 <div className="space-y-2 text-xs text-neutral-500">
-                  <p>Лицензия №1234567890</p>
-                  <p>Официальный партнёр банков Казахстана</p>
+                  <p>{t.footer_license}</p>
+                  <p>{t.footer_trust1}</p>
                 </div>
               </div>
             </motion.div>
@@ -289,7 +290,7 @@ export default function FooterSection() {
           >
             <div className="text-center">
               <h4 className="font-semibold text-white mb-8 text-lg">
-                Официальные партнеры ведущих банков Казахстана
+                {t.footer_partners_title}
               </h4>
               <div className="flex flex-wrap justify-center gap-8 opacity-60">
                 {Partners.map((bank, index) => (
@@ -325,7 +326,6 @@ export default function FooterSection() {
       <div className="border-t border-neutral-800 py-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            {/* Copyright */}
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -334,14 +334,13 @@ export default function FooterSection() {
               className="text-center md:text-left"
             >
               <p className="text-neutral-400 text-sm">
-                © {new Date().getFullYear()} Гарант Ипотеки. Все права защищены.
+                {t.footer_copyright.replace('{{year}}', new Date().getFullYear().toString())}
               </p>
               <p className="text-neutral-500 text-xs mt-1">
-                Информация на сайте не является публичной офертой
+                {t.footer_disclaimer}
               </p>
             </motion.div>
 
-            {/* Additional Links */}
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -351,7 +350,7 @@ export default function FooterSection() {
             >
               <span>{contactInfo.address}</span>
               <span className="hidden md:block">•</span>
-              <span>Лицензия №1234567890</span>
+              <span>{t.footer_license}</span>
             </motion.div>
           </div>
         </div>

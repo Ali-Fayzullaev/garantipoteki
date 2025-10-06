@@ -21,10 +21,13 @@ import {
   Phone,
   FileText,
   CreditCard,
-  UserCheck
+  UserCheck,
+  Send,
+  X
 } from 'lucide-react'
 import { useApp } from '@/components/providers/AppProvider'
 import { dict } from '@/lib/dictionary'
+import { createDeal, updateTxt } from '@/app/actions'
 
 // Простая интерполяция
 const interpolate = (text: string, values: Record<string, string | number>): string => {
@@ -40,6 +43,9 @@ export default function QuizSection() {
   const [quizDone, setQuizDone] = useState(false)
   const [phoneNumber, setPhoneNumber] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [dialogType, setDialogType] = useState<'success' | 'error'>('success')
+  const [phoneError, setPhoneError] = useState('')
 
   const totalSteps = 4
   const progress = (Math.min(step - 1, totalSteps) / totalSteps) * 100
@@ -127,25 +133,84 @@ export default function QuizSection() {
 
   const isTop20 = score >= 15
 
-  const handlePhoneSubmit = async () => {
-    if (!phoneNumber) return
-    setIsSubmitting(true)
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setIsSubmitting(false)
-    setPhoneNumber('')
-    alert(lang === 'ru' 
-      ? 'Спасибо! Мы напомним вам, когда лучше подать заявку.' 
-      : 'Рақмет! Сізге өтініш беру үшін қашан қолайлы екенін еске саламыз.'
-    )
+  const formatPhone = (value: string): string => {
+    const numbers = value.replace(/\D/g, '')
+    
+    // Ограничиваем длину до 11 цифр (10 без +7)
+    const limitedNumbers = numbers.slice(0, 11)
+    
+    if (limitedNumbers.length === 0) return ''
+    if (limitedNumbers.length === 1) return `+7`
+    if (limitedNumbers.length <= 4) return `+7 (${limitedNumbers.slice(1, 4)}`
+    if (limitedNumbers.length <= 7) return `+7 (${limitedNumbers.slice(1, 4)}) ${limitedNumbers.slice(4, 7)}`
+    if (limitedNumbers.length <= 9) return `+7 (${limitedNumbers.slice(1, 4)}) ${limitedNumbers.slice(4, 7)}-${limitedNumbers.slice(7, 9)}`
+    return `+7 (${limitedNumbers.slice(1, 4)}) ${limitedNumbers.slice(4, 7)}-${limitedNumbers.slice(7, 9)}-${limitedNumbers.slice(9, 11)}`
   }
 
-  const formatPhone = (value: string) => {
-    const numbers = value.replace(/\D/g, '')
-    if (numbers.length <= 1) return `+7${numbers}`
-    if (numbers.length <= 4) return `+7 (${numbers.slice(1, 4)}`
-    if (numbers.length <= 7) return `+7 (${numbers.slice(1, 4)}) ${numbers.slice(4, 7)}`
-    if (numbers.length <= 9) return `+7 (${numbers.slice(1, 4)}) ${numbers.slice(4, 7)}-${numbers.slice(7, 9)}`
-    return `+7 (${numbers.slice(1, 4)}) ${numbers.slice(4, 7)}-${numbers.slice(7, 9)}-${numbers.slice(9, 11)}`
+  const handlePhoneChange = (value: string) => {
+    const formattedValue = formatPhone(value)
+    setPhoneNumber(formattedValue)
+    
+    // Валидация телефона
+    const numbers = formattedValue.replace(/\D/g, '')
+    if (numbers.length < 11) {
+      setPhoneError('Номер телефона должен содержать 11 цифр')
+    } else {
+      setPhoneError('')
+    }
+  }
+
+  const isPhoneValid = (): boolean => {
+    const numbers = phoneNumber.replace(/\D/g, '')
+    return numbers.length === 11 && !phoneError
+  }
+
+  const handlePhoneSubmit = async () => {
+    if (!isPhoneValid()) {
+      setDialogType('error')
+      setIsDialogOpen(true)
+      return
+    }
+
+    setIsSubmitting(true)
+
+    try {
+      // Создаем заявку в основной системе
+      const deal = await createDeal({
+        name: 'Клиент квиза',
+        phone_number: phoneNumber.replace(/\D/g, ''),
+        comment: `Результат квиза: ${score}/20 баллов. ${isTop20 ? 'Топ 20%' : 'Нужна консультация'}. Ответы: ${JSON.stringify(answers)}`,
+        selected_time: 'напоминание о заявке'
+      })
+
+      // Отправляем в TXT систему
+      await updateTxt({
+        name: 'Клиент квиза',
+        phone: phoneNumber.replace(/\D/g, ''),
+        service: "Консультация по кредиту",
+        comment: `Результат квиза: ${score}/20 баллов. ${isTop20 ? 'Топ 20%' : 'Нужна консультация'}`,
+        selected_time: 'напоминание о заявке'
+      })
+
+      // Успешная отправка
+      setDialogType('success')
+      setIsDialogOpen(true)
+      
+      // Сброс формы
+      setPhoneNumber('')
+      setPhoneError('')
+
+    } catch (error) {
+      console.error("Ошибка при отправке формы:", error)
+      setDialogType('error')
+      setIsDialogOpen(true)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false)
   }
 
   const getPersonalizedRecommendations = () => {
@@ -219,9 +284,6 @@ export default function QuizSection() {
                     <div>
                       <div className="font-semibold text-neutral-900 dark:text-white">
                         {interpolate(t.question_of, { step, total: totalSteps })}
-                      </div>
-                      <div className="text-sm text-neutral-500">
-                        {interpolate(t.completed, { percent: Math.round(progress) })}
                       </div>
                     </div>
                   </div>
@@ -436,22 +498,32 @@ export default function QuizSection() {
                               <p className="text-neutral-600 dark:text-neutral-400 mb-4">
                                 {t.result_phone_prompt}
                               </p>
-                              <div className="flex gap-3 max-w-md mx-auto">
-                                <Input
-                                  placeholder={lang === 'ru' ? "+7 (___) ___-__-__" : "+7 (___) ___-__-__"}
-                                  value={phoneNumber}
-                                  onChange={(e) => setPhoneNumber(formatPhone(e.target.value))}
-                                  className="flex-1"
-                                />
+                              <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                                <div className="relative flex-1">
+                                  <Input
+                                    placeholder={lang === 'ru' ? "+7 (___) ___-__-__" : "+7 (___) ___-__-__"}
+                                    value={phoneNumber}
+                                    onChange={(e) => handlePhoneChange(e.target.value)}
+                                    className={`flex-1 pr-4 ${phoneError ? 'border-red-500 focus:border-red-500' : ''}`}
+                                    maxLength={18}
+                                  />
+                                  {phoneError && (
+                                    <p className="text-red-500 text-xs mt-1 absolute -bottom-5 left-0">
+                                      {phoneError}
+                                    </p>
+                                  )}
+                                </div>
                                 <Button 
                                   onClick={handlePhoneSubmit}
-                                  disabled={isSubmitting || !phoneNumber}
-                                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                                  disabled={isSubmitting || !isPhoneValid()}
+                                  className="bg-orange-600 hover:bg-orange-700 text-white whitespace-nowrap"
                                 >
                                   {isSubmitting ? (
                                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                                   ) : (
-                                    <Phone className="h-4 w-4" />
+                                    <>
+                                      <Send className="h-4 w-4" />
+                                    </>
                                   )}
                                 </Button>
                               </div>
@@ -496,6 +568,96 @@ export default function QuizSection() {
           ))}
         </motion.div>
       </div>
+
+      {/* Success/Error Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-md mx-4">
+          <DialogHeader>
+            <div className={`w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 rounded-full flex items-center justify-center ${
+              dialogType === 'success' 
+                ? 'bg-green-100 dark:bg-green-900' 
+                : 'bg-red-100 dark:bg-red-900'
+            }`}>
+              {dialogType === 'success' ? (
+                <CheckCircle2 className="h-8 w-8 md:h-10 md:w-10 text-green-600 dark:text-green-400" />
+              ) : (
+                <X className="h-8 w-8 md:h-10 md:w-10 text-red-600 dark:text-red-400" />
+              )}
+            </div>
+            <DialogTitle className={`text-center text-xl md:text-2xl ${
+              dialogType === 'success' ? 'text-green-600' : 'text-red-600'
+            }`}>
+              {dialogType === 'success' ? 'Заявка принята!' : 'Ошибка отправки'}
+            </DialogTitle>
+            <DialogDescription className="text-center text-base md:text-lg">
+              {dialogType === 'success' 
+                ? 'Мы свяжемся с вами в течение 5 минут для подтверждения консультации' 
+                : 'Пожалуйста, проверьте правильность заполнения полей и попробуйте еще раз'
+              }
+            </DialogDescription>
+          </DialogHeader>
+
+          {dialogType === 'success' && (
+            <div className="space-y-4 text-sm">
+              <div className="p-3 md:p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800">
+                <div className="font-semibold text-neutral-900 dark:text-white mb-2 text-sm md:text-base">
+                  Детали заявки:
+                </div>
+                <div className="space-y-2 text-neutral-600 dark:text-neutral-400 text-xs md:text-sm">
+                  <div className="flex justify-between">
+                    <span>Телефон:</span>
+                    <span className="font-semibold">{phoneNumber}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Результат:</span>
+                    <span className="font-semibold">{score}/20 баллов</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Статус:</span>
+                    <span className={`font-semibold ${
+                      isTop20 ? 'text-green-600' : 'text-amber-600'
+                    }`}>
+                      {isTop20 ? 'Топ 20%' : 'Нужна консультация'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3 md:p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                <div className="flex items-center gap-2 text-blue-800 dark:text-blue-300 font-semibold mb-2 text-sm md:text-base">
+                  <Zap className="h-4 w-4" />
+                  Что дальше?
+                </div>
+                <ul className="space-y-2 text-blue-700 dark:text-blue-400 text-xs">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-3 w-3" />
+                    Мы позвоним вам в течение 5 минут
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-3 w-3" />
+                    Подтвердим время консультации
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-3 w-3" />
+                    Ответим на все ваши вопросы
+                  </li>
+                </ul>
+              </div>
+            </div>
+          )}
+
+          <Button
+            onClick={handleDialogClose}
+            className={`w-full ${
+              dialogType === 'success' 
+                ? 'bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600' 
+                : 'bg-red-500 hover:bg-red-600'
+            } text-white`}
+          >
+            Понятно
+          </Button>
+        </DialogContent>
+      </Dialog>
     </section>
   )
 }

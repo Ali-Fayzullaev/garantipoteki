@@ -40,7 +40,7 @@ export default function FinalCTASection() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [dialogType, setDialogType] = useState<'success' | 'error'>('success')
-  const [dialogData, setDialogData] = useState({ name: '', phone: '' }) // Добавляем состояние для данных модального окна
+  const [dialogData, setDialogData] = useState({ name: '', phone: '' })
   const [phoneError, setPhoneError] = useState('')
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -48,7 +48,6 @@ export default function FinalCTASection() {
     minutes: 0
   })
 
-  // Target date - end of current month
   useEffect(() => {
     const calculateTimeLeft = () => {
       const now = new Date()
@@ -72,56 +71,56 @@ export default function FinalCTASection() {
   const steps = [
     {
       step: 1,
-      title: "Запишитесь на бесплатную консультацию",
-      description: "Выберите удобное время и оставьте заявку",
+      title: t.final_step1_title,
+      description: t.final_step1_desc,
       icon: CalendarDays
     },
     {
       step: 2,
-      title: "Приходите в офис в выбранное время",
-      description: "Только удостоверение личности",
+      title: t.final_step2_title,
+      description: t.final_step2_desc,
       icon: Users
     },
     {
       step: 3,
-      title: "Получите деньги в тот же день",
-      description: "Одобрение и получение средств",
+      title: t.final_step3_title,
+      description: t.final_step3_desc,
       icon: CheckCircle2
     }
   ]
 
   const weekStats = [
-    { label: 'Записей на консультацию', value: '47', icon: Users, color: 'text-blue-500' },
-    { label: 'Получили одобрение', value: '39', icon: CheckCircle2, color: 'text-green-500' },
-    { label: 'Средняя сумма одобрения', value: '12 млн ₸', icon: TrendingUp, color: 'text-purple-500' }
+    { label: t.final_stat1_label, value: '47', icon: Users, color: 'text-blue-500' },
+    { label: t.final_stat2_label, value: '39', icon: CheckCircle2, color: 'text-green-500' },
+    { label: t.final_stat3_label, value: '12 млн ₸', icon: TrendingUp, color: 'text-purple-500' }
   ]
 
   const specialOffers = [
     {
       icon: Crown,
-      title: 'Приоритетное рассмотрение',
-      description: 'Ваша заявка будет обработана в первую очередь',
+      title: t.final_offer1_title,
+      description: t.final_offer1_desc,
       color: 'text-yellow-500'
     },
     {
       icon: Target,
-      title: 'Специальные условия',
-      description: 'Доступ к эксклюзивным предложениям банков-партнеров',
+      title: t.final_offer2_title,
+      description: t.final_offer2_desc,
       color: 'text-blue-500'
     },
     {
       icon: Star,
-      title: 'Персональный менеджер',
-      description: 'Индивидуальное сопровождение на весь срок оформления',
+      title: t.final_offer3_title,
+      description: t.final_offer3_desc,
       color: 'text-purple-500'
     }
   ]
 
   const trustBadges = [
-    { text: 'Более 1000 успешных сделок', icon: CheckCircle2 },
-    { text: 'Официальный партнер ведущих банков', icon: Shield },
-    { text: 'Гарантия конфиденциальности', icon: Shield },
-    { text: 'Бесплатная консультация', icon: CheckCircle2 }
+    { text: t.final_trust1, icon: CheckCircle2 },
+    { text: t.final_trust2, icon: Shield },
+    { text: t.final_trust3, icon: Shield },
+    { text: t.final_trust4, icon: CheckCircle2 }
   ]
 
   const handleInputChange = (field: string, value: string) => {
@@ -129,7 +128,6 @@ export default function FinalCTASection() {
       const formattedValue = formatPhone(value)
       setFormData(prev => ({ ...prev, [field]: formattedValue }))
       
-      // Валидация телефона
       const numbers = formattedValue.replace(/\D/g, '')
       if (numbers.length < 11) {
         setPhoneError('Номер телефона должен содержать 11 цифр')
@@ -143,8 +141,6 @@ export default function FinalCTASection() {
 
   const formatPhone = (value: string): string => {
     const numbers = value.replace(/\D/g, '')
-    
-    // Ограничиваем длину до 11 цифр (10 без +7)
     const limitedNumbers = numbers.slice(0, 11)
     
     if (limitedNumbers.length === 0) return ''
@@ -163,7 +159,6 @@ export default function FinalCTASection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // Проверяем валидность формы
     if (!formData.name.trim()) {
       setDialogType('error')
       setDialogData({ name: formData.name, phone: formData.phone })
@@ -183,7 +178,6 @@ export default function FinalCTASection() {
     setIsSubmitting(true)
 
     try {
-      // Создаем заявку в основной системе
       const deal = await createDeal({
         name: formData.name,
         phone_number: formData.phone.replace(/\D/g, ''),
@@ -191,7 +185,6 @@ export default function FinalCTASection() {
         selected_time: 'срочная консультация'
       })
 
-      // Отправляем в TXT систему
       await updateTxt({
         name: formData.name,
         phone: formData.phone.replace(/\D/g, ''),
@@ -200,12 +193,10 @@ export default function FinalCTASection() {
         selected_time: 'срочная консультация'
       })
 
-      // Успешная отправка - сохраняем данные для модального окна
       setDialogData({ name: formData.name, phone: formData.phone })
       setDialogType('success')
       setIsDialogOpen(true)
       
-      // Сброс формы
       setFormData({ name: '', phone: '', comment: '' })
       setPhoneError('')
 
@@ -225,12 +216,10 @@ export default function FinalCTASection() {
 
   return (
     <section id="final-cta" className="py-10 md:py-20 bg-gradient-to-br from-blue-50 via-green-50 to-blue-100 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900 relative overflow-hidden">
-      {/* Background Elements */}
       <div className="absolute top-0 left-0 w-72 h-72 bg-blue-200/30 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-green-200/30 rounded-full blur-3xl" />
       
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -240,18 +229,17 @@ export default function FinalCTASection() {
         >
           <Badge className="bg-gradient-to-r from-blue-500/20 to-green-500/20 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-700/50 px-3 py-2 md:px-4 md:py-3 mb-3 md:mb-4 backdrop-blur-sm text-xs md:text-sm">
             <Zap className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
-            Специальное предложение
+            {t.final_cta_badge}
           </Badge>
           <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-neutral-900 dark:text-white mb-3 md:mb-4 px-4">
-            Сделайте первый шаг к получению нужной суммы
+            {t.final_cta_title}
           </h2>
           <p className="text-base md:text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto px-4">
-            Банки меняют условия одобрения каждый месяц. Прямо сейчас у нас есть информация о банках, которые готовы одобрить максимальные суммы.
+            {t.final_cta_subtitle}
           </p>
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-6 md:gap-12 items-start">
-          {/* Left Column - Urgency & Steps */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -259,15 +247,14 @@ export default function FinalCTASection() {
             transition={{ duration: 0.8 }}
             className="space-y-6 md:space-y-8"
           >
-            {/* Countdown Timer - Секция срочности */}
             <Card className="border-0 shadow-xl md:shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm">
               <CardHeader className="text-center pb-4">
                 <CardTitle className="flex items-center justify-center gap-2 text-lg md:text-xl">
                   <Zap className="h-4 w-4 md:h-5 md:w-5 text-blue-500" />
-                  Важное напоминание
+                  {t.final_urgency_title}
                 </CardTitle>
                 <p className="text-neutral-600 dark:text-neutral-400 text-sm md:text-base">
-                  До следующего обновления банковских условий осталось:
+                  {t.final_urgency_desc}
                 </p>
               </CardHeader>
               <CardContent className="pt-0">
@@ -284,10 +271,10 @@ export default function FinalCTASection() {
                       <Zap className="h-4 w-4 md:h-5 md:w-5 text-orange-600 dark:text-orange-400 flex-shrink-0" />
                       <div>
                         <div className="font-semibold text-orange-800 dark:text-orange-300 text-xs md:text-sm">
-                          Важно: ограниченное количество мест
+                          {t.final_urgency_limit}
                         </div>
                         <div className="text-orange-700 dark:text-orange-400 text-xs">
-                          Мы принимаем ограниченное количество клиентов каждый день
+                          {t.final_urgency_limit_desc}
                         </div>
                       </div>
                     </div>
@@ -296,12 +283,11 @@ export default function FinalCTASection() {
               </CardContent>
             </Card>
 
-            {/* Week Stats - Мотивирующая статистика */}
             <Card className="border-0 shadow-xl md:shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
                   <TrendingUp className="h-4 w-4 md:h-5 md:w-5 text-blue-500" />
-                  Статистика этой недели
+                  {t.final_stats_title}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
@@ -330,12 +316,11 @@ export default function FinalCTASection() {
               </CardContent>
             </Card>
 
-            {/* Steps - Три простых шага */}
             <Card className="border-0 shadow-xl md:shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
                   <CheckCircle2 className="h-4 w-4 md:h-5 md:w-5 text-blue-500" />
-                  Как получить деньги
+                  {t.final_steps_title}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0 space-y-4 md:space-y-6">
@@ -369,12 +354,11 @@ export default function FinalCTASection() {
               </CardContent>
             </Card>
 
-            {/* Special Offers */}
             <Card className="border-0 shadow-xl md:shadow-2xl bg-gradient-to-r from-blue-500/5 to-green-500/5 dark:from-blue-500/10 dark:to-green-500/10">
               <CardHeader className="pb-4">
                 <CardTitle className="text-base md:text-lg flex items-center gap-2">
                   <Crown className="h-4 w-4 md:h-5 md:w-5 text-yellow-500" />
-                  Только при записи сегодня
+                  {t.final_offers_title}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0 space-y-3 md:space-y-4">
@@ -402,7 +386,6 @@ export default function FinalCTASection() {
             </Card>
           </motion.div>
 
-          {/* Right Column - CTA Form */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -416,10 +399,10 @@ export default function FinalCTASection() {
                   <Zap className="h-6 w-6 md:h-8 md:w-8 text-white" />
                 </div>
                 <CardTitle className="text-xl md:text-2xl font-bold text-neutral-900 dark:text-white">
-                  Оставьте заявку прямо сейчас
+                  {t.final_form_title}
                 </CardTitle>
                 <p className="text-neutral-600 dark:text-neutral-400 text-sm md:text-base">
-                  И получите бесплатную консультацию в приоритетном порядке
+                  {t.final_form_subtitle}
                 </p>
               </CardHeader>
 
@@ -428,7 +411,7 @@ export default function FinalCTASection() {
                   <div className="space-y-3 md:space-y-4">
                     <div className="relative">
                       <Input
-                        placeholder="Ваше имя *"
+                        placeholder={t.final_form_name_placeholder}
                         value={formData.name}
                         onChange={(e) => handleInputChange('name', e.target.value)}
                         className="h-12 md:h-14 text-base md:text-lg pl-10 md:pl-12 border-neutral-200 dark:border-neutral-700"
@@ -439,14 +422,14 @@ export default function FinalCTASection() {
 
                     <div className="relative">
                       <Input
-                        placeholder="Номер телефона *"
+                        placeholder={t.final_form_phone_placeholder}
                         value={formData.phone}
                         onChange={(e) => handleInputChange('phone', e.target.value)}
                         className={`h-12 md:h-14 text-base md:text-lg pl-10 md:pl-12 border-neutral-200 dark:border-neutral-700 ${
                           phoneError ? 'border-red-500 focus:border-red-500' : ''
                         }`}
                         required
-                        maxLength={18} // Максимальная длина форматированного номера
+                        maxLength={18}
                       />
                       <Phone className="absolute left-3 md:left-4 top-3 md:top-4 h-4 w-4 md:h-5 md:w-5 text-neutral-400" />
                       {phoneError && (
@@ -457,23 +440,22 @@ export default function FinalCTASection() {
                     </div>
 
                     <Textarea
-                      placeholder="Удобное время для консультации или комментарий"
+                      placeholder={t.final_form_comment_placeholder}
                       value={formData.comment}
                       onChange={(e) => handleInputChange('comment', e.target.value)}
                       className="min-h-[100px] md:min-h-[120px] resize-none text-base md:text-lg p-3 md:p-4 border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
 
-                  {/* Urgency Banner */}
                   <div className="p-3 md:p-4 rounded-xl bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border border-green-200 dark:border-green-700">
                     <div className="flex items-center gap-2 md:gap-3">
                       <Clock className="h-4 w-4 md:h-5 md:w-5 text-green-600 dark:text-green-400 flex-shrink-0" />
                       <div>
                         <div className="font-semibold text-green-800 dark:text-green-300 text-xs md:text-sm">
-                          Срочная запись
+                          {t.final_form_urgency_title}
                         </div>
                         <div className="text-green-700 dark:text-green-400 text-xs">
-                          При записи в течение 15 минут — гарантия консультации сегодня
+                          {t.final_form_urgency_desc}
                         </div>
                       </div>
                     </div>
@@ -487,17 +469,16 @@ export default function FinalCTASection() {
                     {isSubmitting ? (
                       <div className="flex items-center gap-2">
                         <div className="w-5 h-5 md:w-6 md:h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Отправка...
+                        {t.booking_form_submitting}
                       </div>
                     ) : (
                       <>
-                        <span className="text-sm md:text-base">ПОЛУЧИТЬ КОНСУЛЬТАЦИЮ</span>
+                        <span className="text-sm md:text-base">{t.final_form_submit_button}</span>
                         <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
                       </>
                     )}
                   </Button>
 
-                  {/* Trust Badges */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3">
                     {trustBadges.map((badge, index) => (
                       <motion.div
@@ -515,7 +496,7 @@ export default function FinalCTASection() {
                   </div>
 
                   <p className="text-center text-xs text-neutral-500 dark:text-neutral-400">
-                    Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
+                    {t.final_form_consent}
                   </p>
                 </form>
               </CardContent>
@@ -524,7 +505,6 @@ export default function FinalCTASection() {
         </div>
       </div>
 
-      {/* Success/Error Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-md mx-4">
           <DialogHeader>
@@ -542,12 +522,12 @@ export default function FinalCTASection() {
             <DialogTitle className={`text-center text-xl md:text-2xl ${
               dialogType === 'success' ? 'text-green-600' : 'text-red-600'
             }`}>
-              {dialogType === 'success' ? 'Заявка принята!' : 'Ошибка отправки'}
+              {dialogType === 'success' ? t.final_dialog_success_title : t.final_dialog_error_title}
             </DialogTitle>
             <DialogDescription className="text-center text-base md:text-lg">
               {dialogType === 'success' 
-                ? 'Мы свяжемся с вами в течение 5 минут для подтверждения консультации' 
-                : 'Пожалуйста, проверьте правильность заполнения полей и попробуйте еще раз'
+                ? t.final_dialog_success_desc 
+                : t.final_dialog_error_desc
               }
             </DialogDescription>
           </DialogHeader>
@@ -556,15 +536,15 @@ export default function FinalCTASection() {
             <div className="space-y-4 text-sm">
               <div className="p-3 md:p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800">
                 <div className="font-semibold text-neutral-900 dark:text-white mb-2 text-sm md:text-base">
-                  Детали заявки:
+                  {t.final_dialog_details_title}
                 </div>
                 <div className="space-y-2 text-neutral-600 dark:text-neutral-400 text-xs md:text-sm">
                   <div className="flex justify-between">
-                    <span>Имя:</span>
+                    <span>{t.final_dialog_name_label}</span>
                     <span className="font-semibold">{dialogData.name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Телефон:</span>
+                    <span>{t.final_dialog_phone_label}</span>
                     <span className="font-semibold">{dialogData.phone}</span>
                   </div>
                 </div>
@@ -573,20 +553,20 @@ export default function FinalCTASection() {
               <div className="p-3 md:p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
                 <div className="flex items-center gap-2 text-blue-800 dark:text-blue-300 font-semibold mb-2 text-sm md:text-base">
                   <Zap className="h-4 w-4" />
-                  Что дальше?
+                  {t.final_dialog_next_steps}
                 </div>
                 <ul className="space-y-2 text-blue-700 dark:text-blue-400 text-xs">
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3 w-3" />
-                    Мы позвоним вам в течение 5 минут
+                    {t.final_dialog_step1}
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3 w-3" />
-                    Подтвердим время консультации
+                    {t.final_dialog_step2}
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3 w-3" />
-                    Ответим на все ваши вопросы
+                    {t.final_dialog_step3}
                   </li>
                 </ul>
               </div>
@@ -601,7 +581,7 @@ export default function FinalCTASection() {
                 : 'bg-red-500 hover:bg-red-600'
             } text-white`}
           >
-            Понятно
+            {t.final_dialog_close}
           </Button>
         </DialogContent>
       </Dialog>
