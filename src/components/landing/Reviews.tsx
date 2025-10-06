@@ -213,7 +213,7 @@ export default function SuccessStoriesCarousel() {
 
                         {/* Story */}
                         <p className="text-neutral-700 dark:text-neutral-300 text-base md:text-lg leading-relaxed md:leading-loose">
-                          "{successStories[currentIndex].story}"
+                          {successStories[currentIndex].story}
                         </p>
 
                         {/* Badges */}

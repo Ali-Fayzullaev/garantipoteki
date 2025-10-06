@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, X, Phone } from "lucide-react";
+import { CalendarDays, X } from "lucide-react";
 import { useApp } from "@/components/providers/AppProvider";
 import { dict } from "@/lib/dictionary";
 import LanguageToggle from "./LanguageToggle";
