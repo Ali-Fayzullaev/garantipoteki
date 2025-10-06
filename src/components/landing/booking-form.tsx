@@ -109,8 +109,8 @@ export function BookingForm() {
         comment:
           formData.comment ||
           `Сумма: ${formData.amount}. Время: ${selectedSlot}`,
-        amount: formData.amount,
-        selected_time: selectedSlot,
+        // amount: formData.amount,
+        // selected_time: selectedSlot,
       });
 
       await updateTxt({
