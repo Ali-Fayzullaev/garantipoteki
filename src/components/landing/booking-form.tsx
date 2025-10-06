@@ -173,7 +173,10 @@ export function BookingForm() {
               </label>
               <Tabs value={dayTab} onValueChange={setDayTab}>
                 <TabsList className="grid grid-cols-2 w-full">
-                  <TabsTrigger value="today" className="flex items-center gap-2">
+                  <TabsTrigger
+                    value="today"
+                    className="flex items-center gap-2"
+                  >
                     <Clock className="h-4 w-4" />
                     {t.booking_form_today}
                   </TabsTrigger>

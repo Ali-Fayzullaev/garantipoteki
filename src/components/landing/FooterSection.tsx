@@ -19,6 +19,7 @@ import {
 import { useApp } from '@/components/providers/AppProvider'
 import { dict } from '@/lib/dictionary'
 import Image from 'next/image'
+import Partners from '@/lib/partners'
 
 export default function FooterSection() {
   const { lang } = useApp()
@@ -41,13 +42,13 @@ export default function FooterSection() {
   const usefulLinks = [
     {
       icon: Calculator,
-      name: 'Калькулятор кредита',
-      href: '#calculator'
+      name: 'Профессиональная консультация',
+      href: '#booking'
     },
     {
       icon: CheckCircle,
-      name: 'Проверить статус заявки',
-      href: '#status'
+      name: 'Узнайте за 60 секунд',
+      href: '#quiz'
     },
     {
       icon: FileText,
@@ -111,8 +112,8 @@ export default function FooterSection() {
                     <Image 
                       src="/logo.png" 
                       alt="Гарант Ипотеки"
-                      width={40}
-                      height={40}
+                      width={30}
+                      height={30}
                       className="object-contain"
                     />
                   </div>
@@ -291,7 +292,7 @@ export default function FooterSection() {
                 Официальные партнеры ведущих банков Казахстана
               </h4>
               <div className="flex flex-wrap justify-center gap-8 opacity-60">
-                {['Halyk Bank', 'Kaspi Bank', 'ForteBank', 'Jusan Bank', 'Eurasian Bank', 'Bank CenterCredit'].map((bank, index) => (
+                {Partners.map((bank, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, scale: 0.8 }}
@@ -300,11 +301,17 @@ export default function FooterSection() {
                     transition={{ duration: 0.4, delay: index * 0.1 }}
                     className="text-center"
                   >
-                    <div className="w-12 h-12 bg-neutral-800 rounded-xl flex items-center justify-center mb-2">
-                      <div className="text-lg">🏦</div>
+                    <div className=" flex items-center justify-center mb-2">
+                      <Image
+                        src={bank.logoUrl}
+                        alt={bank.name}
+                        width={40}
+                        height={40}
+                        className="object-contain max-h-8 max-w-8 rounded-2xl" 
+                      />
                     </div>
                     <span className="text-neutral-400 text-xs">
-                      {bank}
+                      {bank.name}
                     </span>
                   </motion.div>
                 ))}
