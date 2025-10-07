@@ -19,19 +19,12 @@ import {
 } from "lucide-react";
 import { useApp } from "@/components/providers/AppProvider";
 import { dict } from "@/lib/dictionary";
-import { BookingForm } from "./booking-form";
+import BookingForm from "./booking-form";
 
 export default function BookingSection() {
   const { lang } = useApp();
   const t = dict[lang];
 
-  const [selectedSlot, setSelectedSlot] = useState<string>("");
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    amount: "",
-    comment: "",
-  });
 
   const [timeLeft, setTimeLeft] = useState({
     hours: 23,
@@ -174,7 +167,7 @@ export default function BookingSection() {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           {/* Left Column - Benefits & Info */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -321,7 +314,7 @@ export default function BookingSection() {
                         className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
                       >
                         <Clock className="h-3 w-3 mr-1" />
-                        {office.hours}
+                        <span className="text-[8px] sm:text-sm">{office.hours}</span>
                       </Badge>
                     </div>
                     <div className="flex flex-wrap gap-2">

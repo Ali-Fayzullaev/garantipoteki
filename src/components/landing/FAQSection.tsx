@@ -139,11 +139,11 @@ export default function FAQSection() {
                       >
                         <AccordionTrigger className="hover:no-underline py-6">
                           <div className="flex items-start gap-4 text-left">
-                            <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500/10 to-green-500/10 rounded-xl flex items-center justify-center">
+                            <div className="flex-shrink-0 w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500/10 to-green-500/10 rounded-xl flex items-center justify-center">
                               <item.icon className="h-6 w-6 text-blue-500" />
                             </div>
                             <div className="flex-1">
-                              <div className="font-semibold text-neutral-900 dark:text-white text-lg mb-2">
+                              <div className="font-semibold text-[12px] sm:text-lg text-neutral-900 dark:text-white text-lg mb-2">
                                 {item.question}
                               </div>
                               <Badge variant="secondary" className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">

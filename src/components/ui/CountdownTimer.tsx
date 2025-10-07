@@ -55,8 +55,8 @@ export default function CountdownTimer({ targetDate, className = '' }: Countdown
     return () => clearInterval(timer)
   }, [targetDate])
 
-  const CircularProgress = ({ value, max, label, size = 80 }: { value: number; max: number; label: string; size?: number }) => {
-    const radius = (size - 4) / 2
+  const CircularProgress = ({ value, max, label, size = 60 }: { value: number; max: number; label: string; size?: number }) => {
+    const radius = (size - 3) / 2
     const circumference = 2 * Math.PI * radius
     const progress = (value / max) * circumference
     const strokeDashoffset = circumference - progress
@@ -65,9 +65,9 @@ export default function CountdownTimer({ targetDate, className = '' }: Countdown
       return (
         <div className="text-center">
           <div className="relative" style={{ width: size, height: size }}>
-            <div className="w-full h-full border-4 border-gray-200 dark:border-neutral-700 rounded-full animate-pulse"></div>
+            <div className="w-full h-full border-3 border-gray-200 dark:border-neutral-700 rounded-full animate-pulse"></div>
           </div>
-          <div className="text-xs text-neutral-500 dark:text-neutral-400 uppercase mt-2 font-medium">
+          <div className="text-[10px] md:text-xs text-neutral-500 dark:text-neutral-400 uppercase mt-1 font-medium">
             {label}
           </div>
         </div>
@@ -84,7 +84,7 @@ export default function CountdownTimer({ targetDate, className = '' }: Countdown
               cy={size / 2}
               r={radius}
               stroke="currentColor"
-              strokeWidth="4"
+              strokeWidth="3"
               fill="none"
               className="text-gray-200 dark:text-neutral-700"
             />
@@ -94,7 +94,7 @@ export default function CountdownTimer({ targetDate, className = '' }: Countdown
               cy={size / 2}
               r={radius}
               stroke="currentColor"
-              strokeWidth="4"
+              strokeWidth="3"
               fill="none"
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
@@ -103,12 +103,12 @@ export default function CountdownTimer({ targetDate, className = '' }: Countdown
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-lg font-bold text-gray-800 dark:text-white tabular-nums">
+            <span className="text-sm md:text-lg font-bold text-gray-800 dark:text-white tabular-nums">
               {String(value).padStart(2, '0')}
             </span>
           </div>
         </div>
-        <div className="text-xs text-neutral-500 dark:text-neutral-400 uppercase mt-2 font-medium">
+        <div className="text-[10px] md:text-xs text-neutral-500 dark:text-neutral-400 uppercase mt-1 font-medium">
           {label}
         </div>
       </div>
@@ -116,14 +116,14 @@ export default function CountdownTimer({ targetDate, className = '' }: Countdown
   }
 
   return (
-    <div className={`flex items-center justify-center gap-6 ${className}`}>
+    <div className={`flex items-center justify-center gap-3 md:gap-6 ${className}`}>
       {timeUnits.map((unit, index) => (
         <CircularProgress
           key={index}
           value={unit.value}
           max={unit.max}
           label={unit.label}
-          size={90}
+          size={70} // Уменьшен размер для мобильных
         />
       ))}
     </div>

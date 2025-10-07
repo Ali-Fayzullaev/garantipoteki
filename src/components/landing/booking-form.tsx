@@ -1,102 +1,113 @@
 "use client";
-import { useState } from "react";
-import { createDeal, updateTxt } from "@/app/actions";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
-  CalendarDays,
   Clock,
-  Phone,
-  User,
-  CreditCard,
+  Users,
   CheckCircle2,
   Zap,
+  Phone,
+  ArrowRight,
+  Shield,
+  X,
 } from "lucide-react";
+import { useApp } from "@/components/providers/AppProvider";
+import { dict } from "@/lib/dictionary";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
-import { useApp } from "@/components/providers/AppProvider";
-import { dict } from "@/lib/dictionary";
+} from "@/components/ui/dialog";
+import { createDeal, updateTxt } from "@/app/actions";
 
-export function BookingForm() {
+export default function BookingForm() {
   const { lang } = useApp();
   const t = dict[lang];
 
-  // Состояния формы
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    amount: "",
     comment: "",
   });
-
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedSlot, setSelectedSlot] = useState("");
-  const [dayTab, setDayTab] = useState("today");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogType, setDialogType] = useState<"success" | "error">("success");
+  const [dialogData, setDialogData] = useState({ name: "", phone: "" });
+  const [phoneError, setPhoneError] = useState("");
 
-  // Временные слоты
-  const timeSlots = [
-    "09:00",
-    "09:30",
-    "10:00",
-    "10:30",
-    "11:00",
-    "11:30",
-    "12:00",
-    "12:30",
-    "13:00",
-    "13:30",
-    "14:00",
-    "14:30",
-    "15:00",
-    "15:30",
-    "16:00",
-    "16:30",
-    "17:00",
-    "17:30",
+  const trustBadges = [
+    { text: t.final_trust1, icon: CheckCircle2 },
+    { text: t.final_trust2, icon: Shield },
+    { text: t.final_trust3, icon: Shield },
+    { text: t.final_trust4, icon: CheckCircle2 },
   ];
 
-  // Обработчик изменения полей
   const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    if (field === "phone") {
+      const formattedValue = formatPhone(value);
+      setFormData((prev) => ({ ...prev, [field]: formattedValue }));
+
+      const numbers = formattedValue.replace(/\D/g, "");
+      if (numbers.length < 11) {
+        setPhoneError("Номер телефона должен содержать 11 цифр");
+      } else {
+        setPhoneError("");
+      }
+    } else {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+    }
   };
 
-  // Форматирование телефона
-  const formatPhone = (value: string) => {
+  const formatPhone = (value: string): string => {
     const numbers = value.replace(/\D/g, "");
-    if (numbers.length <= 1) return `+7${numbers}`;
-    if (numbers.length <= 4) return `+7 (${numbers.slice(1, 4)}`;
-    if (numbers.length <= 7)
-      return `+7 (${numbers.slice(1, 4)}) ${numbers.slice(4, 7)}`;
-    if (numbers.length <= 9)
-      return `+7 (${numbers.slice(1, 4)}) ${numbers.slice(
+    const limitedNumbers = numbers.slice(0, 11);
+
+    if (limitedNumbers.length === 0) return "";
+    if (limitedNumbers.length === 1) return `+7`;
+    if (limitedNumbers.length <= 4) return `+7 (${limitedNumbers.slice(1, 4)}`;
+    if (limitedNumbers.length <= 7)
+      return `+7 (${limitedNumbers.slice(1, 4)}) ${limitedNumbers.slice(4, 7)}`;
+    if (limitedNumbers.length <= 9)
+      return `+7 (${limitedNumbers.slice(1, 4)}) ${limitedNumbers.slice(
         4,
         7
-      )}-${numbers.slice(7, 9)}`;
-    return `+7 (${numbers.slice(1, 4)}) ${numbers.slice(4, 7)}-${numbers.slice(
-      7,
-      9
-    )}-${numbers.slice(9, 11)}`;
+      )}-${limitedNumbers.slice(7, 9)}`;
+    return `+7 (${limitedNumbers.slice(1, 4)}) ${limitedNumbers.slice(
+      4,
+      7
+    )}-${limitedNumbers.slice(7, 9)}-${limitedNumbers.slice(9, 11)}`;
   };
 
-  // Обработчик отправки формы
+  const isFormValid = (): boolean => {
+    const numbers = formData.phone.replace(/\D/g, "");
+    return (
+      formData.name.trim().length > 0 && numbers.length === 11 && !phoneError
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!selectedSlot) {
-      alert(t.booking_form_error_no_time);
+    if (!formData.name.trim()) {
+      setDialogType("error");
+      setDialogData({ name: formData.name, phone: formData.phone });
+      setIsDialogOpen(true);
+      return;
+    }
+
+    const numbers = formData.phone.replace(/\D/g, "");
+    if (numbers.length !== 11) {
+      setPhoneError("Номер телефона должен содержать 11 цифр");
+      setDialogType("error");
+      setDialogData({ name: formData.name, phone: formData.phone });
+      setIsDialogOpen(true);
       return;
     }
 
@@ -106,26 +117,26 @@ export function BookingForm() {
       const deal = await createDeal({
         name: formData.name,
         phone_number: formData.phone.replace(/\D/g, ""),
-        comment:
-          formData.comment ||
-          `Сумма: ${formData.amount}. Время: ${selectedSlot}`,
-        // amount: formData.amount,
-        // selected_time: selectedSlot,
+        comment: formData.comment,
       });
 
       await updateTxt({
         name: formData.name,
         phone: formData.phone.replace(/\D/g, ""),
-        service: "Консультация по кредиту",
         comment: formData.comment,
-        amount: formData.amount,
-        selected_time: selectedSlot,
       });
 
+      setDialogData({ name: formData.name, phone: formData.phone });
+      setDialogType("success");
       setIsDialogOpen(true);
+
+      setFormData({ name: "", phone: "", comment: "" });
+      setPhoneError("");
     } catch (error) {
       console.error("Ошибка при отправке формы:", error);
-      alert(t.booking_form_error_submit);
+      setDialogData({ name: formData.name, phone: formData.phone });
+      setDialogType("error");
+      setIsDialogOpen(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -133,269 +144,218 @@ export function BookingForm() {
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
-    setFormData({
-      name: "",
-      phone: "",
-      amount: "",
-      comment: "",
-    });
-    setSelectedSlot("");
-    setDayTab("today");
   };
 
   return (
-    <>
+    <section className="px-2 sm:px-0">
       <motion.div
         initial={{ opacity: 0, x: 30 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8, delay: 0.2 }}
+        className="sticky top-2 md:top-8 mx-auto max-w-full"
       >
-        <Card className="border-0 shadow-2xl bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 sticky top-8">
-          <CardHeader className="text-center pb-4">
-            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-green-500 rounded-2xl flex items-center justify-center shadow-2xl shadow-green-500/25">
-              <CalendarDays className="h-10 w-10 text-white" />
+        <Card className="border-0 shadow-lg md:shadow-2xl bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 mx-1 sm:mx-0">
+          <CardHeader className="text-center pb-3 md:pb-4 px-3 md:px-6">
+            <div className="w-12 h-12 md:w-20 md:h-20 mx-auto mb-2 md:mb-4 bg-gradient-to-br from-blue-500 to-green-500 rounded-xl md:rounded-2xl flex items-center justify-center shadow-md md:shadow-lg">
+              <Zap className="h-4 w-4 md:h-8 md:w-8 text-white" />
             </div>
-            <CardTitle className="text-2xl font-bold text-neutral-900 dark:text-white">
-              {t.booking_form_title}
+            <CardTitle className="text-lg md:text-2xl font-bold text-neutral-900 dark:text-white">
+              {t.final_form_title}
             </CardTitle>
-            <div className="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
-              <p>• {t.booking_form_note1}</p>
-              <p>• {t.booking_form_note2}</p>
-              <p>• {t.booking_form_note3}</p>
-            </div>
+            <p className="text-neutral-600 dark:text-neutral-400 text-xs md:text-base mt-1">
+              {t.final_form_subtitle}
+            </p>
           </CardHeader>
 
-          <CardContent className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3">
-                {t.booking_form_time_label}
-              </label>
-              <Tabs value={dayTab} onValueChange={setDayTab}>
-                <TabsList className="grid grid-cols-2 w-full">
-                  <TabsTrigger
-                    value="today"
-                    className="flex items-center gap-2"
-                  >
-                    <Clock className="h-4 w-4" />
-                    {t.booking_form_today}
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="tomorrow"
-                    className="flex items-center gap-2"
-                  >
-                    <CalendarDays className="h-4 w-4" />
-                    {t.booking_form_tomorrow}
-                  </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="today" className="space-y-3 mt-4">
-                  <div className="grid grid-cols-2 gap-3">
-                    {timeSlots.map((slot) => (
-                      <Button
-                        key={slot}
-                        variant={
-                          selectedSlot === `today-${slot}`
-                            ? "default"
-                            : "outline"
-                        }
-                        className={`h-12 ${
-                          selectedSlot === `today-${slot}`
-                            ? "bg-gradient-to-r from-blue-500 to-green-500 text-white border-transparent"
-                            : "hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400"
-                        } transition-all duration-300`}
-                        onClick={() => setSelectedSlot(`today-${slot}`)}
-                      >
-                        {slot}
-                      </Button>
-                    ))}
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="tomorrow" className="space-y-3 mt-4">
-                  <div className="grid grid-cols-2 gap-3">
-                    {timeSlots.map((slot) => (
-                      <Button
-                        key={slot}
-                        variant={
-                          selectedSlot === `tomorrow-${slot}`
-                            ? "default"
-                            : "outline"
-                        }
-                        className={`h-12 ${
-                          selectedSlot === `tomorrow-${slot}`
-                            ? "bg-gradient-to-r from-blue-500 to-green-500 text-white border-transparent"
-                            : "hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400"
-                        } transition-all duration-300`}
-                        onClick={() => setSelectedSlot(`tomorrow-${slot}`)}
-                      >
-                        {slot}
-                      </Button>
-                    ))}
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-4">
+          <CardContent className="px-3 md:px-6 pb-4 md:pb-6">
+            <form onSubmit={handleSubmit} className="space-y-3 md:space-y-6">
+              <div className="space-y-2 md:space-y-4">
                 <div className="relative">
-                  <User className="absolute left-3 top-3 h-5 w-5 text-neutral-400" />
                   <Input
-                    placeholder={t.booking_form_name_placeholder}
+                    placeholder={t.final_form_name_placeholder}
                     value={formData.name}
                     onChange={(e) => handleInputChange("name", e.target.value)}
-                    className="pl-12 h-14 text-lg"
+                    className="h-10 md:h-14 text-sm md:text-lg pl-8 md:pl-12 border-neutral-200 dark:border-neutral-700"
                     required
                   />
+                  <Users className="absolute left-2 md:left-4 top-2.5 md:top-4 h-3 w-3 md:h-5 md:w-5 text-neutral-400" />
                 </div>
 
                 <div className="relative">
-                  <Phone className="absolute left-3 top-3 h-5 w-5 text-neutral-400" />
                   <Input
-                    placeholder={t.booking_form_phone_placeholder}
+                    placeholder={t.final_form_phone_placeholder}
                     value={formData.phone}
-                    onChange={(e) =>
-                      handleInputChange("phone", formatPhone(e.target.value))
-                    }
-                    className="pl-12 h-14 text-lg"
+                    onChange={(e) => handleInputChange("phone", e.target.value)}
+                    className={`h-10 md:h-14 text-sm md:text-lg pl-8 md:pl-12 border-neutral-200 dark:border-neutral-700 ${
+                      phoneError ? "border-red-500 focus:border-red-500" : ""
+                    }`}
                     required
+                    maxLength={18}
                   />
-                </div>
-
-                <div className="relative">
-                  <CreditCard className="absolute left-3 top-3 h-5 w-5 text-neutral-400" />
-                  <Input
-                    placeholder={t.booking_form_amount_placeholder}
-                    value={formData.amount}
-                    onChange={(e) =>
-                      handleInputChange("amount", e.target.value)
-                    }
-                    className="pl-12 h-14 text-lg"
-                  />
-                </div>
-
-                <div className="relative">
-                  <Clock className="absolute left-3 top-3 h-5 w-5 text-neutral-400" />
-                  <Input
-                    placeholder={t.booking_form_selected_time_placeholder}
-                    value={selectedSlot ? selectedSlot.split("-")[1] : ""}
-                    readOnly
-                    className="pl-12 h-14 text-lg bg-neutral-50 dark:bg-neutral-800"
-                  />
+                  <Phone className="absolute left-2 md:left-4 top-2.5 md:top-4 h-3 w-3 md:h-5 md:w-5 text-neutral-400" />
+                  {phoneError && (
+                    <p className="text-red-500 text-xs mt-1 absolute -bottom-5 left-0">
+                      {phoneError}
+                    </p>
+                  )}
                 </div>
 
                 <Textarea
-                  placeholder={t.booking_form_comment_placeholder}
+                  placeholder={t.final_form_comment_placeholder}
                   value={formData.comment}
                   onChange={(e) => handleInputChange("comment", e.target.value)}
-                  className="min-h-[120px] resize-none text-lg p-4"
+                  className="min-h-[80px] md:min-h-[120px] resize-none text-sm md:text-lg p-2 md:p-4 border-neutral-200 dark:border-neutral-700"
                 />
               </div>
 
-              <div className="text-center space-y-4">
-                <Button
-                  type="submit"
-                  disabled={isSubmitting || !selectedSlot}
-                  className="w-full h-16 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white text-lg font-bold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      {t.booking_form_submitting}
+              <div className="p-2 md:p-4 rounded-lg md:rounded-xl bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border border-green-200 dark:border-green-700">
+                <div className="flex items-center gap-1 md:gap-3">
+                  <Clock className="h-3 w-3 md:h-5 md:w-5 text-green-600 dark:text-green-400 flex-shrink-0" />
+                  <div>
+                    <div className="font-semibold text-green-800 dark:text-green-300 text-xs">
+                      {t.final_form_urgency_title}
                     </div>
-                  ) : (
-                    <>
-                      <CalendarDays className="mr-2 h-6 w-6" />
-                      {t.booking_form_submit_button}
-                    </>
-                  )}
-                </Button>
-
-                <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                  {t.booking_form_submit_hint}
-                </p>
+                    <div className="text-green-700 dark:text-green-400 text-[10px] md:text-xs">
+                      {t.final_form_urgency_desc}
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              <Button
+                type="submit"
+                disabled={isSubmitting || !isFormValid()}
+                className="w-full h-12 md:h-16 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white text-sm md:text-lg font-bold shadow-lg md:shadow-2xl shadow-blue-500/25 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center gap-1 md:gap-2">
+                    <div className="w-4 h-4 md:w-6 md:h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span className="text-xs md:text-base">
+                      {t.booking_form_submitting}
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <span className="text-xs md:text-base">
+                      {t.final_form_submit_button}
+                    </span>
+                    <ArrowRight className="ml-1 md:ml-2 h-3 w-3 md:h-5 md:w-5" />
+                  </>
+                )}
+              </Button>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 md:gap-3">
+                {trustBadges.map((badge, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                    className="flex items-center gap-1 text-[10px] md:text-xs text-neutral-600 dark:text-neutral-400"
+                  >
+                    <badge.icon className="h-2.5 w-2.5 md:h-3 md:w-3 text-green-500 flex-shrink-0" />
+                    <span className="text-[10px] md:text-xs">{badge.text}</span>
+                  </motion.div>
+                ))}
+              </div>
+
+              <p className="text-center text-[10px] md:text-xs text-neutral-500 dark:text-neutral-400">
+                {t.final_form_consent}
+              </p>
             </form>
           </CardContent>
         </Card>
       </motion.div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <div className="w-20 h-20 mx-auto mb-4 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-              <CheckCircle2 className="h-10 w-10 text-green-600 dark:text-green-400" />
+        <DialogContent className="max-w-[95vw] sm:max-w-md mx-auto">
+          <DialogHeader className="px-4 sm:px-6">
+            <div
+              className={`w-12 h-12 md:w-20 md:h-20 mx-auto mb-3 md:mb-4 rounded-full flex items-center justify-center ${
+                dialogType === "success"
+                  ? "bg-green-100 dark:bg-green-900"
+                  : "bg-red-100 dark:bg-red-900"
+              }`}
+            >
+              {dialogType === "success" ? (
+                <CheckCircle2 className="h-5 w-5 md:h-10 md:w-10 text-green-600 dark:text-green-400" />
+              ) : (
+                <X className="h-5 w-5 md:h-10 md:w-10 text-red-600 dark:text-red-400" />
+              )}
             </div>
-            <DialogTitle className="text-center text-2xl">
-              {t.booking_success_title}
+            <DialogTitle
+              className={`text-center text-lg md:text-2xl ${
+                dialogType === "success" ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {dialogType === "success"
+                ? t.final_dialog_success_title
+                : t.final_dialog_error_title}
             </DialogTitle>
-            <DialogDescription className="text-center text-lg">
-              {t.booking_success_desc}
+            <DialogDescription className="text-center text-sm md:text-lg">
+              {dialogType === "success"
+                ? t.final_dialog_success_desc
+                : t.final_dialog_error_desc}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 text-sm">
-            <div className="p-4 rounded-lg bg-neutral-50 dark:bg-neutral-800">
-              <div className="font-semibold text-neutral-900 dark:text-white mb-2">
-                {t.booking_success_details_title}
-              </div>
-              <div className="space-y-2 text-neutral-600 dark:text-neutral-400">
-                <div className="flex justify-between">
-                  <span>{t.booking_success_name_label}</span>
-                  <span className="font-semibold">{formData.name}</span>
+          {dialogType === "success" && (
+            <div className="space-y-3 text-sm px-4 sm:px-6">
+              <div className="p-2 md:p-4 rounded-lg md:rounded-xl bg-neutral-50 dark:bg-neutral-800">
+                <div className="font-semibold text-neutral-900 dark:text-white mb-1 md:mb-2 text-xs md:text-base">
+                  {t.final_dialog_details_title}
                 </div>
-                <div className="flex justify-between">
-                  <span>{t.booking_success_phone_label}</span>
-                  <span className="font-semibold">{formData.phone}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>{t.booking_success_time_label}</span>
-                  <span className="font-semibold">
-                    {selectedSlot.split("-")[1]}
-                  </span>
-                </div>
-                {formData.amount && (
+                <div className="space-y-1 md:space-y-2 text-neutral-600 dark:text-neutral-400 text-xs md:text-sm">
                   <div className="flex justify-between">
-                    <span>{t.booking_success_amount_label}</span>
-                    <span className="font-semibold text-green-600 dark:text-green-400">
-                      {formData.amount}
-                    </span>
+                    <span>{t.final_dialog_name_label}</span>
+                    <span className="font-semibold">{dialogData.name}</span>
                   </div>
-                )}
+                  <div className="flex justify-between">
+                    <span>{t.final_dialog_phone_label}</span>
+                    <span className="font-semibold">{dialogData.phone}</span>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-              <div className="flex items-center gap-2 text-blue-800 dark:text-blue-300 font-semibold mb-2">
-                <Zap className="h-4 w-4" />
-                {t.booking_success_next_steps}
+              <div className="p-2 md:p-4 rounded-lg md:rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                <div className="flex items-center gap-1 md:gap-2 text-blue-800 dark:text-blue-300 font-semibold mb-1 md:mb-2 text-xs md:text-base">
+                  <Zap className="h-3 w-3 md:h-4 md:w-4" />
+                  {t.final_dialog_next_steps}
+                </div>
+                <ul className="space-y-1 md:space-y-2 text-blue-700 dark:text-blue-400 text-[10px] md:text-xs">
+                  <li className="flex items-center gap-1 md:gap-2">
+                    <CheckCircle2 className="h-2.5 w-2.5 md:h-3 md:w-3" />
+                    {t.final_dialog_step1}
+                  </li>
+                  <li className="flex items-center gap-1 md:gap-2">
+                    <CheckCircle2 className="h-2.5 w-2.5 md:h-3 md:w-3" />
+                    {t.final_dialog_step2}
+                  </li>
+                  <li className="flex items-center gap-1 md:gap-2">
+                    <CheckCircle2 className="h-2.5 w-2.5 md:h-3 md:w-3" />
+                    {t.final_dialog_step3}
+                  </li>
+                </ul>
               </div>
-              <ul className="space-y-2 text-blue-700 dark:text-blue-400 text-xs">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-3 w-3" />
-                  {t.booking_success_step1}
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-3 w-3" />
-                  {t.booking_success_step2}
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-3 w-3" />
-                  {t.booking_success_step3}
-                </li>
-              </ul>
             </div>
+          )}
+
+          <div className="px-4 sm:px-6 pb-4">
+            <Button
+              onClick={handleDialogClose}
+              className={`w-full ${
+                dialogType === "success"
+                  ? "bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600"
+                  : "bg-red-500 hover:bg-red-600"
+              } text-white text-sm md:text-base`}
+            >
+              {t.final_dialog_close}
+            </Button>
           </div>
-
-          <Button
-            onClick={handleDialogClose}
-            className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white"
-          >
-            {t.booking_success_close}
-          </Button>
         </DialogContent>
       </Dialog>
-    </>
+    </section>
   );
 }
