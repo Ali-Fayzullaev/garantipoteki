@@ -30,6 +30,17 @@ import {
   UserCheck,
   Send,
   X,
+  DollarSign,
+  Crown,
+  Building,
+  BarChart3,
+  PauseCircle,
+  TrendingDown,
+  Sparkles,
+  AlertTriangle,
+  Target,
+  PieChart,
+  Icon,
 } from "lucide-react";
 import { useApp } from "@/components/providers/AppProvider";
 import { dict } from "@/lib/dictionary";
@@ -68,10 +79,20 @@ export default function QuizSection() {
       question: t.q1,
       icon: CreditCard,
       options: [
-        { value: "a", label: t.q1_a, emoji: "💰", description: t.q1_a_desc },
-        { value: "b", label: t.q1_b, emoji: "💵", description: t.q1_b_desc },
-        { value: "c", label: t.q1_c, emoji: "💎", description: t.q1_c_desc },
-        { value: "d", label: t.q1_d, emoji: "🏦", description: t.q1_d_desc },
+        {
+          value: "a",
+          label: t.q1_a,
+          Icon: DollarSign,
+          description: t.q1_a_desc,
+        },
+        {
+          value: "b",
+          label: t.q1_b,
+          Icon: CreditCard,
+          description: t.q1_b_desc,
+        },
+        { value: "c", label: t.q1_c, Icon: Crown, description: t.q1_c_desc },
+        { value: "d", label: t.q1_d, Icon: Building, description: t.q1_d_desc },
       ],
       hint: t.q1_hint,
     },
@@ -80,9 +101,19 @@ export default function QuizSection() {
       question: t.q2,
       icon: UserCheck,
       options: [
-        { value: "a", label: t.q2_a, emoji: "✅", description: t.q2_a_desc },
-        { value: "b", label: t.q2_b, emoji: "📊", description: t.q2_b_desc },
-        { value: "c", label: t.q2_c, emoji: "⏸️", description: t.q2_c_desc },
+        {
+          value: "a",
+          label: t.q2_a,
+          Icon: CheckCircle2,
+          description: t.q2_a_desc,
+        },
+        { value: "b", label: t.q2_b, Icon: PieChart, description: t.q2_b_desc },
+        {
+          value: "c",
+          label: t.q2_c,
+          Icon: PauseCircle,
+          description: t.q2_c_desc,
+        },
       ],
       hint: t.q2_hint,
     },
@@ -91,9 +122,24 @@ export default function QuizSection() {
       question: t.q3,
       icon: FileText,
       options: [
-        { value: "a", label: t.q3_a, emoji: "📈", description: t.q3_a_desc },
-        { value: "b", label: t.q3_b, emoji: "📉", description: t.q3_b_desc },
-        { value: "c", label: t.q3_c, emoji: "❓", description: t.q3_c_desc },
+        {
+          value: "a",
+          label: t.q3_a,
+          Icon: TrendingUp,
+          description: t.q3_a_desc,
+        },
+        {
+          value: "b",
+          label: t.q3_b,
+          Icon: TrendingDown,
+          description: t.q3_b_desc,
+        },
+        {
+          value: "c",
+          label: t.q3_c,
+          Icon: HelpCircle,
+          description: t.q3_c_desc,
+        },
       ],
       hint: t.q3_hint,
     },
@@ -102,10 +148,15 @@ export default function QuizSection() {
       question: t.q4,
       icon: Shield,
       options: [
-        { value: "a", label: t.q4_a, emoji: "🆓", description: t.q4_a_desc },
-        { value: "b", label: t.q4_b, emoji: "⏰", description: t.q4_b_desc },
-        { value: "c", label: t.q4_c, emoji: "⚡", description: t.q4_c_desc },
-        { value: "d", label: t.q4_d, emoji: "⚠️", description: t.q4_d_desc },
+        { value: "a", label: t.q4_a, Icon: Target, description: t.q4_a_desc },
+        { value: "b", label: t.q4_b, Icon: Clock, description: t.q4_b_desc },
+        { value: "c", label: t.q4_c, Icon: Zap, description: t.q4_c_desc },
+        {
+          value: "d",
+          label: t.q4_d,
+          Icon: AlertTriangle,
+          description: t.q4_d_desc,
+        },
       ],
       hint: t.q4_hint,
     },
@@ -368,7 +419,12 @@ export default function QuizSection() {
                             }
                           >
                             <div className="flex items-center gap-4 w-full">
-                              <div className="text-2xl">{option.emoji}</div>
+                              <div className="text-2xl">
+                                {React.createElement(option.Icon, {
+                                  className: "h-6 w-6 text-blue-500",
+                                  size: 24,
+                                })}
+                              </div>
                               <div className="flex-1 text-left">
                                 <div className="font-semibold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                                   {option.label}
