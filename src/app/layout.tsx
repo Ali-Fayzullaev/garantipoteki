@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import './globals.css'
+import { AppProvider } from '@/components/providers/AppProvider'
 
 export const metadata: Metadata = {
   title: 'GARANT IPOTEKI - Максимальные суммы кредитов',
@@ -16,7 +17,9 @@ export default function RootLayout({
   return (
     <html lang="ru" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="font-sans antialiased">
-        {children}
+        <AppProvider>
+          {children}
+        </AppProvider>
       </body>
     </html>
   )

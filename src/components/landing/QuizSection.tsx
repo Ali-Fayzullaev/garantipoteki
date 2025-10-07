@@ -464,7 +464,6 @@ export default function QuizSection() {
                               <span className="text-2xl text-green-600 dark:text-green-400">
                                 {getMaxAmountText()} млн ₸
                               </span>{" "}
-                              бүгін
                             </p>
                           </div>
                         </div>

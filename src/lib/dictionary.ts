@@ -1,6 +1,8 @@
 // lib/dictionary.ts
 export const dict = {
   ru: {
+    themaLight: "Светлая",
+    themaDark: "Темная",
     brand: "GARANT IPOTEKI",
     menu_quiz: "Квиз",
     menu_success: "Кейсы",
@@ -623,6 +625,8 @@ export const dict = {
     footer_address_short: "г. Астана, пр. Кабанбай батыра, 15",
   },
   kz: {
+    themaLight: "Жарық",
+    themaDark: "Қараңғы",
     brand: "GARANT IPOTEKI",
     menu_quiz: "Сауалнама",
     menu_success: "Жобалар",
