@@ -588,6 +588,22 @@ export const dict = {
     final_dialog_step3: "Ответим на все ваши вопросы",
     final_dialog_close: "Понятно",
 
+    //booking form time slots
+    booking_step2_title: "Выберите услугу",
+    booking_step2_subtitle: "Мы подберем для вас лучшего специалиста",
+    booking_loading_title: "Заявка отправлена успешно!",
+    booking_loading_thanks: "Спасибо, {{name}}!",
+    booking_loading_desc: "Мы свяжемся с вами в ближайшее время по номеру",
+    booking_details_title: "Детали заявки",
+    booking_name_label: "Имя:",
+    booking_phone_label: "Телефон:",
+    booking_comment_label: "Комментарий:",
+    booking_next_steps_title: "Что будет дальше?",
+    booking_step_next1: "Наш менеджер свяжется с вами в течение 15 минут",
+    booking_step_next2: "Ответит на все ваши вопросы",
+    booking_step_next3: "Поможет подобрать оптимальное решение",
+    booking_new_request: "Отправить новую заявку",
+
     // === Footer Section ===
     footer_company_name: "ТОО Гарант Ипотеки",
     footer_company_desc:
@@ -1187,6 +1203,23 @@ export const dict = {
     final_trust2: "Ірі банктердің ресми серіктесі",
     final_trust3: "Құпиялылық кепілдігі",
     final_trust4: "Кеңес тегін",
+
+    //booking form
+    // === BookingForm Multi-step ===
+    booking_step2_title: "Қызметті таңдаңыз",
+    booking_step2_subtitle: "Сіз үшін ең жақсы маманды таңдаймыз",
+    booking_loading_title: "Өтініш сәтті жіберілді!",
+    booking_loading_thanks: "Рахмет, {{name}}!",
+    booking_loading_desc: "Жақын арада сізге мына нөмірге хабарласамыз",
+    booking_details_title: "Өтініш ақпараты",
+    booking_name_label: "Атыңыз:",
+    booking_phone_label: "Телефон:",
+    booking_comment_label: "Түсініктеме:",
+    booking_next_steps_title: "Әрі қарай не болады?",
+    booking_step_next1: "Менеджеріміз 15 минут ішінде сізге хабарласады",
+    booking_step_next2: "Барлық сұрақтарыңызға жауап береді",
+    booking_step_next3: "Ең қолайлы шешімді таңдауға көмектеседі",
+    booking_new_request: "Жаңа өтініш жіберу",
 
     // Dialog
     final_dialog_success_title: "Өтініш қабылданды!",

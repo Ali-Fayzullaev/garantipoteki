@@ -1,8 +1,19 @@
 // src/app/actions.ts
 "use server";
 
-export async function createDeal(body: { 
-  name: string; 
+export async function getServices() {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/public/services/${process.env.NEXT_PUBLIC_CODE}`
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch services");
+  }
+  const json = await response.json();
+  return json.services.services;
+}
+
+export async function createDeal(body: {
+  name: string;
   phone_number: string;
   comment?: string;
 }) {
@@ -26,10 +37,34 @@ export async function createDeal(body: {
   return json.data.deal;
 }
 
+export async function updateDeal(
+  body: { service_id: number; phone_number: string },
+  dealId: string | number
+) {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/public/deals/${dealId}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...body,
+        code: process.env.NEXT_PUBLIC_CODE,
+      }),
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to update the deal");
+  }
+  return;
+}
+
 export async function updateTxt(body: {
   name: string;
   phone: string;
   comment?: string;
+  service?: string;
 }) {
   try {
     const response = await fetch(
