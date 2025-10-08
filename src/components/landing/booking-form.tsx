@@ -29,6 +29,16 @@ interface ServiceType {
   name: string;
 }
 
+declare global {
+  interface Window {
+    fbq?: (
+      event: string,
+      action: string,
+      data?: Record<string, unknown>
+    ) => void;
+  }
+}
+
 export default function BookingForm() {
   const { lang } = useApp();
   const t = dict[lang];
@@ -166,8 +176,8 @@ export default function BookingForm() {
         service: serviceName,
       });
 
-      if (typeof window !== "undefined" && (window as any).fbq) {
-        (window as any).fbq("track", "Lead", {
+      if (typeof window !== "undefined" && window.fbq) {
+        window.fbq("track", "Lead", {
           content_name: serviceName,
           content_category: "form_submission",
         });
