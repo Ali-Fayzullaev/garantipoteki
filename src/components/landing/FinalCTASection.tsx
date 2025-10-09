@@ -13,7 +13,6 @@ import {
   Star,
   Target,
   Crown,
-  X,
 } from "lucide-react";
 import { useApp } from "@/components/providers/AppProvider";
 import { dict } from "@/lib/dictionary";

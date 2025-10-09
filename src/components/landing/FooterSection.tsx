@@ -12,7 +12,6 @@ import {
   Award,
   Calculator,
   FileText,
-  MessageCircle,
   CheckCircle,
   Star
 } from 'lucide-react'

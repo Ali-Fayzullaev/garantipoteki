@@ -367,7 +367,7 @@ export default function BookingSection() {
           </motion.div>
 
           {/* Right Column - Booking Form */}
-          <BookingForm />
+          <BookingForm/>
         </div>
       </div>
     </section>

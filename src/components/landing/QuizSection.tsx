@@ -33,14 +33,11 @@ import {
   DollarSign,
   Crown,
   Building,
-  BarChart3,
   PauseCircle,
   TrendingDown,
-  Sparkles,
   AlertTriangle,
   Target,
   PieChart,
-  Icon,
 } from "lucide-react";
 import { useApp } from "@/components/providers/AppProvider";
 import { dict } from "@/lib/dictionary";
