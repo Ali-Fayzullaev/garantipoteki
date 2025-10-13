@@ -6,7 +6,7 @@ export const dict = {
     brand: "GARANT IPOTEKI",
     menu_quiz: "Квиз",
     menu_success: "Кейсы",
-    menu_faq: "FAQ",
+    menu_faq: "Часто задаваемые вопросы",
     menu_reviews: "Отзывы клиентов",
     menu_address: "Адрес",
     book_consultation_short: "Записаться",
@@ -302,7 +302,6 @@ export const dict = {
     final_cta1: "Записаться на консультацию",
     final_cta2: "Посмотреть все кейсы",
 
-    // ... предыдущие ключи ...
 
     // Success Stories Carousel
     carousel_badge: "Реальные истории успеха",
@@ -639,6 +638,14 @@ export const dict = {
     footer_disclaimer: "Информация на сайте не является публичной офертой",
     footer_license: "Лицензия №1234567890",
     footer_address_short: "г. Астана, пр. Кабанбай батыра, 15",
+
+    about_badge: "О компании",
+about_title: "Гарант Ипотеки - Ваш надежный партнер в получении жилья",
+about_subtitle: "Профессиональное сопровождение ипотечных сделок с 2018 года...",
+about_clients: "Довольных клиентов",
+about_cases: "Успешных кейсов",
+about_approval: "Одобрения ипотеки",
+about_time: "Среднее время одобрения",
   },
   kz: {
     themaLight: "Жарық",
@@ -646,7 +653,7 @@ export const dict = {
     brand: "GARANT IPOTEKI",
     menu_quiz: "Сауалнама",
     menu_success: "Жобалар",
-    menu_faq: "ЖҚ",
+    menu_faq: "Жиі қойылатын сұрақтар",
     menu_reviews: "Тұтынушылар пікірлері",
     menu_address: "Мекенжай",
     book_consultation_short: "Тіркелу",

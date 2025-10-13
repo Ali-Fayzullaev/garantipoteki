@@ -93,18 +93,7 @@ export default function HeroSection() {
             transition={{ duration: 0.8 }}
             className="space-y-8 text-center lg:text-left"
           >
-            {/* Pattern Interrupt Badge */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex justify-center lg:justify-start"
-            >
-              <Badge className="bg-gradient-to-r from-blue-500/10 to-green-500/10 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-700/50 px-4 py-2 text-sm font-semibold backdrop-blur-sm">
-                <Star className="w-4 h-4 mr-2" />
-                {t.pattern_interrupt}
-              </Badge>
-            </motion.div>
+           
 
             {/* Main Headline */}
             <div className="space-y-6">

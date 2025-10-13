@@ -67,7 +67,7 @@ export default function Navigation() {
             : "backdrop-blur-lg bg-white/80 dark:bg-neutral-950/80 border-b border-neutral-200/30 dark:border-neutral-800/30"
         }`}
       >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <motion.div
@@ -129,7 +129,7 @@ export default function Navigation() {
             </div>
 
             {/* Controls */}
-            <div className="items-center gap-3  flex">
+            <div className="items-center flex  lg:hidden  gap-3 ">
               {/* Mobile menu button */}
               <motion.button
                 initial={{ opacity: 0, scale: 0.8 }}

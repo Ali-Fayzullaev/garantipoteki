@@ -13,13 +13,13 @@ export default function ThemeToggle() {
   const { lang } = useApp();
   const t = dict[lang];
   return (
-    <div className="flex items-center gap-3 p-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+    <div className="flex items-center gap-3 px-2 py-3 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
       <div className={cn(
         "flex items-center gap-2 transition-all duration-200",
         !dark ? "text-amber-500" : "text-neutral-400"
       )}>
         <Sun className="h-4 w-4" />
-        <span className="text-xs font-medium hidden sm:inline">{t.themaLight}</span>
+        <span className="text-xs font-medium hidden md:inline">{t.themaLight}</span>
       </div>
       
       <Switch 
@@ -29,7 +29,7 @@ export default function ThemeToggle() {
           "relative transition-all duration-300",
           "data-[state=checked]:bg-blue-600 data-[state=unchecked]:bg-neutral-300",
           "ring-2 ring-transparent hover:ring-blue-200 focus:ring-blue-300",
-          "scale-110" // Немного увеличим для акцента
+          "scale-110"
         )}
       />
       
@@ -37,7 +37,7 @@ export default function ThemeToggle() {
         "flex items-center gap-2 transition-all duration-200",
         dark ? "text-blue-400" : "text-neutral-400"
       )}>
-        <span className="text-xs font-medium hidden sm:inline">{t.themaDark}</span>
+        <span className="text-xs font-medium hidden md:inline">{t.themaDark}</span>
         <Moon className="h-4 w-4" />
       </div>
     </div>

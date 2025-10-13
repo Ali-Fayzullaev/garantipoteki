@@ -228,7 +228,7 @@ export default function BookingForm() {
   // Шаг 1: Форма ввода данных
   if (step === 1) {
     return (
-      <section className="px-2 sm:px-0">
+      <section id="booking" className="px-2 sm:px-0">
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           whileInView={{ opacity: 1, x: 0 }}

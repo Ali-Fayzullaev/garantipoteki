@@ -66,11 +66,11 @@ export default function FooterSection() {
   const documents = [
     {
       name: t.footer_doc1,
-      href: '/privacy'
+      href: '/consent'
     },
     {
       name: t.footer_doc2,
-      href: '/terms'
+      href: '/consent'
     },
     {
       name: t.footer_doc3,
