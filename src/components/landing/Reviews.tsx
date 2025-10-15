@@ -1,26 +1,26 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { 
-  CheckCircle2, 
-  MapPin, 
-  Clock, 
-  ChevronLeft, 
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  CheckCircle2,
+  MapPin,
+  Clock,
+  ChevronLeft,
   ChevronRight,
   Star,
   TrendingUp,
-  Shield
-} from 'lucide-react'
-import { useApp } from '@/components/providers/AppProvider'
-import { dict } from '@/lib/dictionary'
+  Shield,
+} from "lucide-react";
+import { useApp } from "@/components/providers/AppProvider";
+import { dict } from "@/lib/dictionary";
 
 export default function SuccessStoriesCarousel() {
-  const { lang } = useApp()
-  const t = dict[lang]
+  const { lang } = useApp();
+  const t = dict[lang];
 
   const successStories = [
     {
@@ -52,37 +52,46 @@ export default function SuccessStoriesCarousel() {
       rating: 5,
       story: t.story3_story,
       badges: [t.story3_badge1, t.story3_badge2, t.story3_badge3],
-    }
-  ]
+    },
+  ];
 
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % successStories.length)
-  }
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + successStories.length) % successStories.length)
-  }
-
-  const goToSlide = (index: number) => {
-    setCurrentIndex(index)
-  }
-
-  // Auto-play
+  // Auto-play каждые 6 секунд
   useEffect(() => {
-    if (!isAutoPlaying) return
+    if (!isAutoPlaying) return;
 
     const interval = setInterval(() => {
-      nextSlide()
-    }, 4000)
+      setCurrentIndex((prevIndex) =>
+        prevIndex === successStories.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 6000);
 
-    return () => clearInterval(interval)
-  }, [currentIndex, isAutoPlaying])
+    return () => clearInterval(interval);
+  }, [currentIndex, isAutoPlaying, successStories.length]);
+
+  const nextSlide = () => {
+    setCurrentIndex(
+      currentIndex === successStories.length - 1 ? 0 : currentIndex + 1
+    );
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex(
+      currentIndex === 0 ? successStories.length - 1 : currentIndex - 1
+    );
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentIndex(index);
+  };
 
   return (
-    <section id='reviews' className="py-16 mb-4 md:py-20 bg-gradient-to-b from-neutral-50 to-white dark:from-neutral-900 dark:to-neutral-800">
+    <section
+      id="reviews"
+      className="py-16 mb-4 md:py-20 bg-gradient-to-b from-neutral-50 to-white dark:from-neutral-900 dark:to-neutral-800"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -150,7 +159,7 @@ export default function SuccessStoriesCarousel() {
           </div>
 
           {/* Carousel Content */}
-          <div className="max-w-4xl mx-auto">
+          <div className="w-full max-w-6xl mx-auto">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentIndex}
@@ -245,8 +254,8 @@ export default function SuccessStoriesCarousel() {
               onClick={() => goToSlide(index)}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 index === currentIndex
-                  ? 'bg-gradient-to-r from-blue-500 to-green-500 w-8'
-                  : 'bg-neutral-300 dark:bg-neutral-600 hover:bg-neutral-400'
+                  ? "bg-gradient-to-r from-blue-500 to-green-500 w-8"
+                  : "bg-neutral-300 dark:bg-neutral-600 hover:bg-neutral-400"
               }`}
             />
           ))}
@@ -264,8 +273,8 @@ export default function SuccessStoriesCarousel() {
             {[
               { value: "47+", label: t.stat_cases },
               { value: "92%", label: t.stat_approval },
-              { value: lang === 'ru' ? "1 день" : "1 күн", label: t.stat_time },
-              { value: "9.8 млн ₸", label: t.stat_amount }
+              { value: lang === "ru" ? "1 день" : "1 күн", label: t.stat_time },
+              { value: "9.8 млн ₸", label: t.stat_amount },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -287,5 +296,5 @@ export default function SuccessStoriesCarousel() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

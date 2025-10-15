@@ -18,7 +18,6 @@ import {
 import { useApp } from '@/components/providers/AppProvider'
 import { dict } from '@/lib/dictionary'
 import Image from 'next/image'
-import Partners from '@/lib/partners'
 
 export default function FooterSection() {
   const { lang } = useApp()
@@ -278,46 +277,6 @@ export default function FooterSection() {
               </div>
             </motion.div>
           </div>
-
-          {/* Trust Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="border-t border-neutral-800 pt-12"
-          >
-            <div className="text-center">
-              <h4 className="font-semibold text-white mb-8 text-lg">
-                {t.footer_partners_title}
-              </h4>
-              <div className="flex flex-wrap justify-center gap-8 opacity-60">
-                {Partners.map((bank, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    className="text-center"
-                  >
-                    <div className=" flex items-center justify-center mb-2">
-                      <Image
-                        src={bank.logoUrl}
-                        alt={bank.name}
-                        width={40}
-                        height={40}
-                        className="object-contain max-h-8 max-w-8 rounded-2xl" 
-                      />
-                    </div>
-                    <span className="text-neutral-400 text-xs">
-                      {bank.name}
-                    </span>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
         </div>
       </div>
 

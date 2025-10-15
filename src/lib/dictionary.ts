@@ -4,7 +4,7 @@ export const dict = {
     themaLight: "Светлая",
     themaDark: "Темная",
     brand: "GARANT IPOTEKI",
-    menu_quiz: "Квиз",
+    menu_quiz: "Узнать сумму одобрения",
     menu_success: "Кейсы",
     menu_faq: "Часто задаваемые вопросы",
     menu_reviews: "Отзывы клиентов",
@@ -14,7 +14,6 @@ export const dict = {
     credit_support: "Кредитное сопровождение",
 
     // Hero Section
-    pattern_interrupt: "Pattern Interrupt",
     headline_part1: "Знаете ли вы, что",
     headline_part2: "8 из 10 людей,",
     headline_part3: "которые получают отказ в банке,",
@@ -24,8 +23,8 @@ export const dict = {
     solution_highlight: "2-3 раза больше денег",
     solution_continuation: "чем предлагает банк",
 
-    intro_name: "[Имя]",
-    intro_years: "[X]",
+    intro_name: "Нурсултан",
+    intro_years: "5",
     intro_company: "«Гарант Ипотеки»",
     intro_text:
       "и за последние {{years}} лет наша компания {{company}} помогла тысячам людей по всему Казахстану получить максимальные суммы кредитов.",
@@ -38,15 +37,14 @@ export const dict = {
     trust_security: "Безопасность данных",
     trust_bank_partner: "Партнер банков РК",
 
-    video_title: "Pattern Interrupt",
     video_description:
       "Узнайте главную ошибку при получении кредита и как её избежать",
-    video_duration: "2:30",
+    video_duration: "01:47",
     video_exclusive: "Эксклюзив",
 
     video_close: "Закрыть",
 
-    floating_quiz_title: "Быстрый квиз",
+    floating_quiz_title: "Быстрый тест",
     floating_quiz_desc: "Узнайте вашу сумму за 60 сек",
     floating_quiz_cta: "Начать сейчас",
 
@@ -55,7 +53,6 @@ export const dict = {
     // ... предыдущие ключи ...
 
     // Quiz Section
-    quiz_badge: "Квалификационный квиз",
     quiz_title:
       "Узнайте за 60 секунд, сколько денег вы можете получить уже сегодня",
     quiz_subtitle:
@@ -162,13 +159,11 @@ export const dict = {
     // ... предыдущие ключи ...
 
     // Education Section
-    education_badge: "Pattern Interrupt",
     education_title: "3 секрета, которые банки скрывают от заёмщиков",
     education_subtitle:
       '"То, что я сейчас расскажу, изменит ваше представление о работе банков..."',
 
     // Video Thumbnail
-    video_secrets_title: "3 секрета, которые банки скрывают от заёмщиков",
     video_secrets_subtitle:
       "Подождите! Прежде чем записываться на консультацию, посмотрите это короткое видео",
     video_durationEd: "3:45",
@@ -286,14 +281,7 @@ export const dict = {
     office_hours: "Работаем ежедневно с 9:00 до 18:00",
     office_cta: "Записаться на консультацию",
 
-    // Partner Banks
-    partner_title: "Работаем со всеми ведущими банками Казахстана",
-    bank_halyk: "Halyk Bank",
-    bank_kaspi: "Kaspi Bank",
-    bank_forte: "ForteBank",
-    bank_jusan: "Jusan Bank",
-    bank_eurasian: "Eurasian Bank",
-    bank_centercredit: "Bank CenterCredit",
+  
 
     // Final CTA
     final_title: "Узнайте, какую сумму можете получить вы",
@@ -633,7 +621,6 @@ export const dict = {
     footer_trust2: "Работаем с {{year}} года",
     footer_trust3: "Более 1000 успешных сделок",
 
-    footer_partners_title: "Официальные партнеры ведущих банков Казахстана",
     footer_copyright: "© {{year}} Гарант Ипотеки. Все права защищены.",
     footer_disclaimer: "Информация на сайте не является публичной офертой",
     footer_license: "Лицензия №1234567890",
@@ -651,7 +638,7 @@ about_time: "Среднее время одобрения",
     themaLight: "Жарық",
     themaDark: "Қараңғы",
     brand: "GARANT IPOTEKI",
-    menu_quiz: "Сауалнама",
+    menu_quiz: "Мақұлдау сомасын біліңіз",
     menu_success: "Жобалар",
     menu_faq: "Жиі қойылатын сұрақтар",
     menu_reviews: "Тұтынушылар пікірлері",
@@ -661,7 +648,6 @@ about_time: "Среднее время одобрения",
     credit_support: "Кредиттік қамтамасыз ету",
 
     // Hero Section
-    pattern_interrupt: "Pattern Interrupt",
     headline_part1: "Білесіз бе,",
     headline_part2: "банктен бас тартылған",
     headline_part3: "10 адамның 8-і",
@@ -671,8 +657,8 @@ about_time: "Среднее время одобрения",
     solution_highlight: "2-3 есе көп ақша алу",
     solution_continuation: "жолын көрсетемін",
 
-    intro_name: "[Аты]",
-    intro_years: "[X]",
+    intro_name: "Нұрсұлтан",
+    intro_years: "5",
     intro_company: "«GARANT IPOTEKI»",
     intro_text:
       "және соңғы {{years}} жыл ішінде біздің {{company}} компаниясы Қазақстанның барлық жерінен мыңдаған адамдарға кредиттің максималды сомасын алуға көмектесті.",
@@ -685,22 +671,20 @@ about_time: "Среднее время одобрения",
     trust_security: "Деректер қауіпсіздігі",
     trust_bank_partner: "ҚР банктерінің серіктесі",
 
-    video_title: "Pattern Interrupt",
     video_description:
       "Кредит алу кезіндегі негізгі қатені және оны қалай болдырмау керектігін біліңіз",
-    video_duration: "2:30",
+    video_duration: "01:47",
     video_exclusive: "Эксклюзив",
 
     video_close: "Жабу",
 
-    floating_quiz_title: "Жылдам сауалнама",
+    floating_quiz_title: "Жылдам  тексеру",
     floating_quiz_desc: "Сіздің сомаңызды 60 секундта біліңіз",
     floating_quiz_cta: "Қазір бастау",
 
     scroll_indicator: "Көбірек білу",
 
     // Quiz Section
-    quiz_badge: "Квалификациялық сауалнама",
     quiz_title: "60 секунд ішінде бүгін қанша ақша ала алатыныңызды біліңіз",
     quiz_subtitle:
       "4 қарапайым сұраққа жауап беріңіз және сіздің максималды сомаңызға жеке есептеу алыңыз",
@@ -805,13 +789,11 @@ about_time: "Среднее время одобрения",
     trust_accurate: "Дәл есептеу",
 
     // Education Section
-    education_badge: "Pattern Interrupt",
     education_title: "Банктер несін жасырғанын 3 құпия",
     education_subtitle:
       '"Мен қазір айтатын нәрсе банктердің жұмыс істеуі туралы көзқарасыңызды өзгертеді..."',
 
     // Video Thumbnail
-    video_secrets_title: "Банктер несін жасырғанын 3 құпия",
     video_secrets_subtitle:
       "Кеңеске тіркелер алдында бұл қысқа бейнені көріңіз!",
     video_durationEd: "3:45",
@@ -928,14 +910,6 @@ about_time: "Среднее время одобрения",
     office_hours: "Күн сайын 9:00-ден 18:00-ге дейін жұмыс істейміз",
     office_cta: "Кеңеске тіркелу",
 
-    // Partner Banks
-    partner_title: "Қазақстанның барлық жетекші банктерімен жұмыс істейміз",
-    bank_halyk: "Halyk Bank",
-    bank_kaspi: "Kaspi Bank",
-    bank_forte: "ForteBank",
-    bank_jusan: "Jusan Bank",
-    bank_eurasian: "Eurasian Bank",
-    bank_centercredit: "Bank CenterCredit",
 
     // Final CTA
     final_title: "Сіз қанша ақша ала алатыныңызды біліңіз",
@@ -1274,7 +1248,6 @@ about_time: "Среднее время одобрения",
     footer_trust2: "{{year}} жылдан бері жұмыс істейміз",
     footer_trust3: "1000-нан астам сәтті мәміле",
 
-    footer_partners_title: "Қазақстанның ірі банктерінің ресми серіктестері",
     footer_copyright: "© {{year}} Гарант Ипотеки. Барлық құқықтар қорғалған.",
     footer_disclaimer: "Сайттағы ақпарат қоғамға ашық ұсыныс болып табылмайды",
     footer_license: "Лицензия №1234567890",

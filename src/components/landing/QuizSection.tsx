@@ -321,10 +321,6 @@ export default function QuizSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <Badge className="bg-gradient-to-r from-blue-500/10 to-orange-500/10 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-700/50 px-4 py-3 mb-4 backdrop-blur-sm">
-            <Zap className="w-4 h-4 mr-2" />
-            {t.quiz_badge}
-          </Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white mb-4">
             {t.quiz_title}
           </h2>

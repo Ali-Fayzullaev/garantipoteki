@@ -21,7 +21,6 @@ import {
 import { useApp } from "@/components/providers/AppProvider";
 import { dict } from "@/lib/dictionary";
 import SuccessStoriesCarousel from "./Reviews";
-import Partners from "@/lib/partners";
 import Image from "next/image";
 
 export default function SocialProofSection() {
@@ -429,49 +428,14 @@ export default function SocialProofSection() {
                   <span>{t.office_hours}</span>
                 </div>
 
-                <Button className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white">
+                <a href="#booking">
+                  <Button className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white">
                   <CalendarDays className="mr-2 h-4 w-4" />
                   {t.office_cta}
                 </Button>
+                </a>
               </CardContent>
             </Card>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-          className="mb-16 text-center"
-        >
-          <h3 className="text-2xl font-bold text-neutral-900 dark:text-white mb-8">
-            {t.partner_title}
-          </h3>
-          <div className="flex flex-wrap justify-center gap-6">
-            {Partners.map((bank, index) => (
-              <motion.div
-                key={bank.name}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                className="flex flex-col items-center gap-3 group"
-              >
-                <div className="rounded-2xl shadow-lg flex items-center justify-center group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
-                  <Image
-                    src={bank.logoUrl}
-                    alt={bank.name}
-                    width={48}
-                    height={48}
-                    className="object-contain max-h-10 max-w-10 rounded-lg"
-                  />
-                </div>
-                <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                  {bank.name}
-                </span>
-              </motion.div>
-            ))}
           </div>
         </motion.div>
 

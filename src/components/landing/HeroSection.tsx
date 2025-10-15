@@ -166,7 +166,7 @@ export default function HeroSection() {
               </div>
               <div className="text-center p-4 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700">
                 <Clock className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-neutral-900 dark:text-white">[X]</div>
+                <div className="text-2xl font-bold text-neutral-900 dark:text-white">5</div>
                 <div className="text-sm text-neutral-600 dark:text-neutral-400">{t.stats_experience}</div>
               </div>
             </motion.div>
@@ -239,9 +239,6 @@ export default function HeroSection() {
                           </div>
                           
                           <div className="space-y-4">
-                            <h3 className="text-xl sm:text-2xl font-bold text-white">
-                              {t.video_title}
-                            </h3>
                             <p className="text-neutral-200 text-base sm:text-lg leading-relaxed">
                               {t.video_description}
                             </p>
@@ -297,14 +294,14 @@ export default function HeroSection() {
                       >
                         <video
                           ref={videoRef}
-                          src="/test_video.mp4"
+                          src="/forgarand.mp4"
                           autoPlay
                           className="w-full h-full object-cover"
                           muted={isMuted}
                           loop
                           playsInline
                         >
-                          <source src="/test_video.mp4" type="video/mp4" />
+                          <source src="/forgarand.mp4" type="video/mp4" />
                           Ваш браузер не поддерживает видео.
                         </video>
                         
@@ -354,9 +351,9 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 30, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.8, delay: 1 }}
-              className="absolute -bottom-6 -right-6 hidden lg:block"
+              className="absolute -bottom-65 -right-46 hidden lg:block"
             >
-              <Card className="border-0 shadow-2xl bg-gradient-to-br from-green-500 to-emerald-600 text-white w-64">
+              <Card className="border-0 shadow-2xl  bg-gradient-to-br from-green-500 to-emerald-600 text-white w-64">
                 <CardContent className="p-6 text-center">
                   <div className="w-12 h-12 mx-auto mb-3 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
                     <Star className="h-6 w-6 text-white" />
