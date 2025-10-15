@@ -1,62 +1,92 @@
-'use client'
+"use client";
 
-import React, { useState, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
-import { Play, ChevronRight, ShieldCheck, Building2, Star, Volume2, VolumeX, X, Clock, Users } from 'lucide-react'
-import { useApp } from '@/components/providers/AppProvider'
-import { dict } from '@/lib/dictionary'
+import React, { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Play,
+  ChevronRight,
+  ShieldCheck,
+  Building2,
+  Star,
+  Volume2,
+  VolumeX,
+  X,
+  Clock,
+  Users,
+} from "lucide-react";
+import { useApp } from "@/components/providers/AppProvider";
+import { dict } from "@/lib/dictionary";
 
 // Простая функция для замены шаблонов вида {{key}}
 const interpolate = (text: string, values: Record<string, string>): string => {
-  return text.replace(/{{(\w+)}}/g, (_, key) => values[key] || `{{${key}}}`)
-}
+  return text.replace(/{{(\w+)}}/g, (_, key) => values[key] || `{{${key}}}`);
+};
 
 export default function HeroSection() {
-  const { lang } = useApp()
-  const t = dict[lang]
-  
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
-  const [isMuted, setIsMuted] = useState(true)
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const { lang } = useApp();
+  const t = dict[lang];
+
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const handlePlayVideo = () => {
-    setIsVideoPlaying(true)
+    setIsVideoPlaying(true);
     if (videoRef.current) {
-      videoRef.current.play()
+      videoRef.current.play();
     }
-  }
+  };
 
   const handlePauseVideo = () => {
-    setIsVideoPlaying(false)
+    setIsVideoPlaying(false);
     if (videoRef.current) {
-      videoRef.current.pause()
+      videoRef.current.pause();
     }
-  }
+  };
 
   const toggleMute = () => {
     if (videoRef.current) {
-      videoRef.current.muted = !videoRef.current.muted
-      setIsMuted(videoRef.current.muted)
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(videoRef.current.muted);
     }
-  }
+  };
 
   const scrollToQuiz = () => {
-    document.getElementById('quiz')?.scrollIntoView({ behavior: 'smooth' })
-  }
+    const quizElement = document.getElementById("quiz");
+    if (quizElement) {
+      quizElement.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
 
   // Подготовка текста с подстановкой
   const introText = interpolate(t.intro_text, {
     years: t.intro_years,
     company: t.intro_company,
-  })
+  });
+
+  // Конфигурация анимаций для предотвращения прыжков
+  const animationConfig = {
+    initial: { opacity: 0, y: 30 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.8 },
+  };
+
+  const staggeredAnimation = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.6 },
+  };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-neutral-50 via-blue-50/30 to-green-50/20 dark:from-neutral-950 dark:via-blue-950/20 dark:to-green-950/10">
       {/* Animated Background Elements */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 pointer-events-none">
         <motion.div
           animate={{
             scale: [1, 1.2, 1],
@@ -65,7 +95,7 @@ export default function HeroSection() {
           transition={{
             duration: 8,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: "easeInOut",
           }}
           className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-200/20 dark:bg-blue-500/10 rounded-full blur-3xl"
         />
@@ -78,7 +108,7 @@ export default function HeroSection() {
             duration: 10,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 1
+            delay: 1,
           }}
           className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-green-200/20 dark:bg-green-500/10 rounded-full blur-3xl"
         />
@@ -88,19 +118,15 @@ export default function HeroSection() {
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Left Content */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            {...animationConfig}
             className="space-y-8 text-center lg:text-left"
           >
-           
-
             {/* Main Headline */}
             <div className="space-y-6">
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
                 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight"
               >
                 <span className="block text-neutral-900 dark:text-white leading-tight">
@@ -115,7 +141,7 @@ export default function HeroSection() {
                 <motion.span
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.8, delay: 0.8 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
                   className="block bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent leading-tight mt-2 lg:mt-4"
                 >
                   {t.headline_part4}
@@ -127,13 +153,15 @@ export default function HeroSection() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.5 }}
+              transition={{ duration: 0.7, delay: 0.8 }}
               className="space-y-4"
             >
               <p className="text-xl sm:text-2xl lg:text-3xl font-semibold text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                {t.solution_teaser}{' '}
-                <span className="text-green-600 dark:text-green-400">{t.solution_highlight}</span>, 
-                {' '}{t.solution_continuation}
+                {t.solution_teaser}{" "}
+                <span className="text-green-600 dark:text-green-400">
+                  {t.solution_highlight}
+                </span>
+                , {t.solution_continuation}
               </p>
             </motion.div>
 
@@ -141,13 +169,23 @@ export default function HeroSection() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.8 }}
+              transition={{ duration: 0.7, delay: 1.0 }}
               className="space-y-4"
             >
               <p className="text-lg sm:text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                Меня зовут <span className="font-semibold text-blue-600 dark:text-blue-400">{t.intro_name}</span>, 
-                и за последние <span className="font-semibold text-green-600 dark:text-green-400">{t.intro_years}</span> лет наша компания 
-                <span className="font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent"> {t.intro_company} </span>
+                Меня зовут{" "}
+                <span className="font-semibold text-blue-600 dark:text-blue-400">
+                  {t.intro_name}
+                </span>
+                , и за последние{" "}
+                <span className="font-semibold text-green-600 dark:text-green-400">
+                  {t.intro_years}
+                </span>{" "}
+                лет наша компания
+                <span className="font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+                  {" "}
+                  {t.intro_company}{" "}
+                </span>
                 {introText}
               </p>
             </motion.div>
@@ -156,18 +194,26 @@ export default function HeroSection() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 2.1 }}
+              transition={{ duration: 0.7, delay: 1.2 }}
               className="grid grid-cols-2 gap-4 max-w-md mx-auto lg:mx-0"
             >
-              <div className="text-center p-4 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700">
+              <div className="text-center p-4 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 min-h-[100px] flex flex-col justify-center">
                 <Users className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-neutral-900 dark:text-white">1000+</div>
-                <div className="text-sm text-neutral-600 dark:text-neutral-400">{t.stats_clients}</div>
+                <div className="text-2xl font-bold text-neutral-900 dark:text-white">
+                  1000+
+                </div>
+                <div className="text-sm text-neutral-600 dark:text-neutral-400">
+                  {t.stats_clients}
+                </div>
               </div>
-              <div className="text-center p-4 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700">
+              <div className="text-center p-4 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 min-h-[100px] flex flex-col justify-center">
                 <Clock className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-neutral-900 dark:text-white">5</div>
-                <div className="text-sm text-neutral-600 dark:text-neutral-400">{t.stats_experience}</div>
+                <div className="text-2xl font-bold text-neutral-900 dark:text-white">
+                  5
+                </div>
+                <div className="text-sm text-neutral-600 dark:text-neutral-400">
+                  {t.stats_experience}
+                </div>
               </div>
             </motion.div>
 
@@ -175,13 +221,13 @@ export default function HeroSection() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 2.4 }}
+              transition={{ duration: 0.7, delay: 1.4 }}
               className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
             >
-              <Button 
+              <Button
                 onClick={scrollToQuiz}
-                size="lg" 
-                className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105"
+                size="lg"
+                className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105 min-h-[56px]"
               >
                 <ChevronRight className="mr-2 h-5 w-5" />
                 {t.cta_quiz}
@@ -192,15 +238,15 @@ export default function HeroSection() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 2.7 }}
+              transition={{ duration: 0.7, delay: 1.6 }}
               className="flex flex-wrap gap-4 justify-center lg:justify-start pt-4"
             >
-              <div className="flex items-center gap-3 text-sm text-neutral-600 dark:text-neutral-400 bg-white/50 dark:bg-neutral-800/50 rounded-lg px-4 py-2 backdrop-blur-sm">
-                <ShieldCheck className="h-5 w-5 text-green-500" />
+              <div className="flex items-center gap-3 text-sm text-neutral-600 dark:text-neutral-400 bg-white/50 dark:bg-neutral-800/50 rounded-lg px-4 py-2 backdrop-blur-sm min-h-[44px]">
+                <ShieldCheck className="h-5 w-5 text-green-500 flex-shrink-0" />
                 <span>{t.trust_security}</span>
               </div>
-              <div className="flex items-center gap-3 text-sm text-neutral-600 dark:text-neutral-400 bg-white/50 dark:bg-neutral-800/50 rounded-lg px-4 py-2 backdrop-blur-sm">
-                <Building2 className="h-5 w-5 text-blue-500" />
+              <div className="flex items-center gap-3 text-sm text-neutral-600 dark:text-neutral-400 bg-white/50 dark:bg-neutral-800/50 rounded-lg px-4 py-2 backdrop-blur-sm min-h-[44px]">
+                <Building2 className="h-5 w-5 text-blue-500 flex-shrink-0" />
                 <span>{t.trust_bank_partner}</span>
               </div>
             </motion.div>
@@ -210,13 +256,13 @@ export default function HeroSection() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95, x: 30 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
             className="relative order-first lg:order-last"
           >
             {/* Main Video Card */}
-            <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm overflow-hidden group cursor-pointer mx-auto max-w-md lg:max-w-none">
-              <CardContent className="p-0 relative">
-                <div className="aspect-[9/16] lg:aspect-[4/5] bg-gradient-to-br from-blue-500/5 to-green-500/5 relative overflow-hidden">
+            <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm overflow-hidden group cursor-pointer mx-auto max-w-md lg:max-w-none min-h-[500px] lg:min-h-[600px]">
+              <CardContent className="p-0 relative h-full">
+                <div className="aspect-[9/16] lg:aspect-[4/5] bg-gradient-to-br from-blue-500/5 to-green-500/5 relative overflow-hidden h-full">
                   <AnimatePresence mode="wait">
                     {!isVideoPlaying ? (
                       <motion.div
@@ -224,11 +270,11 @@ export default function HeroSection() {
                         initial={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-500/10 to-green-500/10"
+                        className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-500/10 to-green-500/10 h-full"
                       >
                         {/* Thumbnail Background */}
                         <div className="absolute inset-0 bg-gradient-to-br from-neutral-900/40 to-neutral-950/60" />
-                        
+
                         {/* Thumbnail Content */}
                         <motion.div
                           whileHover={{ scale: 1.02 }}
@@ -237,51 +283,51 @@ export default function HeroSection() {
                           <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-green-500 rounded-full flex items-center justify-center mx-auto shadow-2xl shadow-green-500/25 group-hover:shadow-green-500/40 transition-all duration-300">
                             <Play className="h-6 w-6 sm:h-8 sm:w-8 text-white ml-1" />
                           </div>
-                          
+
                           <div className="space-y-4">
                             <p className="text-neutral-200 text-base sm:text-lg leading-relaxed">
                               {t.video_description}
                             </p>
                           </div>
-                          
+
                           {/* Video Stats */}
                           <div className="flex items-center justify-center gap-4 sm:gap-6 text-white/80 text-xs sm:text-sm">
                             <div className="flex items-center gap-2">
-                              <Play className="h-3 w-3 sm:h-4 sm:w-4" />
+                              <Play className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                               <span>{t.video_duration}</span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <Star className="h-3 w-3 sm:h-4 sm:w-4" />
+                              <Star className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                               <span>{t.video_exclusive}</span>
                             </div>
                           </div>
                         </motion.div>
-                        
+
                         {/* Floating Elements */}
                         <motion.div
-                          animate={{ 
+                          animate={{
                             y: [0, -10, 0],
-                            rotate: [0, 180, 360]
+                            rotate: [0, 180, 360],
                           }}
-                          transition={{ 
+                          transition={{
                             duration: 6,
                             repeat: Infinity,
-                            ease: "easeInOut"
+                            ease: "easeInOut",
                           }}
-                          className="absolute top-4 left-4 sm:top-6 sm:left-6 w-3 h-3 sm:w-4 sm:h-4 bg-blue-400/30 rounded-full"
+                          className="absolute top-4 left-4 sm:top-6 sm:left-6 w-3 h-3 sm:w-4 sm:h-4 bg-blue-400/30 rounded-full pointer-events-none"
                         />
                         <motion.div
-                          animate={{ 
+                          animate={{
                             y: [0, 15, 0],
-                            scale: [1, 1.2, 1]
+                            scale: [1, 1.2, 1],
                           }}
-                          transition={{ 
+                          transition={{
                             duration: 4,
                             repeat: Infinity,
                             ease: "easeInOut",
-                            delay: 1
+                            delay: 1,
                           }}
-                          className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 w-4 h-4 sm:w-6 sm:h-6 bg-green-400/30 rounded-full"
+                          className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 w-4 h-4 sm:w-6 sm:h-6 bg-green-400/30 rounded-full pointer-events-none"
                         />
                       </motion.div>
                     ) : (
@@ -290,7 +336,7 @@ export default function HeroSection() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
-                        className="absolute inset-0"
+                        className="absolute inset-0 h-full"
                       >
                         <video
                           ref={videoRef}
@@ -304,7 +350,7 @@ export default function HeroSection() {
                           <source src="/forgarand.mp4" type="video/mp4" />
                           Ваш браузер не поддерживает видео.
                         </video>
-                        
+
                         {/* Video Controls */}
                         <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
                           <Button
@@ -319,10 +365,10 @@ export default function HeroSection() {
                               <Volume2 className="h-4 w-4" />
                             )}
                           </Button>
-                          
+
                           <Button
                             variant="secondary"
-                            className="bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm h-10 px-3 text-sm"
+                            className="bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm h-10 px-3 text-sm min-w-[120px]"
                             onClick={handlePauseVideo}
                           >
                             <X className="h-4 w-4 mr-2" />
@@ -332,10 +378,10 @@ export default function HeroSection() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                  
+
                   {/* Play Button Overlay */}
                   {!isVideoPlaying && (
-                    <Button 
+                    <Button
                       className="absolute inset-0 w-full h-full bg-transparent hover:bg-black/5 transition-colors z-20"
                       onClick={handlePlayVideo}
                     >
@@ -350,26 +396,28 @@ export default function HeroSection() {
             <motion.div
               initial={{ opacity: 0, y: 30, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.8, delay: 1 }}
-              className="absolute -bottom-65 -right-46 hidden lg:block"
+              transition={{ duration: 0.8, delay: 1.2 }}
+              className={`absolute  -right-2 hidden lg:block ${
+                isVideoPlaying ? "-bottom-61" : "-bottom-6"
+              }`}
             >
-              <Card className="border-0 shadow-2xl  bg-gradient-to-br from-green-500 to-emerald-600 text-white w-64">
-                <CardContent className="p-6 text-center">
+              <Card className="border-0 shadow-2xl bg-gradient-to-br from-green-500 to-emerald-600 text-white w-64 min-h-[180px]">
+                <CardContent className="p-6 text-center h-full flex flex-col justify-center">
                   <div className="w-12 h-12 mx-auto mb-3 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
                     <Star className="h-6 w-6 text-white" />
                   </div>
-                  
+
                   <h4 className="font-bold text-lg mb-2">
                     {t.floating_quiz_title}
                   </h4>
-                  
+
                   <p className="text-white/80 text-sm mb-4">
                     {t.floating_quiz_desc}
                   </p>
 
-                  <Button 
+                  <Button
                     onClick={scrollToQuiz}
-                    className="w-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm border border-white/20"
+                    className="w-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm border border-white/20 min-h-[40px]"
                     size="sm"
                   >
                     {t.floating_quiz_cta}
@@ -385,7 +433,7 @@ export default function HeroSection() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 3 }}
+        transition={{ duration: 0.8, delay: 2.0 }}
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden lg:block"
       >
         <motion.div
@@ -399,5 +447,5 @@ export default function HeroSection() {
         </motion.div>
       </motion.div>
     </section>
-  )
+  );
 }

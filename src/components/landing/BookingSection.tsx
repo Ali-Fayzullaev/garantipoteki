@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +24,7 @@ import BookingForm from "./booking-form";
 export default function BookingSection() {
   const { lang } = useApp();
   const t = dict[lang];
-
+  const sectionRef = useRef(null);
 
   const [timeLeft, setTimeLeft] = useState({
     hours: 23,
@@ -133,7 +133,7 @@ export default function BookingSection() {
       address: t.office_right_address,
       hours: t.office_hours,
       features: [
-        t.office_features_parking, // или "Парковка" → "Автотұрақ", но у тебя в RU было просто "Парковка"
+        t.office_features_parking,
         t.office_features_center,
         t.office_features_elevator,
         t.office_features_wifi,
@@ -142,16 +142,17 @@ export default function BookingSection() {
   ];
 
   return (
-    <section
-      className="py-20 bg-gradient-to-b from-neutral-50 to-white dark:from-neutral-900 dark:to-neutral-950"
+    <section 
+      ref={sectionRef}
+      className="py-20 bg-gradient-to-b from-neutral-50 to-white dark:from-neutral-900 dark:to-neutral-950 overflow-hidden"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
           <Badge className="bg-gradient-to-r from-blue-500/10 to-green-500/10 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-700/50 px-4 py-3 mb-4 backdrop-blur-sm">
@@ -171,12 +172,12 @@ export default function BookingSection() {
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.7 }}
             className="space-y-8"
           >
             {/* Benefits */}
-            <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm">
+            <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm min-h-[300px]">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-xl">
                   <Zap className="h-5 w-5 text-yellow-500" />
@@ -189,7 +190,7 @@ export default function BookingSection() {
                     key={benefit.title}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
+                    viewport={{ once: true, margin: "-20px" }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="flex items-start gap-4 p-4 rounded-2xl bg-gradient-to-r from-blue-500/5 to-green-500/5 hover:from-blue-500/10 hover:to-green-500/10 transition-all duration-300 group"
                   >
@@ -210,7 +211,7 @@ export default function BookingSection() {
             </Card>
 
             {/* Special Offers */}
-            <Card className="border-0 shadow-2xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20">
+            <Card className="border-0 shadow-2xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 min-h-[300px]">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-xl">
                   <Zap className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
@@ -223,7 +224,7 @@ export default function BookingSection() {
                     key={offer.title}
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
+                    viewport={{ once: true, margin: "-20px" }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="flex items-start gap-3 p-3 rounded-xl bg-white/50 dark:bg-amber-900/20"
                   >
@@ -243,7 +244,7 @@ export default function BookingSection() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, margin: "-20px" }}
                   transition={{ duration: 0.5, delay: 0.4 }}
                   className="mt-4 p-4 rounded-xl bg-amber-100 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700"
                 >
@@ -281,7 +282,7 @@ export default function BookingSection() {
             {/* Office Locations */}
             <Card
               id="adress"
-              className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm"
+              className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm min-h-[300px]"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-xl">
@@ -295,7 +296,7 @@ export default function BookingSection() {
                     key={office.name}
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
+                    viewport={{ once: true, margin: "-20px" }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:border-blue-500/50 transition-colors duration-300"
                   >
@@ -336,10 +337,10 @@ export default function BookingSection() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-20px" }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <Card className="border-0 shadow-2xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
+              <Card className="border-0 shadow-2xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 min-h-[200px]">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <ShieldCheck className="h-5 w-5 text-green-500" />

@@ -232,11 +232,11 @@ export default function BookingForm() {
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="sticky top-2 md:top-8 mx-auto max-w-full"
         >
-          <Card className="border-0 shadow-lg md:shadow-2xl bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 mx-1 sm:mx-0">
+          <Card className="border-0 shadow-lg md:shadow-2xl bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 mx-1 sm:mx-0 min-h-[500px]">
             <CardHeader className="text-center pb-3 md:pb-4 px-3 md:px-6">
               <div className="w-12 h-12 md:w-20 md:h-20 mx-auto mb-2 md:mb-4 bg-gradient-to-br from-blue-500 to-green-500 rounded-xl md:rounded-2xl flex items-center justify-center shadow-md md:shadow-lg">
                 <Zap className="h-4 w-4 md:h-8 md:w-8 text-white" />
@@ -338,7 +338,7 @@ export default function BookingForm() {
                       key={index}
                       initial={{ opacity: 0, scale: 0.9 }}
                       whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
+                      viewport={{ once: true, margin: "-10px" }}
                       transition={{ duration: 0.3, delay: index * 0.1 }}
                       className="flex items-center gap-1 text-[10px] md:text-xs text-neutral-600 dark:text-neutral-400"
                     >
@@ -370,7 +370,7 @@ export default function BookingForm() {
           animate={{ opacity: 1, x: 0 }}
           className="sticky top-2 md:top-8 mx-auto max-w-full"
         >
-          <Card className="border-0 shadow-lg md:shadow-2xl bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 mx-1 sm:mx-0">
+          <Card className="border-0 shadow-lg md:shadow-2xl bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 mx-1 sm:mx-0 min-h-[400px]">
             <CardHeader className="text-center pb-3 md:pb-4 px-3 md:px-6">
               <div className="w-12 h-12 md:w-20 md:h-20 mx-auto mb-2 md:mb-4 bg-gradient-to-br from-blue-500 to-green-500 rounded-xl md:rounded-2xl flex items-center justify-center shadow-md md:shadow-lg">
                 <Zap className="h-4 w-4 md:h-8 md:w-8 text-white" />
@@ -423,7 +423,7 @@ export default function BookingForm() {
           animate={{ opacity: 1, scale: 1 }}
           className="sticky top-2 md:top-8 mx-auto max-w-full"
         >
-          <Card className="border-0 shadow-lg md:shadow-2xl bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 mx-1 sm:mx-0 overflow-hidden">
+          <Card className="border-0 shadow-lg md:shadow-2xl bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 mx-1 sm:mx-0 min-h-[600px]">
             <CardContent className="p-0">
               <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 opacity-60"></div>
 

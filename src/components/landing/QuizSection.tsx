@@ -291,7 +291,13 @@ export default function QuizSection() {
   };
 
   const scrollToBooking = () => {
-    document.getElementById("booking")?.scrollIntoView({ behavior: "smooth" });
+    const bookingElement = document.getElementById("booking");
+    if (bookingElement) {
+      bookingElement.scrollIntoView({ 
+        behavior: "smooth",
+        block: "start"
+      });
+    }
   };
 
   const currentQuestion = questions[step - 1];
@@ -305,20 +311,39 @@ export default function QuizSection() {
     return "30";
   };
 
+  // Конфигурация анимаций для предотвращения прыжков
+  const animationConfig = {
+    initial: { opacity: 0, y: 30 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-50px" },
+    transition: { duration: 0.6 }
+  };
+
+  const cardAnimation = {
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-40px" },
+    transition: { duration: 0.5 }
+  };
+
+  const itemAnimation = {
+    initial: { opacity: 0, y: 10 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-20px" },
+    transition: { duration: 0.3 }
+  };
+
   return (
     <section
       id="quiz"
       className="py-20 bg-gradient-to-b from-white to-neutral-50 dark:from-neutral-950 dark:to-neutral-900 relative overflow-hidden"
     >
-      <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl" />
+      <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          {...animationConfig}
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white mb-4">
@@ -330,17 +355,14 @@ export default function QuizSection() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          {...cardAnimation}
         >
-          <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm overflow-hidden">
-            <CardContent className="p-8">
+          <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm overflow-hidden min-h-[600px]">
+            <CardContent className="p-6 md:p-8">
               <div className="space-y-6 mb-8">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-orange-500 rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
                       <Clock className="h-5 w-5 text-white" />
                     </div>
                     <div>
@@ -393,11 +415,11 @@ export default function QuizSection() {
                           key={option.value}
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.3, delay: index * 0.1 }}
+                          transition={{ duration: 0.3, delay: index * 0.08 }}
                         >
                           <Button
                             variant="outline"
-                            className="w-full h-auto py-6 px-6 text-left border-2 border-neutral-200 dark:border-neutral-700 hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 group transition-all duration-300"
+                            className="w-full h-auto py-6 px-6 text-left border-2 border-neutral-200 dark:border-neutral-700 hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 group transition-all duration-300 min-h-[80px]"
                             onClick={() =>
                               pick(
                                 step === 1
@@ -412,21 +434,21 @@ export default function QuizSection() {
                             }
                           >
                             <div className="flex items-center gap-4 w-full">
-                              <div className="text-2xl">
+                              <div className="text-2xl flex-shrink-0">
                                 {React.createElement(option.Icon, {
                                   className: "h-6 w-6 text-blue-500",
                                   size: 24,
                                 })}
                               </div>
-                              <div className="flex-1 text-left">
-                                <div className="font-semibold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                              <div className="flex-1 text-left min-w-0">
+                                <div className="font-semibold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
                                   {option.label}
                                 </div>
-                                <div className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+                                <div className="text-sm text-neutral-500 dark:text-neutral-400 mt-1 line-clamp-2">
                                   {option.description}
                                 </div>
                               </div>
-                              <ArrowRight className="h-5 w-5 text-neutral-400 group-hover:text-blue-500 transition-colors" />
+                              <ArrowRight className="h-5 w-5 text-neutral-400 group-hover:text-blue-500 transition-colors flex-shrink-0" />
                             </div>
                           </Button>
                         </motion.div>
@@ -437,7 +459,7 @@ export default function QuizSection() {
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5, delay: 0.5 }}
+                        transition={{ duration: 0.5, delay: 0.4 }}
                         className="text-center"
                       >
                         {step === 3 ? (
@@ -445,13 +467,13 @@ export default function QuizSection() {
                             <DialogTrigger asChild>
                               <Button
                                 variant="ghost"
-                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 min-h-[40px]"
                               >
-                                <HelpCircle className="h-4 w-4 mr-2" />
+                                <HelpCircle className="h-4 w-4 mr-2 flex-shrink-0" />
                                 {currentQuestion.hint}
                               </Button>
                             </DialogTrigger>
-                            <DialogContent>
+                            <DialogContent className="max-w-md mx-4">
                               <DialogHeader>
                                 <DialogTitle>{t.dialog_title}</DialogTitle>
                                 <DialogDescription>
@@ -469,10 +491,10 @@ export default function QuizSection() {
                                     key={idx}
                                     className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg"
                                   >
-                                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
+                                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
                                       {idx + 1}
                                     </div>
-                                    <span>{text}</span>
+                                    <span className="leading-relaxed">{text}</span>
                                   </div>
                                 ))}
                               </div>
@@ -480,7 +502,7 @@ export default function QuizSection() {
                           </Dialog>
                         ) : (
                           <p className="text-sm text-neutral-500 dark:text-neutral-400 flex items-center justify-center gap-2">
-                            <TrendingUp className="h-4 w-4 text-green-500" />
+                            <TrendingUp className="h-4 w-4 text-green-500 flex-shrink-0" />
                             {currentQuestion.hint}
                           </p>
                         )}
@@ -521,22 +543,22 @@ export default function QuizSection() {
                           <Button
                             onClick={scrollToBooking}
                             size="lg"
-                            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105"
+                            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105 min-h-[56px]"
                           >
-                            <CalendarDays className="mr-2 h-5 w-5" />
-                            <span className="text-[12px] md:text-[20px]">
+                            <CalendarDays className="mr-2 h-5 w-5 flex-shrink-0" />
+                            <span className="text-sm md:text-base truncate">
                               {t.result_success_cta}
                             </span>
                           </Button>
 
                           <div className="p-4 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200 dark:border-yellow-700">
                             <div className="flex items-center gap-3">
-                              <Zap className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
-                              <div>
-                                <div className="font-semibold text-yellow-800 dark:text-yellow-300">
+                              <Zap className="h-5 w-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
+                              <div className="min-w-0">
+                                <div className="font-semibold text-yellow-800 dark:text-yellow-300 text-sm">
                                   {t.result_bonus_title}
                                 </div>
-                                <div className="text-yellow-700 dark:text-yellow-400 text-sm">
+                                <div className="text-yellow-700 dark:text-yellow-400 text-xs leading-relaxed">
                                   {t.result_bonus_desc}
                                 </div>
                               </div>
@@ -562,9 +584,9 @@ export default function QuizSection() {
                         </div>
 
                         <div className="space-y-6">
-                          <div className="text-left space-y-4 bg-white/50 dark:bg-neutral-800/50 rounded-2xl p-6">
+                          <div className="text-left space-y-4 bg-white/50 dark:bg-neutral-800/50 rounded-2xl p-6 min-h-[200px]">
                             <h4 className="font-semibold text-neutral-900 dark:text-white text-lg flex items-center gap-2">
-                              <Star className="h-5 w-5 text-blue-500" />
+                              <Star className="h-5 w-5 text-blue-500 flex-shrink-0" />
                               {t.result_recommendations_title}
                             </h4>
                             <ul className="space-y-3">
@@ -581,7 +603,7 @@ export default function QuizSection() {
                                     className="flex items-start gap-3 text-neutral-700 dark:text-neutral-300"
                                   >
                                     <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                                    <span>{rec}</span>
+                                    <span className="leading-relaxed">{rec}</span>
                                   </motion.li>
                                 )
                               )}
@@ -605,7 +627,7 @@ export default function QuizSection() {
                                     onChange={(e) =>
                                       handlePhoneChange(e.target.value)
                                     }
-                                    className={`flex-1 pr-4 ${
+                                    className={`flex-1 pr-4 min-h-[44px] ${
                                       phoneError
                                         ? "border-red-500 focus:border-red-500"
                                         : ""
@@ -621,14 +643,12 @@ export default function QuizSection() {
                                 <Button
                                   onClick={handlePhoneSubmit}
                                   disabled={isSubmitting || !isPhoneValid()}
-                                  className="bg-orange-600 hover:bg-orange-700 text-white whitespace-nowrap"
+                                  className="bg-orange-600 hover:bg-orange-700 text-white whitespace-nowrap min-h-[44px] min-w-[44px]"
                                 >
                                   {isSubmitting ? (
                                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                                   ) : (
-                                    <>
-                                      <Send className="h-4 w-4" />
-                                    </>
+                                    <Send className="h-4 w-4" />
                                   )}
                                 </Button>
                               </div>
@@ -647,9 +667,9 @@ export default function QuizSection() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12"
+          viewport={{ once: true, margin: "-30px" }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-12"
         >
           {[
             {
@@ -669,12 +689,12 @@ export default function QuizSection() {
               key={index}
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              className="flex items-center gap-3 justify-center p-4 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200/50 dark:border-neutral-700/50"
+              viewport={{ once: true, margin: "-15px" }}
+              transition={{ duration: 0.4, delay: index * 0.08 }}
+              className="flex items-center gap-3 justify-center p-3 md:p-4 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200/50 dark:border-neutral-700/50 min-h-[70px]"
             >
-              <item.icon className={`h-5 w-5 ${item.color}`} />
-              <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+              <item.icon className={`h-4 w-4 md:h-5 md:w-5 ${item.color} flex-shrink-0`} />
+              <span className="text-xs md:text-sm font-medium text-neutral-700 dark:text-neutral-300 text-center leading-tight">
                 {item.text}
               </span>
             </motion.div>
@@ -715,7 +735,7 @@ export default function QuizSection() {
 
           {dialogType === "success" && (
             <div className="space-y-4 text-sm">
-              <div className="p-3 md:p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800">
+              <div className="p-3 md:p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800 min-h-[100px]">
                 <div className="font-semibold text-neutral-900 dark:text-white mb-2 text-sm md:text-base">
                   Детали заявки:
                 </div>
@@ -741,22 +761,22 @@ export default function QuizSection() {
                 </div>
               </div>
 
-              <div className="p-3 md:p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+              <div className="p-3 md:p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 min-h-[100px]">
                 <div className="flex items-center gap-2 text-blue-800 dark:text-blue-300 font-semibold mb-2 text-sm md:text-base">
-                  <Zap className="h-4 w-4" />
+                  <Zap className="h-4 w-4 flex-shrink-0" />
                   Что дальше?
                 </div>
                 <ul className="space-y-2 text-blue-700 dark:text-blue-400 text-xs">
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-3 w-3" />
+                    <CheckCircle2 className="h-3 w-3 flex-shrink-0" />
                     Мы позвоним вам в течение 5 минут
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-3 w-3" />
+                    <CheckCircle2 className="h-3 w-3 flex-shrink-0" />
                     Подтвердим время консультации
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-3 w-3" />
+                    <CheckCircle2 className="h-3 w-3 flex-shrink-0" />
                     Ответим на все ваши вопросы
                   </li>
                 </ul>
@@ -766,7 +786,7 @@ export default function QuizSection() {
 
           <Button
             onClick={handleDialogClose}
-            className={`w-full ${
+            className={`w-full min-h-[44px] ${
               dialogType === "success"
                 ? "bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600"
                 : "bg-red-500 hover:bg-red-600"

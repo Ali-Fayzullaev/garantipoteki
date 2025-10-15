@@ -32,7 +32,7 @@ export const dict = {
     stats_clients: "клиентов",
     stats_experience: "лет опыта",
 
-    cta_quiz: "Пройти квиз 60 сек",
+    cta_quiz: "Пройти тест 60 сек",
 
     trust_security: "Безопасность данных",
     trust_bank_partner: "Партнер банков РК",
@@ -666,7 +666,7 @@ about_time: "Среднее время одобрения",
     stats_clients: "тұтынушы",
     stats_experience: "жыл тәжірибе",
 
-    cta_quiz: "60 секундтық сауалнаманы бастау",
+    cta_quiz: "60 секундтық тест бастау",
 
     trust_security: "Деректер қауіпсіздігі",
     trust_bank_partner: "ҚР банктерінің серіктесі",

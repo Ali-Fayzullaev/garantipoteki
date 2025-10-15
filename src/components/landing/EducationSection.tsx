@@ -78,21 +78,40 @@ export default function EducationSection() {
   ]
 
   const scrollToBooking = () => {
-    document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })
+    const bookingElement = document.getElementById('booking')
+    if (bookingElement) {
+      bookingElement.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      })
+    }
+  }
+
+  // Конфигурация анимаций для предотвращения прыжков
+  const animationConfig = {
+    initial: { opacity: 0, y: 30 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-50px" },
+    transition: { duration: 0.6 }
+  }
+
+  const cardAnimation = {
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-30px" },
+    transition: { duration: 0.5 }
   }
 
   return (
     <section className="py-20 bg-gradient-to-b from-neutral-50 to-white dark:from-neutral-900 dark:to-neutral-950 relative overflow-hidden">
-      <div className="absolute top-1/4 -left-20 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl" />
+      {/* Фоновые элементы с фиксированной позицией */}
+      <div className="absolute top-1/4 -left-20 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl pointer-events-none" />
       
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Заголовок и подзаголовок */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          {...animationConfig}
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white mb-6 leading-tight">
@@ -102,7 +121,7 @@ export default function EducationSection() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-20px" }}
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed italic max-w-3xl mx-auto"
           >
@@ -117,14 +136,14 @@ export default function EducationSection() {
               key={secret.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-              className="group"
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.6, delay: index * 0.15 }}
+              className="group min-h-[400px]"
             >
               <Card className="h-full border-0 shadow-lg bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-6 h-full flex flex-col">
                   <motion.div
-                    whileHover={{ scale: 1.05, rotate: 5 }}
+                    whileHover={{ scale: 1.05 }}
                     className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-blue-500/10 to-orange-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:from-blue-500/20 group-hover:to-orange-500/20 transition-all duration-300"
                   >
                     <secret.icon className="h-8 w-8 text-blue-600 dark:text-blue-400" />
@@ -140,10 +159,17 @@ export default function EducationSection() {
                   
                   <div className="space-y-2">
                     {secret.details.map((detail, detailIndex) => (
-                      <div key={detailIndex} className="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
+                      <motion.div 
+                        key={detailIndex} 
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.3, delay: detailIndex * 0.1 }}
+                        className="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400"
+                      >
                         <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
                         <span>{detail}</span>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 </CardContent>
@@ -156,24 +182,30 @@ export default function EducationSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: true, margin: "-30px" }}
+          transition={{ duration: 0.6, delay: 0.3 }}
           className="text-center space-y-8"
         >
-          <div className="p-8 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-700 max-w-4xl mx-auto">
-            <h4 className="font-semibold text-neutral-900 dark:text-white text-2xl mb-4 flex items-center justify-center gap-2">
-              <CheckCircle2 className="h-6 w-6 text-green-500" />
-              {t.cta_title}
-            </h4>
-            <p className="text-neutral-700 dark:text-neutral-300 text-lg mb-4">
-              {t.cta_text1}
-            </p>
-            <p className="text-neutral-900 dark:text-white font-semibold text-xl">
-              {t.cta_text2}
-            </p>
+          <div className="p-8 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-700 max-w-4xl mx-auto min-h-[120px] flex items-center justify-center">
+            <div>
+              <h4 className="font-semibold text-neutral-900 dark:text-white text-2xl mb-4 flex items-center justify-center gap-2">
+                <CheckCircle2 className="h-6 w-6 text-green-500" />
+                {t.cta_title}
+              </h4>
+              <p className="text-neutral-700 dark:text-neutral-300 text-lg mb-4">
+                {t.cta_text1}
+              </p>
+              <p className="text-neutral-900 dark:text-white font-semibold text-xl">
+                {t.cta_text2}
+              </p>
+            </div>
           </div>
 
           <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: 0.5 }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -190,9 +222,9 @@ export default function EducationSection() {
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="flex items-center justify-center gap-3 text-sm text-neutral-500 dark:text-neutral-400 bg-white/50 dark:bg-neutral-800/50 rounded-lg p-4 max-w-2xl mx-auto"
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="flex items-center justify-center gap-3 text-sm text-neutral-500 dark:text-neutral-400 bg-white/50 dark:bg-neutral-800/50 rounded-lg p-4 max-w-2xl mx-auto min-h-[60px]"
           >
             <ShieldCheck className="h-5 w-5 text-green-500 flex-shrink-0" />
             <span className="leading-relaxed">
@@ -205,8 +237,8 @@ export default function EducationSection() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.6, delay: 0.1 }}
           className="grid md:grid-cols-3 gap-6 mt-16"
         >
           {stats.map((stat, index) => (
@@ -214,11 +246,12 @@ export default function EducationSection() {
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+              viewport={{ once: true, margin: "-20px" }}
+              transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+              className="min-h-[200px]"
             >
-              <Card className="border-0 shadow-lg bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300 group">
-                <CardContent className="p-6 text-center">
+              <Card className="h-full border-0 shadow-lg bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300 group">
+                <CardContent className="p-6 text-center h-full flex flex-col justify-center">
                   <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500/10 to-orange-500/10 rounded-2xl flex items-center justify-center group-hover:from-blue-500/20 group-hover:to-orange-500/20 transition-all duration-300">
                     <stat.icon className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                   </div>

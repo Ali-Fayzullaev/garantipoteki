@@ -91,7 +91,35 @@ export default function FooterSection() {
   ]
 
   const scrollToBooking = () => {
-    document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })
+    const bookingElement = document.getElementById('booking')
+    if (bookingElement) {
+      bookingElement.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      })
+    }
+  }
+
+  // Конфигурация анимаций для предотвращения прыжков
+  const animationConfig = {
+    initial: { opacity: 0, y: 30 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-50px" },
+    transition: { duration: 0.6 }
+  }
+
+  const columnAnimation = {
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-40px" },
+    transition: { duration: 0.5 }
+  }
+
+  const itemAnimation = {
+    initial: { opacity: 0, x: -10 },
+    whileInView: { opacity: 1, x: 0 },
+    viewport: { once: true, margin: "-20px" },
+    transition: { duration: 0.3 }
   }
 
   return (
@@ -101,15 +129,12 @@ export default function FooterSection() {
           <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
             {/* Колонка 1: О компании */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="space-y-6"
+              {...columnAnimation}
+              className="space-y-6 min-h-[300px]"
             >
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center flex-shrink-0">
                     <Image 
                       src="/logo.png" 
                       alt="Гарант Ипотеки"
@@ -118,8 +143,8 @@ export default function FooterSection() {
                       className="object-contain"
                     />
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">Гарант Ипотеки</h3>
+                  <div className="min-w-0">
+                    <h3 className="text-xl font-bold text-white truncate">Гарант Ипотеки</h3>
                     <p className="text-neutral-400 text-sm">
                       {lang === 'ru' ? 'Профессиональное кредитное сопровождение' : 'Кәсіби несиелік қолдау'}
                     </p>
@@ -144,8 +169,8 @@ export default function FooterSection() {
                     key={index}
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    viewport={{ once: true, margin: "-10px" }}
+                    transition={{ duration: 0.4, delay: index * 0.08 }}
                     className="flex items-center gap-3"
                   >
                     <badge.icon className="h-4 w-4 text-blue-400 flex-shrink-0" />
@@ -157,11 +182,9 @@ export default function FooterSection() {
 
             {/* Колонка 2: Контакты */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="space-y-6"
+              {...columnAnimation}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="space-y-6 min-h-[300px]"
             >
               <h4 className="font-semibold text-white text-lg flex items-center gap-2">
                 <Phone className="h-5 w-5 text-blue-400" />
@@ -172,16 +195,16 @@ export default function FooterSection() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <Phone className="h-4 w-4 text-green-400 flex-shrink-0" />
-                    <div>
-                      <p className="text-white text-sm font-medium">{contactInfo.phone}</p>
+                    <div className="min-w-0">
+                      <p className="text-white text-sm font-medium truncate">{contactInfo.phone}</p>
                       <p className="text-neutral-400 text-xs">{t.footer_phone_label}</p>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
                     <Mail className="h-4 w-4 text-blue-400 flex-shrink-0" />
-                    <div>
-                      <p className="text-white text-sm font-medium">{contactInfo.email}</p>
+                    <div className="min-w-0">
+                      <p className="text-white text-sm font-medium truncate">{contactInfo.email}</p>
                       <p className="text-neutral-400 text-xs">{t.footer_email_label}</p>
                     </div>
                   </div>
@@ -190,7 +213,7 @@ export default function FooterSection() {
                 <div className="space-y-3 pt-4 border-t border-neutral-800">
                   <div className="flex items-start gap-3">
                     <MapPin className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-white text-sm font-medium">{t.footer_address_label}</p>
                       <p className="text-neutral-400 text-xs">{contactInfo.address}</p>
                     </div>
@@ -198,7 +221,7 @@ export default function FooterSection() {
                   
                   <div className="flex items-start gap-3">
                     <Clock className="h-4 w-4 text-yellow-400 flex-shrink-0 mt-0.5" />
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-white text-sm font-medium">{t.footer_hours_label}</p>
                       <p className="text-neutral-400 text-xs">{contactInfo.hours}</p>
                     </div>
@@ -208,7 +231,7 @@ export default function FooterSection() {
 
               <Button 
                 onClick={scrollToBooking}
-                className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white font-semibold"
+                className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white font-semibold transition-all duration-300 hover:scale-105 min-h-[44px]"
               >
                 <Phone className="mr-2 h-4 w-4" />
                 {t.footer_cta_button}
@@ -217,11 +240,9 @@ export default function FooterSection() {
 
             {/* Колонка 3: Полезное */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="space-y-6"
+              {...columnAnimation}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="space-y-6 min-h-[250px]"
             >
               <h4 className="font-semibold text-white text-lg">{t.footer_useful_title}</h4>
               
@@ -230,14 +251,12 @@ export default function FooterSection() {
                   <motion.a
                     key={index}
                     href={link.href}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                    {...itemAnimation}
+                    transition={{ duration: 0.3, delay: index * 0.06 }}
                     className="flex items-center gap-3 group text-neutral-400 hover:text-white transition-all duration-200 p-2 rounded-lg hover:bg-neutral-800/50"
                   >
-                    <link.icon className="h-4 w-4 text-blue-400 group-hover:text-blue-300 transition-colors duration-200" />
-                    <span className="text-sm">{link.name}</span>
+                    <link.icon className="h-4 w-4 text-blue-400 group-hover:text-blue-300 transition-colors duration-200 flex-shrink-0" />
+                    <span className="text-sm truncate">{link.name}</span>
                   </motion.a>
                 ))}
               </div>
@@ -245,11 +264,9 @@ export default function FooterSection() {
 
             {/* Колонка 4: Документы */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="space-y-6"
+              {...columnAnimation}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="space-y-6 min-h-[250px]"
             >
               <h4 className="font-semibold text-white text-lg">{t.footer_docs_title}</h4>
               
@@ -258,11 +275,9 @@ export default function FooterSection() {
                   <motion.a
                     key={index}
                     href={doc.href}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    className="block text-neutral-400 hover:text-white   text-sm py-1 hover:pl-2 transition-all duration-200"
+                    {...itemAnimation}
+                    transition={{ duration: 0.3, delay: index * 0.06 }}
+                    className="block text-neutral-400 hover:text-white text-sm py-1 hover:pl-2 transition-all duration-200 truncate"
                   >
                     {doc.name}
                   </motion.a>
@@ -271,8 +286,8 @@ export default function FooterSection() {
 
               <div className="pt-4 border-t border-neutral-800">
                 <div className="space-y-2 text-xs text-neutral-500">
-                  <p>{t.footer_license}</p>
-                  <p>{t.footer_trust1}</p>
+                  <p className="leading-relaxed">{t.footer_license}</p>
+                  <p className="leading-relaxed">{t.footer_trust1}</p>
                 </div>
               </div>
             </motion.div>
@@ -287,14 +302,14 @@ export default function FooterSection() {
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.6 }}
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ duration: 0.6, delay: 0.4 }}
               className="text-center md:text-left"
             >
               <p className="text-neutral-400 text-sm">
                 {t.footer_copyright.replace('{{year}}', new Date().getFullYear().toString())}
               </p>
-              <p className="text-neutral-500 text-xs mt-1">
+              <p className="text-neutral-500 text-xs mt-1 leading-relaxed">
                 {t.footer_disclaimer}
               </p>
             </motion.div>
@@ -302,12 +317,12 @@ export default function FooterSection() {
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="flex items-center gap-4 text-neutral-400 text-sm"
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-neutral-400 text-sm text-center"
             >
-              <span>{contactInfo.address}</span>
-              <span className="hidden md:block">•</span>
+              <span className="truncate">{contactInfo.address}</span>
+              <span className="hidden sm:block">•</span>
               <span>{t.footer_license}</span>
             </motion.div>
           </div>
