@@ -85,12 +85,6 @@ export default function FinalCTASection() {
       color: "text-yellow-500",
     },
     {
-      icon: Target,
-      title: t.final_offer2_title,
-      description: t.final_offer2_desc,
-      color: "text-blue-500",
-    },
-    {
       icon: Star,
       title: t.final_offer3_title,
       description: t.final_offer3_desc,

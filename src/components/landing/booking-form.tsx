@@ -60,7 +60,6 @@ export default function BookingForm() {
 
   const trustBadges = [
     { text: t.final_trust1, icon: CheckCircle2 },
-    { text: t.final_trust2, icon: Shield },
     { text: t.final_trust3, icon: Shield },
     { text: t.final_trust4, icon: CheckCircle2 },
   ];

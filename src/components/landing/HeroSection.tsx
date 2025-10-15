@@ -245,10 +245,6 @@ export default function HeroSection() {
                 <ShieldCheck className="h-5 w-5 text-green-500 flex-shrink-0" />
                 <span>{t.trust_security}</span>
               </div>
-              <div className="flex items-center gap-3 text-sm text-neutral-600 dark:text-neutral-400 bg-white/50 dark:bg-neutral-800/50 rounded-lg px-4 py-2 backdrop-blur-sm min-h-[44px]">
-                <Building2 className="h-5 w-5 text-blue-500 flex-shrink-0" />
-                <span>{t.trust_bank_partner}</span>
-              </div>
             </motion.div>
           </motion.div>
 

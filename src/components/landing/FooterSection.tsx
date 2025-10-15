@@ -82,7 +82,6 @@ export default function FooterSection() {
   ]
 
   const trustBadges = [
-    { icon: Shield, text: t.footer_trust1 },
     { 
       icon: Award, 
       text: t.footer_trust2.replace('{{year}}', companyInfo.founded) 
@@ -287,7 +286,6 @@ export default function FooterSection() {
               <div className="pt-4 border-t border-neutral-800">
                 <div className="space-y-2 text-xs text-neutral-500">
                   <p className="leading-relaxed">{t.footer_license}</p>
-                  <p className="leading-relaxed">{t.footer_trust1}</p>
                 </div>
               </div>
             </motion.div>

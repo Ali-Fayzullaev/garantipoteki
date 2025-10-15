@@ -87,11 +87,6 @@ export default function BookingSection() {
       description: t.offer_1_desc,
     },
     {
-      icon: Star,
-      title: t.offer_2_title,
-      description: t.offer_2_desc,
-    },
-    {
       icon: FileText,
       title: t.offer_3_title,
       description: t.offer_3_desc,
