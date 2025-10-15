@@ -546,7 +546,7 @@ export default function QuizSection() {
                             className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105 min-h-[56px]"
                           >
                             <CalendarDays className="mr-2 h-5 w-5 flex-shrink-0" />
-                            <span className="text-sm md:text-base truncate">
+                            <span className=" text-[12px] md:text-base truncate">
                               {t.result_success_cta}
                             </span>
                           </Button>

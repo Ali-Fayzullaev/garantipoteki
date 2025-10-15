@@ -607,7 +607,7 @@ export const dict = {
 
     footer_useful_title: "Полезное",
     footer_link1: "Профессиональная консультация",
-    footer_link2: "Узнайте за 60 секунд",
+    footer_link2: "Узнать сумму одобрения",
     footer_link3: "Частые вопросы",
     footer_link4: "Отзывы клиентов",
 
@@ -678,7 +678,7 @@ about_time: "Среднее время одобрения",
 
     video_close: "Жабу",
 
-    floating_quiz_title: "Жылдам  тексеру",
+    floating_quiz_title: "Мақұлдау сомасын біліңіз",
     floating_quiz_desc: "Сіздің сомаңызды 60 секундта біліңіз",
     floating_quiz_cta: "Қазір бастау",
 
@@ -1234,7 +1234,7 @@ about_time: "Среднее время одобрения",
 
     footer_useful_title: "Пайдалы ақпарат",
     footer_link1: "Кәсіби кеңес",
-    footer_link2: "60 секунд ішінде біліңіз",
+    footer_link2: "Мақұлдау сомасын біліңіз",
     footer_link3: "Жиі қойылатын сұрақтар",
     footer_link4: "Клиенттердің пікірлері",
 
