@@ -18,7 +18,6 @@ export const dict = {
     headline_part2: "8 из 10 людей,",
     headline_part3: "которые получают отказ в банке,",
     headline_part4: "делают одну и ту же ошибку?",
-
     solution_teaser: "Я покажу вам, как получить в",
     solution_highlight: "2-3 раза больше денег",
     solution_continuation: "чем предлагает банк",
@@ -32,7 +31,7 @@ export const dict = {
     stats_clients: "клиентов",
     stats_experience: "лет опыта",
 
-    cta_quiz: "Пройти тест 60 сек",
+    cta_quiz: "Пройти тест 1 мин",
 
     trust_security: "Безопасность данных",
 
@@ -44,21 +43,21 @@ export const dict = {
     video_close: "Закрыть",
 
     floating_quiz_title: "Быстрый тест",
-    floating_quiz_desc: "Узнайте вашу сумму за 60 сек",
+    floating_quiz_desc: "Узнайте вашу сумму за 1 мин",
     floating_quiz_cta: "Начать сейчас",
 
     scroll_indicator: "Узнать больше",
 
     // Quiz Section
     quiz_title:
-      "Узнайте за 60 секунд, сколько денег вы можете получить уже сегодня",
+      "Узнайте за 1 минут, сколько денег вы можете получить уже сегодня",
     quiz_subtitle:
       "Ответьте на 4 простых вопроса и получите персональный расчет вашей максимальной суммы",
 
     // Progress
     question_of: "Вопрос {{step}} из {{total}}",
     completed: "% завершено",
-    time_badge: "60 сек",
+    time_badge: "1 мин",
 
     // Questions
     q1: "Какая сумма вам нужна?",
@@ -141,7 +140,7 @@ export const dict = {
     rec_job:
       "Найдите официальное трудоустройство или подготовьте документы, подтверждающие доход",
     rec_pension_partial:
-      "Нарастите пенсионные отчисления в течение 2-3 месяцев",
+      "Чтобы заявка прошла , нужно чтобы пенсионные отчисления падали минимум 4 месяца",
     rec_debt_clear:
       "Погасите текущие микрозаймы и просрочки перед подачей заявки",
     rec_amount_lower:
@@ -149,7 +148,7 @@ export const dict = {
 
     // Trust Badges
     trust_confidential: "Конфиденциально",
-    trust_60sec: "60 секунд",
+    trust_60sec: "1 минут",
     trust_no_spam: "Без спама",
     trust_accurate: "Точный расчет",
 
@@ -205,7 +204,6 @@ export const dict = {
     stat3_value: "-20%",
 
     // CTA
-    cta_title: "Закрывающий призыв:",
     cta_text1:
       "Если у вас есть пенсионные отчисления за последние 6 месяцев и нет текущих просрочек - запишитесь на консультацию прямо сейчас.",
     cta_text2:
@@ -644,7 +642,6 @@ about_time: "Среднее время одобрения",
     headline_part2: "банктен бас тартылған",
     headline_part3: "10 адамның 8-і",
     headline_part4: "бір ғана қатені қайталайды ма?",
-
     solution_teaser: "Сізге банктің ұсынғанынан",
     solution_highlight: "2-3 есе көп ақша алу",
     solution_continuation: "жолын көрсетемін",
@@ -658,7 +655,7 @@ about_time: "Среднее время одобрения",
     stats_clients: "тұтынушы",
     stats_experience: "жыл тәжірибе",
 
-    cta_quiz: "60 секундтық тест бастау",
+    cta_quiz: "1 минуттық тест бастау",
 
     trust_security: "Деректер қауіпсіздігі",
 
@@ -670,20 +667,20 @@ about_time: "Среднее время одобрения",
     video_close: "Жабу",
 
     floating_quiz_title: "Мақұлдау сомасын біліңіз",
-    floating_quiz_desc: "Сіздің сомаңызды 60 секундта біліңіз",
+    floating_quiz_desc: "Сіздің сомаңызды 1 минутта біліңіз",
     floating_quiz_cta: "Қазір бастау",
 
     scroll_indicator: "Көбірек білу",
 
     // Quiz Section
-    quiz_title: "60 секунд ішінде бүгін қанша ақша ала алатыныңызды біліңіз",
+    quiz_title: "1 минут ішінде бүгін қанша ақша ала алатыныңызды біліңіз",
     quiz_subtitle:
       "4 қарапайым сұраққа жауап беріңіз және сіздің максималды сомаңызға жеке есептеу алыңыз",
 
     // Progress
     question_of: "{{step}} сұрақ / {{total}}",
     completed: "% аяқталды",
-    time_badge: "60 сек",
+    time_badge: "1 мин",
 
     // Questions
     q1: "Сізге қандай сома қажет?",
@@ -767,7 +764,7 @@ about_time: "Среднее время одобрения",
     rec_pension: "2–3 ай бойы зейнетақы аударымдарын көбейтіңіз",
     rec_job:
       "Ресми жұмыс орнын табыңыз немесе табысты растайтын құжаттарды дайындаңыз",
-    rec_pension_partial: "2-3 ай ішінде зейнетақы аударымдарын көбейтіңіз",
+    rec_pension_partial: "Өтінімнің өтуі үшін зейнетақы жарналары кем дегенде 4 айға түсуі керек",
     rec_debt_clear:
       "Ағымдағы микроқарыздар мен кешіккен төлемдерді өтініш берер алдында төлеп тастаңыз",
     rec_amount_lower:
@@ -775,7 +772,7 @@ about_time: "Среднее время одобрения",
 
     // Trust Badges
     trust_confidential: "Құпиялылық",
-    trust_60sec: "60 секунд",
+    trust_60sec: "1 минут",
     trust_no_spam: "Спамсыз",
     trust_accurate: "Дәл есептеу",
 

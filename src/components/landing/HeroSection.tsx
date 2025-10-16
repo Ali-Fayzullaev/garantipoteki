@@ -1,447 +1,329 @@
-"use client";
+"use client"
 
-import React, { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Play,
-  ChevronRight,
-  ShieldCheck,
-  Building2,
-  Star,
-  Volume2,
-  VolumeX,
-  X,
-  Clock,
-  Users,
-} from "lucide-react";
-import { useApp } from "@/components/providers/AppProvider";
-import { dict } from "@/lib/dictionary";
+import React, { useState, useRef, useEffect } from "react";
+import { Play, Pause, Volume2, VolumeX, Maximize2 } from "lucide-react";
+import { useApp } from '@/components/providers/AppProvider';
+import { Switch } from '@/components/ui/switch';
+import { Moon, Sun } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { dict } from '@/lib/dictionary';
 
-// Простая функция для замены шаблонов вида {{key}}
-const interpolate = (text: string, values: Record<string, string>): string => {
-  return text.replace(/{{(\w+)}}/g, (_, key) => values[key] || `{{${key}}}`);
-};
-
-export default function HeroSection() {
-  const { lang } = useApp();
+export default function VideoHero() {
+  const { dark, setDark, lang } = useApp();
   const t = dict[lang];
-
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [showControls, setShowControls] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [windowHeight, setWindowHeight] = useState(0);
 
-  const handlePlayVideo = () => {
-    setIsVideoPlaying(true);
-    if (videoRef.current) {
-      videoRef.current.play();
-    }
-  };
+  // Отслеживаем высоту окна для мобильных устройств
+  useEffect(() => {
+    const updateWindowHeight = () => {
+      setWindowHeight(window.innerHeight);
+    };
 
-  const handlePauseVideo = () => {
-    setIsVideoPlaying(false);
+    updateWindowHeight();
+    window.addEventListener('resize', updateWindowHeight);
+    return () => window.removeEventListener('resize', updateWindowHeight);
+  }, []);
+
+  // Обработчик изменения полноэкранного режима
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const togglePlay = () => {
     if (videoRef.current) {
-      videoRef.current.pause();
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play().catch(error => {
+          console.error("Error playing video:", error);
+        });
+      }
+      setIsPlaying(!isPlaying);
     }
   };
 
   const toggleMute = () => {
     if (videoRef.current) {
-      videoRef.current.muted = !videoRef.current.muted;
-      setIsMuted(videoRef.current.muted);
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
     }
   };
 
-  const scrollToQuiz = () => {
-    const quizElement = document.getElementById("quiz");
-    if (quizElement) {
-      quizElement.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      const currentTime = videoRef.current.currentTime;
+      const duration = videoRef.current.duration;
+      setCurrentTime(currentTime);
+      setProgress(duration ? (currentTime / duration) * 100 : 0);
     }
   };
 
-  // Подготовка текста с подстановкой
-  const introText = interpolate(t.intro_text, {
-    years: t.intro_years,
-    company: t.intro_company,
-  });
-
-  // Конфигурация анимаций для предотвращения прыжков
-  const animationConfig = {
-    initial: { opacity: 0, y: 30 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.8 },
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration);
+    }
   };
 
-  const staggeredAnimation = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 },
+  const handleProgressChange = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickPosition = (e.clientX - rect.left) / rect.width;
+    const newTime = clickPosition * duration;
+    
+    if (videoRef.current) {
+      videoRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+      setProgress(duration ? (newTime / duration) * 100 : 0);
+    }
   };
+
+  const formatTime = (time: number) => {
+    if (!time || !isFinite(time)) return "0:00";
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
+  const toggleFullscreen = async () => {
+    const container = containerRef.current;
+    const video = videoRef.current;
+    
+    if (!container || !video) return;
+
+    try {
+      if (document.fullscreenElement) {
+        // Выход из полноэкранного режима
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if ((document as any).webkitExitFullscreen) {
+          await (document as any).webkitExitFullscreen();
+        } else if ((document as any).mozCancelFullScreen) {
+          await (document as any).mozCancelFullScreen();
+        } else if ((document as any).msExitFullscreen) {
+          await (document as any).msExitFullscreen();
+        }
+      } else {
+        // Вход в полноэкранный режим
+        // Пробуем разные методы для разных браузеров
+        if (container.requestFullscreen) {
+          await container.requestFullscreen();
+        } else if ((container as any).webkitRequestFullscreen) {
+          await (container as any).webkitRequestFullscreen();
+        } else if ((container as any).mozRequestFullScreen) {
+          await (container as any).mozRequestFullScreen();
+        } else if ((container as any).msRequestFullscreen) {
+          await (container as any).msRequestFullscreen();
+        } else {
+          // Fallback для мобильных - запускаем видео в полноэкранном режиме
+          if ((video as any).webkitEnterFullscreen) {
+            (video as any).webkitEnterFullscreen();
+          } else if (video.requestFullscreen) {
+            await video.requestFullscreen();
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Fullscreen error:", error);
+      // Ultimate fallback для мобильных
+      if ((video as any).webkitEnterFullscreen) {
+        (video as any).webkitEnterFullscreen();
+      }
+    }
+  };
+
+  // Обработчик касаний для мобильных устройств
+  const handleTouchStart = () => {
+    setShowControls(true);
+    setTimeout(() => setShowControls(false), 3000);
+  };
+
+  // Автоматическое скрытие контролов через 3 секунды
+  useEffect(() => {
+    if (showControls && isPlaying) {
+      const timer = setTimeout(() => {
+        setShowControls(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showControls, isPlaying]);
+
+  // Адаптивная высота для мобильных устройств
+  const getVideoHeight = () => {
+    if (typeof window === 'undefined') return "h-64 md:h-[500px] lg:h-[600px]";
+    
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      // На мобильных используем 70% высоты экрана
+      return `h-[70vh] max-h-[600px]`;
+    }
+    return "h-[500px] lg:h-[600px]";
+  };
+
+  // Классы для тем
+  const bgClass = dark
+    ? "bg-gradient-to-b from-slate-950 via-slate-900 to-black"
+    : "bg-gradient-to-b from-gray-50 via-white to-gray-100";
+
+  const textClass = dark ? "text-white" : "text-slate-900";
+  const containerBgClass = dark ? "bg-black border-gray-800" : "bg-white border-gray-200";
+  const overlayClass = dark ? "from-black via-black/50" : "from-white/80 via-white/40";
+  const hoverBgClass = dark ? "hover:bg-white/20" : "hover:bg-black/20";
+  const playOverlayClass = dark ? "bg-black/30 hover:bg-black/50" : "bg-white/30 hover:bg-white/50";
+  const playButtonBgClass = dark ? "bg-white/20 hover:bg-white/30" : "bg-black/20 hover:bg-black/30";
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-neutral-50 via-blue-50/30 to-green-50/20 dark:from-neutral-950 dark:via-blue-950/20 dark:to-green-950/10">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-200/20 dark:bg-blue-500/10 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.4, 0.2, 0.4],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-          className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-green-200/20 dark:bg-green-500/10 rounded-full blur-3xl"
-        />
-      </div>
+    <div className={`min-h-screen ${bgClass} transition-colors duration-500 pt-8 md:pt-20 pb-8 md:pb-20`}>
+      <div className="max-w-6xl mx-auto px-4">
+        {/* Видео контейнер */}
+        <div
+          ref={containerRef}
+          className={`relative mt-13  rounded-2xl md:rounded-3xl overflow-hidden ${containerBgClass} border shadow-2xl group transition-colors duration-500 ${getVideoHeight()}`}
+          onMouseEnter={() => setShowControls(true)}
+          onMouseLeave={() => setShowControls(false)}
+          onTouchStart={handleTouchStart}
+        >
+          {/* Градиентный ореол */}
+          <div className={`absolute -inset-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-2xl md:rounded-3xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 -z-10`} />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-24">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          {/* Left Content */}
-          <motion.div
-            {...animationConfig}
-            className="space-y-8 text-center lg:text-left"
-          >
-            {/* Main Headline */}
-            <div className="space-y-6">
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight"
+          <div className="relative w-full h-full bg-black flex items-center justify-center">
+            {/* Видео с правильным aspect ratio */}
+            <div className="w-full h-full flex items-center justify-center">
+              <video
+                ref={videoRef}
+                className="w-full h-full object-contain max-w-full max-h-full"
+                onTimeUpdate={handleTimeUpdate}
+                onLoadedMetadata={handleLoadedMetadata}
+                onEnded={() => setIsPlaying(false)}
+                muted={isMuted}
+                playsInline
+                preload="metadata"
+                aria-label={"Демонстрационное видео нашего сервиса"}
               >
-                <span className="block text-neutral-900 dark:text-white leading-tight">
-                  {t.headline_part1}
-                </span>
-                <span className="block text-neutral-900 dark:text-white leading-tight mt-2 lg:mt-4">
-                  {t.headline_part2}
-                </span>
-                <span className="block text-neutral-900 dark:text-white leading-tight">
-                  {t.headline_part3}
-                </span>
-                <motion.span
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                  className="block bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent leading-tight mt-2 lg:mt-4"
-                >
-                  {t.headline_part4}
-                </motion.span>
-              </motion.h1>
+                <source src="/forgarand.mp4" type="video/mp4" />
+                <source src="/forgarand.webm" type="video/webm" />
+                {"Ваш браузер не поддерживает видео."}
+              </video>
             </div>
 
-            {/* Solution Teaser */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.8 }}
-              className="space-y-4"
-            >
-              <p className="text-xl sm:text-2xl lg:text-3xl font-semibold text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                {t.solution_teaser}{" "}
-                <span className="text-green-600 dark:text-green-400">
-                  {t.solution_highlight}
-                </span>
-                , {t.solution_continuation}
-              </p>
-            </motion.div>
-
-            {/* Company Introduction */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 1.0 }}
-              className="space-y-4"
-            >
-              <p className="text-lg sm:text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                Меня зовут{" "}
-                <span className="font-semibold text-blue-600 dark:text-blue-400">
-                  {t.intro_name}
-                </span>
-                , и за последние{" "}
-                <span className="font-semibold text-green-600 dark:text-green-400">
-                  {t.intro_years}
-                </span>{" "}
-                лет наша компания
-                <span className="font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
-                  {" "}
-                  {t.intro_company}{" "}
-                </span>
-                {introText}
-              </p>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 1.2 }}
-              className="grid grid-cols-2 gap-4 max-w-md mx-auto lg:mx-0"
-            >
-              <div className="text-center p-4 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 min-h-[100px] flex flex-col justify-center">
-                <Users className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-neutral-900 dark:text-white">
-                  1000+
-                </div>
-                <div className="text-sm text-neutral-600 dark:text-neutral-400">
-                  {t.stats_clients}
-                </div>
-              </div>
-              <div className="text-center p-4 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 min-h-[100px] flex flex-col justify-center">
-                <Clock className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-neutral-900 dark:text-white">
-                  5
-                </div>
-                <div className="text-sm text-neutral-600 dark:text-neutral-400">
-                  {t.stats_experience}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 1.4 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-            >
-              <Button
-                onClick={scrollToQuiz}
-                size="lg"
-                className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105 min-h-[56px]"
+            {/* Play overlay */}
+            {!isPlaying && (
+              <div
+                className={`absolute inset-0 flex items-center justify-center ${playOverlayClass} cursor-pointer transition-colors duration-300 group`}
+                onClick={togglePlay}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  togglePlay();
+                }}
               >
-                <ChevronRight className="mr-2 h-5 w-5" />
-                {t.cta_quiz}
-              </Button>
-            </motion.div>
-
-            {/* Trust Indicators */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 1.6 }}
-              className="flex flex-wrap gap-4 justify-center lg:justify-start pt-4"
-            >
-              <div className="flex items-center gap-3 text-sm text-neutral-600 dark:text-neutral-400 bg-white/50 dark:bg-neutral-800/50 rounded-lg px-4 py-2 backdrop-blur-sm min-h-[44px]">
-                <ShieldCheck className="h-5 w-5 text-green-500 flex-shrink-0" />
-                <span>{t.trust_security}</span>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Content - Video Card */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, x: 30 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="relative order-first lg:order-last"
-          >
-            {/* Main Video Card */}
-            <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm overflow-hidden group cursor-pointer mx-auto max-w-md lg:max-w-none min-h-[500px] lg:min-h-[600px]">
-              <CardContent className="p-0 relative h-full">
-                <div className="aspect-[9/16] lg:aspect-[4/5] bg-gradient-to-br from-blue-500/5 to-green-500/5 relative overflow-hidden h-full">
-                  <AnimatePresence mode="wait">
-                    {!isVideoPlaying ? (
-                      <motion.div
-                        key="thumbnail"
-                        initial={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-500/10 to-green-500/10 h-full"
-                      >
-                        {/* Thumbnail Background */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-neutral-900/40 to-neutral-950/60" />
-
-                        {/* Thumbnail Content */}
-                        <motion.div
-                          whileHover={{ scale: 1.02 }}
-                          className="relative z-10 text-center space-y-6 p-6 sm:p-8 w-full"
-                        >
-                          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-green-500 rounded-full flex items-center justify-center mx-auto shadow-2xl shadow-green-500/25 group-hover:shadow-green-500/40 transition-all duration-300">
-                            <Play className="h-6 w-6 sm:h-8 sm:w-8 text-white ml-1" />
-                          </div>
-
-                          <div className="space-y-4">
-                            <p className="text-neutral-200 text-base sm:text-lg leading-relaxed">
-                              {t.video_description}
-                            </p>
-                          </div>
-
-                          {/* Video Stats */}
-                          <div className="flex items-center justify-center gap-4 sm:gap-6 text-white/80 text-xs sm:text-sm">
-                            <div className="flex items-center gap-2">
-                              <Play className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                              <span>{t.video_duration}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Star className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                              <span>{t.video_exclusive}</span>
-                            </div>
-                          </div>
-                        </motion.div>
-
-                        {/* Floating Elements */}
-                        <motion.div
-                          animate={{
-                            y: [0, -10, 0],
-                            rotate: [0, 180, 360],
-                          }}
-                          transition={{
-                            duration: 6,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                          }}
-                          className="absolute top-4 left-4 sm:top-6 sm:left-6 w-3 h-3 sm:w-4 sm:h-4 bg-blue-400/30 rounded-full pointer-events-none"
-                        />
-                        <motion.div
-                          animate={{
-                            y: [0, 15, 0],
-                            scale: [1, 1.2, 1],
-                          }}
-                          transition={{
-                            duration: 4,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                            delay: 1,
-                          }}
-                          className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 w-4 h-4 sm:w-6 sm:h-6 bg-green-400/30 rounded-full pointer-events-none"
-                        />
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="video"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                        className="absolute inset-0 h-full"
-                      >
-                        <video
-                          ref={videoRef}
-                          src="/forgarand.mp4"
-                          autoPlay
-                          className="w-full h-full object-cover"
-                          muted={isMuted}
-                          loop
-                          playsInline
-                        >
-                          <source src="/forgarand.mp4" type="video/mp4" />
-                          Ваш браузер не поддерживает видео.
-                        </video>
-
-                        {/* Video Controls */}
-                        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                          <Button
-                            size="icon"
-                            variant="secondary"
-                            className="bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm w-10 h-10"
-                            onClick={toggleMute}
-                          >
-                            {isMuted ? (
-                              <VolumeX className="h-4 w-4" />
-                            ) : (
-                              <Volume2 className="h-4 w-4" />
-                            )}
-                          </Button>
-
-                          <Button
-                            variant="secondary"
-                            className="bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm h-10 px-3 text-sm min-w-[120px]"
-                            onClick={handlePauseVideo}
-                          >
-                            <X className="h-4 w-4 mr-2" />
-                            {t.video_close}
-                          </Button>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Play Button Overlay */}
-                  {!isVideoPlaying && (
-                    <Button
-                      className="absolute inset-0 w-full h-full bg-transparent hover:bg-black/5 transition-colors z-20"
-                      onClick={handlePlayVideo}
-                    >
-                      <span className="sr-only">Play video</span>
-                    </Button>
-                  )}
+                <div className={`w-16 h-16 md:w-24 md:h-24 lg:w-32 lg:h-32 ${playButtonBgClass} backdrop-blur-md rounded-full flex items-center justify-center transition-all transform group-hover:scale-110 active:scale-95`}>
+                  <Play className="w-6 h-6 md:w-8 md:h-8 lg:w-12 lg:h-12 text-white fill-white ml-1" />
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            )}
 
-            {/* Floating Quiz Card - Hidden on mobile */}
-            <motion.div
-              initial={{ opacity: 0, y: 30, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.8, delay: 1.2 }}
-              className={`absolute  -right-2 hidden lg:block ${
-                isVideoPlaying ? "-bottom-61" : "-bottom-6"
+            {/* Контролы */}
+            <div
+              className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t ${overlayClass} to-transparent p-3 md:p-4 lg:p-6 transition-opacity duration-300 ${
+                showControls || !isPlaying ? "opacity-100" : "opacity-0"
               }`}
             >
-              <Card className="border-0 shadow-2xl bg-gradient-to-br from-green-500 to-emerald-600 text-white w-64 min-h-[180px]">
-                <CardContent className="p-6 text-center h-full flex flex-col justify-center">
-                  <div className="w-12 h-12 mx-auto mb-3 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                    <Star className="h-6 w-6 text-white" />
-                  </div>
+              {/* Progress bar */}
+              <div
+                className={`w-full h-1 md:h-1.5 ${dark ? "bg-gray-600" : "bg-gray-300"} rounded-full cursor-pointer mb-3 md:mb-4 overflow-hidden group/progress hover:h-2 md:hover:h-2 transition-all touch-none`}
+                onClick={handleProgressChange}
+                onTouchStart={(e) => {
+                  e.preventDefault();
+                  const touch = e.touches[0];
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const clickPosition = (touch.clientX - rect.left) / rect.width;
+                  const newTime = clickPosition * duration;
+                  
+                  if (videoRef.current) {
+                    videoRef.current.currentTime = newTime;
+                    setCurrentTime(newTime);
+                    setProgress(duration ? (newTime / duration) * 100 : 0);
+                  }
+                }}
+              >
+                <div
+                  className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all relative"
+                  style={{ width: `${progress}%` }}
+                >
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 md:w-3 md:h-3 lg:w-4 lg:h-4 bg-white rounded-full shadow-lg opacity-0 group-hover/progress:opacity-100" />
+                </div>
+              </div>
 
-                  <h4 className="font-bold text-lg mb-2">
-                    {t.floating_quiz_title}
-                  </h4>
-
-                  <p className="text-white/80 text-sm mb-4">
-                    {t.floating_quiz_desc}
-                  </p>
-
-                  <Button
-                    onClick={scrollToQuiz}
-                    className="w-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm border border-white/20 min-h-[40px]"
-                    size="sm"
+              {/* Controls row */}
+              <div className={`flex items-center justify-between ${textClass} text-xs md:text-sm`}>
+                <div className="flex items-center gap-1 md:gap-2 lg:gap-3">
+                  <button
+                    onClick={togglePlay}
+                    className={`p-1.5 md:p-2 lg:p-3 ${hoverBgClass} rounded-lg transition-colors active:scale-95 touch-manipulation`}
+                    title={isPlaying ? "Пауза" :  "Воспроизвести"}
+                    aria-label={isPlaying ?  "Пауза" :  "Воспроизвести"}
                   >
-                    {t.floating_quiz_cta}
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </motion.div>
+                    {isPlaying ? (
+                      <Pause className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
+                    ) : (
+                      <Play className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
+                    )}
+                  </button>
+
+                  <button
+                    onClick={toggleMute}
+                    className={`p-1.5 md:p-2 lg:p-3 ${hoverBgClass} rounded-lg transition-colors active:scale-95 touch-manipulation`}
+                    title={isMuted ? "Включить звук" : "Выключить звук"}
+                    aria-label={isMuted ?  "Включить звук" : "Выключить звук"}
+                  >
+                    {isMuted ? (
+                      <VolumeX className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
+                    ) : (
+                      <Volume2 className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
+                    )}
+                  </button>
+
+                  <span className="text-xs md:text-sm font-medium min-w-[60px] md:min-w-[80px]">
+                    {formatTime(currentTime)} / {formatTime(duration)}
+                  </span>
+                </div>
+
+                <button
+                  onClick={toggleFullscreen}
+                  className={`p-1.5 md:p-2 lg:p-3 ${hoverBgClass} rounded-lg transition-colors active:scale-95 touch-manipulation`}
+                  title={isFullscreen ?  "Выйти из полноэкранного режима" : "Полноэкранный режим"}
+                  aria-label={isFullscreen ?  "Выйти из полноэкранного режима" :  "Полноэкранный режим"}
+                >
+                  <Maximize2 className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="text-center mt-8 md:mt-16">
+          <button 
+            className="px-6 py-3 md:px-8 md:py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-full transition-all hover:shadow-xl hover:shadow-blue-500/50 transform hover:scale-105 active:scale-95 text-sm md:text-base touch-manipulation"
+            onClick={() => document.getElementById('quiz')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            {t.scroll_indicator}
+          </button>
         </div>
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 2.0 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden lg:block"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="flex flex-col items-center gap-2 text-neutral-500 dark:text-neutral-400 cursor-pointer"
-          onClick={scrollToQuiz}
-        >
-          <span className="text-sm">{t.scroll_indicator}</span>
-          <ChevronRight className="h-5 w-5 rotate-90" />
-        </motion.div>
-      </motion.div>
-    </section>
+    </div>
   );
 }

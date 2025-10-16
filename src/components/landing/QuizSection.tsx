@@ -38,6 +38,8 @@ import {
   AlertTriangle,
   Target,
   PieChart,
+  Briefcase,
+  Ban,
 } from "lucide-react";
 import { useApp } from "@/components/providers/AppProvider";
 import { dict } from "@/lib/dictionary";
@@ -111,6 +113,13 @@ export default function QuizSection() {
           Icon: PauseCircle,
           description: t.q2_c_desc,
         },
+        {
+          value: "d",
+          label:
+            lang === "ru" ? "У меня ИП, либо ТОО" : "Менде ЖШС немесе ЖШC бар",
+          Icon: Briefcase,
+          description: lang === "ru" ? "Бизнес доход" : "Бизнес табысы",
+        },
       ],
       hint: t.q2_hint,
     },
@@ -154,6 +163,13 @@ export default function QuizSection() {
           Icon: AlertTriangle,
           description: t.q4_d_desc,
         },
+        {
+          value: "e",
+          label: lang === "ru" ? "Нахожусь на просрочке" : "Менде кешігу бар",
+          Icon: Ban,
+          description:
+            lang === "ru" ? "Текущие просрочки" : "Ағымдағы кешігулер",
+        },
       ],
       hint: t.q4_hint,
     },
@@ -161,7 +177,11 @@ export default function QuizSection() {
 
   const pick = (key: string, value: string) => {
     setAnswers((prev) => ({ ...prev, [key]: value }));
-    if (step < totalSteps) {
+
+    // Проверяем, если выбран вариант "Нахожусь на просрочке" - сразу завершаем квиз
+    if (key === "debt" && value === "e") {
+      setQuizDone(true);
+    } else if (step < totalSteps) {
       setStep(step + 1);
     } else {
       setQuizDone(true);
@@ -177,6 +197,7 @@ export default function QuizSection() {
 
     if (answers.job === "a") s += 5;
     else if (answers.job === "b") s += 3;
+    else if (answers.job === "d") s += 6; // ИП/ТОО - высший балл
     else s += 1;
 
     if (answers.pension === "a") s += 5;
@@ -185,17 +206,34 @@ export default function QuizSection() {
     if (answers.debt === "a") s += 5;
     else if (answers.debt === "b") s += 4;
     else if (answers.debt === "c") s += 2;
-    else s += 0;
+    else if (answers.debt === "d") s += 1; // Есть просрочки, но не на просрочке
+    else s += 0; // На просрочке - 0 баллов
 
     return s;
   }, [answers]);
 
-  const isTop20 = score >= 15;
+  // Проверяем, отсеиваем ли клиента (на просрочке)
+  const isRejected = answers.debt === "e";
+
+  // Проверяем, топ ли клиент (ИП/ТОО с пенсионными отчислениями)
+  const isTopClient = answers.job === "d" && answers.pension !== "c";
+
+  // Получаем максимальную сумму на основе выбора в первом вопросе
+  const getMaxAmountText = () => {
+    if (isRejected) return "0";
+
+    // Если ИП/ТОО с пенсионными отчислениями - всегда 30 млн
+    if (isTopClient) return "30";
+
+    if (answers.amount === "a") return "7";
+    if (answers.amount === "b") return "12";
+    if (answers.amount === "c") return "20";
+    if (answers.amount === "d") return "25";
+    return "15";
+  };
 
   const formatPhone = (value: string): string => {
     const numbers = value.replace(/\D/g, "");
-
-    // Ограничиваем длину до 11 цифр (10 без +7)
     const limitedNumbers = numbers.slice(0, 11);
 
     if (limitedNumbers.length === 0) return "";
@@ -218,10 +256,13 @@ export default function QuizSection() {
     const formattedValue = formatPhone(value);
     setPhoneNumber(formattedValue);
 
-    // Валидация телефона
     const numbers = formattedValue.replace(/\D/g, "");
     if (numbers.length < 11) {
-      setPhoneError("Номер телефона должен содержать 11 цифр");
+      setPhoneError(
+        lang === "ru"
+          ? "Номер телефона должен содержать 11 цифр"
+          : "Телефон нөмірі 11 саннан тұруы керек"
+      );
     } else {
       setPhoneError("");
     }
@@ -242,29 +283,32 @@ export default function QuizSection() {
     setIsSubmitting(true);
 
     try {
-      // Создаем заявку в основной системе
       const deal = await createDeal({
         name: "Клиент квиза",
         phone_number: phoneNumber.replace(/\D/g, ""),
         comment: `Результат квиза: ${score}/20 баллов. ${
-          isTop20 ? "Топ 20%" : "Нужна консультация"
+          isRejected
+            ? "Отказ - на просрочке"
+            : isTopClient
+            ? "Топ клиент ИП/ТОО"
+            : "Стандартный клиент"
         }. Ответы: ${JSON.stringify(answers)}`,
       });
 
-      // Отправляем в TXT систему
       await updateTxt({
         name: "Клиент квиза",
         phone: phoneNumber.replace(/\D/g, ""),
         comment: `Результат квиза: ${score}/20 баллов. ${
-          isTop20 ? "Топ 20%" : "Нужна консультация"
+          isRejected
+            ? "Отказ - на просрочке"
+            : isTopClient
+            ? "Топ клиент ИП/ТОО"
+            : "Стандартный клиент"
         }`,
       });
 
-      // Успешная отправка
       setDialogType("success");
       setIsDialogOpen(true);
-
-      // Сброс формы
       setPhoneNumber("");
       setPhoneError("");
     } catch (error) {
@@ -281,9 +325,28 @@ export default function QuizSection() {
   };
 
   const getPersonalizedRecommendations = () => {
+    if (isRejected) {
+      return [
+        lang === "ru"
+          ? "К сожалению, мы не можем рассмотреть вашу заявку из-за текущих просрочек"
+          : "Өкінішке орай, біз ағымдағы кешігулер себебінен сіздің өтінішіңізді қарай алмаймыз",
+      ];
+    }
+
     const recs = [];
+
+    // Рекомендации по пенсионным отчислениям
+    if (answers.pension === "c") {
+      recs.push(
+        lang === "ru"
+          ? "Чтобы заявка прошла, нужно чтобы пенсионные отчисления падали минимум 4 месяца"
+          : "Өтініштің өтуі үшін зейнетақы аударымдары кемінде 4 ай бойы түсуі керек"
+      );
+    } else if (answers.pension === "b") {
+      recs.push(t.rec_pension_partial);
+    }
+
     if (answers.job === "c") recs.push(t.rec_job);
-    if (["b", "c"].includes(answers.pension)) recs.push(t.rec_pension_partial);
     if (["c", "d"].includes(answers.debt)) recs.push(t.rec_debt_clear);
     if (answers.amount === "d" && score < 15) recs.push(t.rec_amount_lower);
 
@@ -303,15 +366,7 @@ export default function QuizSection() {
   const currentQuestion = questions[step - 1];
   const CurrentIcon = currentQuestion?.icon;
 
-  // Форматирование суммы в результате
-  const getMaxAmountText = () => {
-    if (answers.amount === "a") return "7";
-    if (answers.amount === "b") return "15";
-    if (answers.amount === "c") return "25";
-    return "30";
-  };
-
-  // Конфигурация анимаций для предотвращения прыжков
+  // Конфигурация анимаций
   const animationConfig = {
     initial: { opacity: 0, y: 30 },
     whileInView: { opacity: 1, y: 0 },
@@ -351,316 +406,437 @@ export default function QuizSection() {
           </p>
         </motion.div>
 
-      <motion.div
-  {...cardAnimation}
-  className="w-full max-w-full" // Убедимся, что внешний контейнер не выходит за ширину экрана
->
-  {/* Добавлен overflow-x-hidden на внешний контейнер для гарантии отсутствия горизонтального скролла */}
-  <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm overflow-hidden min-h-[600px] w-full max-w-full mx-auto box-border">
-    <CardContent className="p-3 sm:p-4 md:p-6 box-border"> {/* Ещё уменьшены отступы на мобильных */}
-      <div className="space-y-4 mb-6"> {/* Уменьшены отступы */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4"> {/* Адаптив для заголовка */}
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0"> {/* Уменьшен gap на мобильных */}
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-              <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-            </div>
-            <div className="min-w-0"> {/* min-w-0 для предотвращения overflow */}
-              <div className="font-semibold text-neutral-900 dark:text-white break-words text-sm sm:text-base">
-                {interpolate(t.question_of, {
-                  step,
-                  total: totalSteps,
-                })}
-              </div>
-            </div>
-          </div>
-          <Badge
-            variant="secondary"
-            className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 whitespace-nowrap text-xs px-2 py-1" 
-          >
-            <Clock className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
-            {t.time_badge}
-          </Badge>
-        </div>
-        <Progress
-          value={quizDone ? 100 : progress}
-          className="h-1.5 sm:h-2 bg-neutral-200 dark:bg-neutral-700" // Уменьшена высота прогресса на мобильных
-        />
-      </div>
-
-      <AnimatePresence mode="wait">
-        {!quizDone ? (
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.4 }}
-            className="space-y-6 w-full max-w-full mx-0 box-border" // Убраны ограничения ширины, max-width и отступы
-          >
-            <div className="text-center space-y-3 px-1"> {/* Небольшие отступы по бокам для текста */}
-              {CurrentIcon && (
-                <div className="w-14 h-14 mx-auto bg-gradient-to-br from-blue-500/10 to-orange-500/10 rounded-2xl flex items-center justify-center">
-                  <CurrentIcon className="h-6 sm:h-8 w-6 sm:w-8 text-blue-600 dark:text-blue-400" />
-                </div>
-              )}
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-900 dark:text-white break-words leading-tight">
-                {currentQuestion?.question}
-              </h3>
-            </div>
-
-            <div className="grid gap-3 px-1"> {/* Небольшие отступы по бокам для кнопок */}
-              {currentQuestion?.options.map((option, index) => (
-                <motion.div
-                  key={option.value}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.08 }}
-                  className=""
-                >
-                  <Button
-                    variant="outline"
-                    className="w-full h-auto py-3 px-3 text-left border-2 border-neutral-200 dark:border-neutral-700 hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 group transition-all duration-300 min-h-[70px] break-words text-sm" 
-                    onClick={() =>
-                      pick(
-                        step === 1
-                          ? "amount"
-                          : step === 2
-                          ? "job"
-                          : step === 3
-                          ? "pension"
-                          : "debt",
-                        option.value
-                      )
-                    }
-                  >
-                    <div className="flex items-start gap-2 w-full"> {/* Уменьшен gap */}
-                      <div className="text-xl sm:text-2xl flex-shrink-0 mt-0.5"> {/* Уменьшен размер иконки и корректировка вертикального выравнивания */}
-                        {React.createElement(option.Icon, {
-                          className: "h-5 w-5 sm:h-6 sm:w-6 text-blue-500",
-                          size: 20, // Уменьшен размер иконки
+        <motion.div {...cardAnimation} className="w-full max-w-full">
+          <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm overflow-hidden min-h-[600px] w-full max-w-full mx-auto box-border">
+            <CardContent className="p-3 sm:p-4 md:p-6 box-border">
+              <div className="space-y-4 mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="font-semibold text-neutral-900 dark:text-white break-words text-sm sm:text-base">
+                        {interpolate(t.question_of, {
+                          step,
+                          total: totalSteps,
                         })}
                       </div>
-                      <div className="flex-1 text-left min-w-0">
-                        <div className="font-semibold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors break-words">
-                          {option.label}
-                        </div>
-                        <div className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 break-words"> {/* Уменьшен размер шрифта описания */}
-                          {option.description}
-                        </div>
-                      </div>
-                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-neutral-400 group-hover:text-blue-500 transition-colors flex-shrink-0 mt-0.5" />
                     </div>
-                  </Button>
-                </motion.div>
-              ))}
-            </div>
-
-            {currentQuestion?.hint && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="text-center px-1" 
-              >
-                {step === 3 ? (
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 min-h-[36px] whitespace-nowrap text-sm" // Уменьшен размер кнопки подсказки
-                      >
-                        <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
-                        <span className="truncate">{currentQuestion.hint}</span> {/* truncate для текста подсказки */}
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="w-[90%] max-w-[90%] mx-auto box-border"> {/* Ограниченная ширина диалога */}
-                      <DialogHeader>
-                        <DialogTitle className="text-base">{t.dialog_title}</DialogTitle> {/* Уменьшен размер заголовка диалога */}
-                        <DialogDescription className="text-xs">{t.dialog_desc}</DialogDescription> {/* Уменьшен размер описания диалога */}
-                      </DialogHeader>
-                      <div className="space-y-3 text-xs"> {/* Уменьшен размер текста внутри диалога */}
-                        {[
-                          t.dialog_step1,
-                          t.dialog_step2,
-                          t.dialog_step3,
-                          t.dialog_step4,
-                        ].map((text, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-start gap-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg break-words"
-                          >
-                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 text-xs sm:text-sm mt-0.5">
-                              {idx + 1}
-                            </div>
-                            <span className="leading-relaxed break-words">{text}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                ) : (
-                  <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 flex items-center justify-center gap-1 sm:gap-2 break-words">
-                    <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0" />
-                    {currentQuestion.hint}
-                  </p>
-                )}
-              </motion.div>
-            )}
-          </motion.div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="text-center space-y-6 px-1" 
-          >
-            {isTop20 ? (
-              <>
-                <div className="space-y-4">
-                  <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-2xl shadow-green-500/25">
-                    <CheckCircle2 className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                   </div>
-
-                  <div className="space-y-3">
-                    <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400 break-words">
-                      {t.result_success_title}
-                    </h3>
-                    <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
-                      {t.result_success_text1}
-                    </p>
-                    <p className="text-sm sm:text-base md:text-lg text-neutral-700 dark:text-neutral-300 font-semibold break-words">
-                      {t.result_success_text2}{" "}
-                      <span className="text-base sm:text-lg md:text-xl text-green-600 dark:text-green-400">
-                        {getMaxAmountText()} млн ₸
-                      </span>{" "}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <Button
-                    onClick={scrollToBooking}
-                    size="lg"
-                    className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105 min-h-[44px] w-full max-w-[280px] sm:max-w-[320px] mx-auto"
+                  <Badge
+                    variant="secondary"
+                    className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 whitespace-nowrap text-xs px-2 py-1"
                   >
-                    <CalendarDays className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                    <span className="text-xs sm:text-sm md:text-base truncate">
-                      {t.result_success_cta}
-                    </span>
-                  </Button>
-
-                  <div className="p-2 sm:p-3 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200 dark:border-yellow-700 break-words">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3">
-                      <Zap className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
-                      <div className="min-w-0">
-                        <div className="font-semibold text-yellow-800 dark:text-yellow-300 text-xs sm:text-sm">
-                          {t.result_bonus_title}
-                        </div>
-                        <div className="text-yellow-700 dark:text-yellow-400 text-xs leading-relaxed">
-                          {t.result_bonus_desc}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    <Clock className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
+                    {t.time_badge}
+                  </Badge>
                 </div>
-              </>
-            ) : (
-              <>
-                <div className="space-y-4">
-                  <div className="w-16 h-16 mx-auto bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center shadow-2xl shadow-amber-500/25">
-                    <HelpCircle className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
-                  </div>
+                <Progress
+                  value={quizDone ? 100 : progress}
+                  className="h-1.5 sm:h-2 bg-neutral-200 dark:bg-neutral-700"
+                />
+              </div>
 
-                  <div className="space-y-3">
-                    <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-amber-600 dark:text-amber-400 break-words">
-                      {t.result_improve_title}
-                    </h3>
-                    <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
-                      {t.result_improve_text}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="text-left space-y-3 bg-white/50 dark:bg-neutral-800/50 rounded-2xl p-3 sm:p-4 min-h-[180px] break-words">
-                    <h4 className="font-semibold text-neutral-900 dark:text-white text-sm sm:text-base flex items-center gap-1 sm:gap-2">
-                      <Star className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500 flex-shrink-0" />
-                      {t.result_recommendations_title}
-                    </h4>
-                    <ul className="space-y-2">
-                      {getPersonalizedRecommendations().map(
-                        (rec, index) => (
-                          <motion.li
-                            key={index}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{
-                              duration: 0.3,
-                              delay: index * 0.1,
-                            }}
-                            className="flex items-start gap-1 sm:gap-2 text-sm text-neutral-700 dark:text-neutral-300 break-words"
-                          >
-                            <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0 mt-0.5" />
-                            <span className="leading-relaxed break-words">{rec}</span>
-                          </motion.li>
-                        )
+              <AnimatePresence mode="wait">
+                {!quizDone ? (
+                  <motion.div
+                    key={step}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.4 }}
+                    className="space-y-6 w-full max-w-full mx-0 box-border"
+                  >
+                    <div className="text-center space-y-3 px-1">
+                      {CurrentIcon && (
+                        <div className="w-14 h-14 mx-auto bg-gradient-to-br from-blue-500/10 to-orange-500/10 rounded-2xl flex items-center justify-center">
+                          <CurrentIcon className="h-6 sm:h-8 w-6 sm:w-8 text-blue-600 dark:text-blue-400" />
+                        </div>
                       )}
-                    </ul>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="text-center">
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-3 break-words">
-                        {t.result_phone_prompt}
-                      </p>
-                      <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 max-w-[260px] sm:max-w-xs md:max-w-md mx-auto px-1"> {/* Отступы для формы ввода, ограничена ширина контейнера */}
-                        <div className="relative flex-1">
-                          <Input
-                            placeholder={
-                              lang === "ru"
-                                ? "+7 (___) ___-__-__"
-                                : "+7 (___) ___-__-__"
-                            }
-                            value={phoneNumber}
-                            onChange={(e) =>
-                              handlePhoneChange(e.target.value)
-                            }
-                            className={`flex-1 pr-3 sm:pr-4 min-h-[36px] sm:min-h-[40px] text-sm ${ // Уменьшен размер шрифта и высота
-                              phoneError
-                                ? "border-red-500 focus:border-red-500"
-                                : ""
-                            }`}
-                            maxLength={18}
-                          />
-                          {phoneError && (
-                            <p className="text-red-500 text-xs mt-1 absolute -bottom-5 left-0 break-words">
-                              {phoneError}
-                            </p>
-                          )}
-                        </div>
-                        <Button
-                          onClick={handlePhoneSubmit}
-                          disabled={isSubmitting || !isPhoneValid()}
-                          className="bg-orange-600 hover:bg-orange-700 text-white whitespace-nowrap min-h-[36px] sm:min-h-[40px] px-2 sm:px-3 text-sm" // Уменьшен размер кнопки
-                        >
-                          {isSubmitting ? (
-                            <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          ) : (
-                            <Send className="h-3 w-3 sm:h-4 sm:w-4" />
-                          )}
-                        </Button>
-                      </div>
+                      <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-900 dark:text-white break-words leading-tight">
+                        {currentQuestion?.question}
+                      </h3>
                     </div>
-                  </div>
-                </div>
-              </>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </CardContent>
-  </Card>
-</motion.div>
+
+                    <div className="grid gap-3 px-1">
+                      {currentQuestion?.options.map((option, index) => (
+                        <motion.div
+                          key={option.value}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3, delay: index * 0.08 }}
+                          className=""
+                        >
+                          <Button
+                            variant="outline"
+                            className="w-full h-auto py-3 px-3 text-left border-2 border-neutral-200 dark:border-neutral-700 hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 group transition-all duration-300 min-h-[70px] break-words text-sm"
+                            onClick={() =>
+                              pick(
+                                step === 1
+                                  ? "amount"
+                                  : step === 2
+                                  ? "job"
+                                  : step === 3
+                                  ? "pension"
+                                  : "debt",
+                                option.value
+                              )
+                            }
+                          >
+                            <div className="flex items-start gap-2 w-full">
+                              <div className="text-xl sm:text-2xl flex-shrink-0 mt-0.5">
+                                {React.createElement(option.Icon, {
+                                  className:
+                                    "h-5 w-5 sm:h-6 sm:w-6 text-blue-500",
+                                  size: 20,
+                                })}
+                              </div>
+                              <div className="flex-1 text-left min-w-0">
+                                <div className="font-semibold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors break-words whitespace-normal word-break break-word">
+                                  {option.label}
+                                </div>
+                                <div className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 break-words whitespace-normal word-break break-word leading-relaxed">
+                                  {option.description}
+                                </div>
+                              </div>
+                              <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-neutral-400 group-hover:text-blue-500 transition-colors flex-shrink-0 mt-0.5" />
+                            </div>
+                          </Button>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {currentQuestion?.hint && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 0.4 }}
+                        className="text-center px-1"
+                      >
+                        {step === 3 ? (
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 min-h-[36px] whitespace-nowrap text-sm"
+                              >
+                                <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
+                                <span className="truncate">
+                                  {currentQuestion.hint}
+                                </span>
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="w-[90%] max-w-[90%] mx-auto box-border">
+                              <DialogHeader>
+                                <DialogTitle className="text-base">
+                                  {t.dialog_title}
+                                </DialogTitle>
+                                <DialogDescription className="text-xs">
+                                  {t.dialog_desc}
+                                </DialogDescription>
+                              </DialogHeader>
+                              <div className="space-y-3 text-xs">
+                                {[
+                                  t.dialog_step1,
+                                  t.dialog_step2,
+                                  t.dialog_step3,
+                                  t.dialog_step4,
+                                ].map((text, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="flex items-start gap-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg break-words"
+                                  >
+                                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 text-xs sm:text-sm mt-0.5">
+                                      {idx + 1}
+                                    </div>
+                                    <span className="leading-relaxed break-words">
+                                      {text}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        ) : (
+                          <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 flex items-center justify-center gap-1 sm:gap-2 break-words">
+                            <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0" />
+                            {currentQuestion.hint}
+                          </p>
+                        )}
+                      </motion.div>
+                    )}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-center space-y-6 px-1"
+                  >
+                    {isRejected ? (
+                      // Блок для отказа (на просрочке)
+                      <>
+                        <div className="space-y-4">
+                          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-red-500 to-orange-600 rounded-full flex items-center justify-center shadow-2xl shadow-red-500/25">
+                            <Ban className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                          </div>
+
+                          <div className="space-y-3">
+                            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-red-600 dark:text-red-400 break-words">
+                              {lang === "ru"
+                                ? "К сожалению, мы не можем вам помочь"
+                                : "Өкінішке орай, біз сізге көмектесе алмаймыз"}
+                            </h3>
+                            <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
+                              {lang === "ru"
+                                ? "В настоящее время мы не рассматриваем заявки от клиентов с текущими просрочками по платежам"
+                                : "Қазіргі уақытта біз төлемдер бойынша ағымдағы кешігулері бар клиенттердің өтініштерін қарамаймыз"}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          <div className="text-left space-y-3 bg-white/50 dark:bg-neutral-800/50 rounded-2xl p-3 sm:p-4 min-h-[120px] break-words">
+                            <h4 className="font-semibold text-neutral-900 dark:text-white text-sm sm:text-base flex items-center gap-1 sm:gap-2">
+                              <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-500 flex-shrink-0" />
+                              {lang === "ru"
+                                ? "Что делать?"
+                                : "Не істеу керек?"}
+                            </h4>
+                            <ul className="space-y-2">
+                              <li className="flex items-start gap-1 sm:gap-2 text-sm text-neutral-700 dark:text-neutral-300 break-words">
+                                <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                                <span className="leading-relaxed break-words">
+                                  {lang === "ru"
+                                    ? "Погасите все текущие просрочки"
+                                    : "Барлық ағымдағы кешігулерді төлеп тастаңыз"}
+                                </span>
+                              </li>
+                              <li className="flex items-start gap-1 sm:gap-2 text-sm text-neutral-700 dark:text-neutral-300 break-words">
+                                <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                                <span className="leading-relaxed break-words">
+                                  {lang === "ru"
+                                    ? "Подождите 1-2 месяца после погашения"
+                                    : "Төлемнен кейін 1-2 ай күтіңіз"}
+                                </span>
+                              </li>
+                              <li className="flex items-start gap-1 sm:gap-2 text-sm text-neutral-700 dark:text-neutral-300 break-words">
+                                <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                                <span className="leading-relaxed break-words">
+                                  {lang === "ru"
+                                    ? "Подайте заявку снова после улучшения кредитной истории"
+                                    : "Несие тарихы жақсарғаннан кейін қайтадан өтініш беріңіз"}
+                                </span>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </>
+                    ) : isTopClient ? (
+                      // Блок для ИП/ТОО с пенсионными отчислениями
+                      <>
+                        <div className="space-y-4">
+                          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center shadow-2xl shadow-purple-500/25">
+                            <Crown className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                          </div>
+
+                          <div className="space-y-3">
+                            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-600 dark:text-purple-400 break-words">
+                              {t.result_success_title}
+                            </h3>
+                            <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
+                              {lang === "ru"
+                                ? "Как владелец бизнеса с подтвержденными доходами вы получаете максимальные условия"
+                                : "Расталған табысы бар бизнес иесі ретінде сіз максималды шарттарды аласыз"}
+                            </p>
+                            <p className="text-sm sm:text-base md:text-lg text-neutral-700 dark:text-neutral-300 font-semibold break-words">
+                              {t.result_success_text2}{" "}
+                              <span className="text-base sm:text-lg md:text-xl text-purple-600 dark:text-purple-400">
+                                {getMaxAmountText()} млн ₸
+                              </span>{" "}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          <Button
+                            onClick={scrollToBooking}
+                            size="lg"
+                            className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold shadow-2xl shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300 hover:scale-105 min-h-[44px] w-full max-w-[280px] sm:max-w-[320px] mx-auto"
+                          >
+                            <CalendarDays className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm md:text-base truncate">
+                              {t.result_success_cta}
+                            </span>
+                          </Button>
+
+                          <div className="p-2 sm:p-3 rounded-2xl bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border border-purple-200 dark:border-purple-700 break-words">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3">
+                              <Zap className="h-3 w-3 sm:h-4 sm:w-4 text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" />
+                              <div className="min-w-0">
+                                <div className="font-semibold text-purple-800 dark:text-purple-300 text-xs sm:text-sm">
+                                  {t.result_bonus_title}
+                                </div>
+                                <div className="text-purple-700 dark:text-purple-400 text-xs leading-relaxed">
+                                  {t.result_bonus_desc}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    ) : score >= 15 ? (
+                      // Блок для успешных клиентов (не ИП/ТОО)
+                      <>
+                        <div className="space-y-4">
+                          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-2xl shadow-green-500/25">
+                            <CheckCircle2 className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                          </div>
+
+                          <div className="space-y-3">
+                            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400 break-words">
+                              {t.result_success_title}
+                            </h3>
+                            <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
+                              {t.result_success_text1}
+                            </p>
+                            <p className="text-sm sm:text-base md:text-lg text-neutral-700 dark:text-neutral-300 font-semibold break-words">
+                              {t.result_success_text2}{" "}
+                              <span className="text-base sm:text-lg md:text-xl text-green-600 dark:text-green-400">
+                                {getMaxAmountText()} млн ₸
+                              </span>{" "}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          <Button
+                            onClick={scrollToBooking}
+                            size="lg"
+                            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105 min-h-[44px] w-full max-w-[280px] sm:max-w-[320px] mx-auto"
+                          >
+                            <CalendarDays className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm md:text-base truncate">
+                              {t.result_success_cta}
+                            </span>
+                          </Button>
+
+                          <div className="p-2 sm:p-3 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200 dark:border-yellow-700 break-words">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3">
+                              <Zap className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+                              <div className="min-w-0">
+                                <div className="font-semibold text-yellow-800 dark:text-yellow-300 text-xs sm:text-sm">
+                                  {t.result_bonus_title}
+                                </div>
+                                <div className="text-yellow-700 dark:text-yellow-400 text-xs leading-relaxed">
+                                  {t.result_bonus_desc}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      // Блок для клиентов, которым нужно улучшить условия
+                      <>
+                        <div className="space-y-4">
+                          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center shadow-2xl shadow-amber-500/25">
+                            <HelpCircle className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                          </div>
+
+                          <div className="space-y-3">
+                            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-amber-600 dark:text-amber-400 break-words">
+                              {t.result_improve_title}
+                            </h3>
+                            <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
+                              {t.result_improve_text}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          <div className="text-left space-y-3 bg-white/50 dark:bg-neutral-800/50 rounded-2xl p-3 sm:p-4 min-h-[180px] break-words">
+                            <h4 className="font-semibold text-neutral-900 dark:text-white text-sm sm:text-base flex items-center gap-1 sm:gap-2">
+                              <Star className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500 flex-shrink-0" />
+                              {t.result_recommendations_title}
+                            </h4>
+                            <ul className="space-y-2">
+                              {getPersonalizedRecommendations().map(
+                                (rec, index) => (
+                                  <motion.li
+                                    key={index}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{
+                                      duration: 0.3,
+                                      delay: index * 0.1,
+                                    }}
+                                    className="flex items-start gap-1 sm:gap-2 text-sm text-neutral-700 dark:text-neutral-300 break-words"
+                                  >
+                                    <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                                    <span className="leading-relaxed break-words">
+                                      {rec}
+                                    </span>
+                                  </motion.li>
+                                )
+                              )}
+                            </ul>
+                          </div>
+
+                          <div className="space-y-3">
+                            <div className="text-center">
+                              <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-3 break-words">
+                                {t.result_phone_prompt}
+                              </p>
+                              <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 max-w-[260px] sm:max-w-xs md:max-w-md mx-auto px-1">
+                                <div className="relative flex-1">
+                                  <Input
+                                    placeholder={
+                                      lang === "ru"
+                                        ? "+7 (___) ___-__-__"
+                                        : "+7 (___) ___-__-__"
+                                    }
+                                    value={phoneNumber}
+                                    onChange={(e) =>
+                                      handlePhoneChange(e.target.value)
+                                    }
+                                    className={`flex-1 pr-3 sm:pr-4 min-h-[36px] sm:min-h-[40px] text-sm ${
+                                      phoneError
+                                        ? "border-red-500 focus:border-red-500"
+                                        : ""
+                                    }`}
+                                    maxLength={18}
+                                  />
+                                  {phoneError && (
+                                    <p className="text-red-500 text-xs mt-1 absolute -bottom-5 left-0 break-words">
+                                      {phoneError}
+                                    </p>
+                                  )}
+                                </div>
+                                <Button
+                                  onClick={handlePhoneSubmit}
+                                  disabled={isSubmitting || !isPhoneValid()}
+                                  className="bg-orange-600 hover:bg-orange-700 text-white whitespace-nowrap min-h-[36px] sm:min-h-[40px] px-2 sm:px-3 text-sm"
+                                >
+                                  {isSubmitting ? (
+                                    <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                  ) : (
+                                    <Send className="h-3 w-3 sm:h-4 sm:w-4" />
+                                  )}
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </CardContent>
+          </Card>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -724,12 +900,22 @@ export default function QuizSection() {
                 dialogType === "success" ? "text-green-600" : "text-red-600"
               }`}
             >
-              {dialogType === "success" ? "Заявка принята!" : "Ошибка отправки"}
+              {dialogType === "success"
+                ? lang === "ru"
+                  ? "Заявка принята!"
+                  : "Өтініш қабылданды!"
+                : lang === "ru"
+                ? "Ошибка отправки"
+                : "Жіберу қатесі"}
             </DialogTitle>
             <DialogDescription className="text-center text-base md:text-lg">
               {dialogType === "success"
-                ? "Мы свяжемся с вами в течение 5 минут для подтверждения консультации"
-                : "Пожалуйста, проверьте правильность заполнения полей и попробуйте еще раз"}
+                ? lang === "ru"
+                  ? "Мы свяжемся с вами в течение 5 минут для подтверждения консультации"
+                  : "Біз кеңесуді растау үшін сізге 5 минут ішінде хабарласамыз"
+                : lang === "ru"
+                ? "Пожалуйста, проверьте правильность заполнения полей и попробуйте еще раз"
+                : "Өтінеміз, өрістерді толтыру дұрыстығын тексеріп, қайтадан көріңіз"}
             </DialogDescription>
           </DialogHeader>
 
@@ -737,25 +923,49 @@ export default function QuizSection() {
             <div className="space-y-4 text-sm">
               <div className="p-3 md:p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800 min-h-[100px]">
                 <div className="font-semibold text-neutral-900 dark:text-white mb-2 text-sm md:text-base">
-                  Детали заявки:
+                  {lang === "ru"
+                    ? "Детали заявки:"
+                    : "Өтініш туралы мәліметтер:"}
                 </div>
                 <div className="space-y-2 text-neutral-600 dark:text-neutral-400 text-xs md:text-sm">
                   <div className="flex justify-between">
-                    <span>Телефон:</span>
+                    <span>{lang === "ru" ? "Телефон:" : "Телефон:"}</span>
                     <span className="font-semibold">{phoneNumber}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Результат:</span>
-                    <span className="font-semibold">{score}/20 баллов</span>
+                    <span>{lang === "ru" ? "Результат:" : "Нәтиже:"}</span>
+                    <span className="font-semibold">
+                      {score}/20 {lang === "ru" ? "баллов" : "ұпай"}
+                    </span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Статус:</span>
+                    <span>{lang === "ru" ? "Статус:" : "Мәртебе:"}</span>
                     <span
                       className={`font-semibold ${
-                        isTop20 ? "text-green-600" : "text-amber-600"
+                        isRejected
+                          ? "text-red-600"
+                          : isTopClient
+                          ? "text-purple-600"
+                          : score >= 15
+                          ? "text-green-600"
+                          : "text-amber-600"
                       }`}
                     >
-                      {isTop20 ? "Топ 20%" : "Нужна консультация"}
+                      {isRejected
+                        ? lang === "ru"
+                          ? "Отказ"
+                          : "Бас тарту"
+                        : isTopClient
+                        ? lang === "ru"
+                          ? "Топ клиент"
+                          : "Топ клиент"
+                        : score >= 15
+                        ? lang === "ru"
+                          ? "Топ 20%"
+                          : "Топ 20%"
+                        : lang === "ru"
+                        ? "Нужна консультация"
+                        : "Кеңесү қажет"}
                     </span>
                   </div>
                 </div>
@@ -764,20 +974,26 @@ export default function QuizSection() {
               <div className="p-3 md:p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 min-h-[100px]">
                 <div className="flex items-center gap-2 text-blue-800 dark:text-blue-300 font-semibold mb-2 text-sm md:text-base">
                   <Zap className="h-4 w-4 flex-shrink-0" />
-                  Что дальше?
+                  {lang === "ru" ? "Что дальше?" : "Әрі қарай не?"}
                 </div>
                 <ul className="space-y-2 text-blue-700 dark:text-blue-400 text-xs">
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3 w-3 flex-shrink-0" />
-                    Мы позвоним вам в течение 5 минут
+                    {lang === "ru"
+                      ? "Мы позвоним вам в течение 5 минут"
+                      : "Біз сізге 5 минут ішінде телефон шаламыз"}
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3 w-3 flex-shrink-0" />
-                    Подтвердим время консультации
+                    {lang === "ru"
+                      ? "Подтвердим время консультации"
+                      : "Кеңесу уақытын растаймыз"}
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3 w-3 flex-shrink-0" />
-                    Ответим на все ваши вопросы
+                    {lang === "ru"
+                      ? "Ответим на все ваши вопросы"
+                      : "Сіздің барлық сұрақтарыңызға жауап береміз"}
                   </li>
                 </ul>
               </div>
@@ -792,7 +1008,7 @@ export default function QuizSection() {
                 : "bg-red-500 hover:bg-red-600"
             } text-white`}
           >
-            Понятно
+            {lang === "ru" ? "Понятно" : "Түсінікті"}
           </Button>
         </DialogContent>
       </Dialog>
