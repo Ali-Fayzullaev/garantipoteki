@@ -293,9 +293,9 @@ export default function QuizSection() {
   const scrollToBooking = () => {
     const bookingElement = document.getElementById("booking");
     if (bookingElement) {
-      bookingElement.scrollIntoView({ 
+      bookingElement.scrollIntoView({
         behavior: "smooth",
-        block: "start"
+        block: "start",
       });
     }
   };
@@ -316,21 +316,21 @@ export default function QuizSection() {
     initial: { opacity: 0, y: 30 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, margin: "-50px" },
-    transition: { duration: 0.6 }
+    transition: { duration: 0.6 },
   };
 
   const cardAnimation = {
     initial: { opacity: 0, y: 20 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, margin: "-40px" },
-    transition: { duration: 0.5 }
+    transition: { duration: 0.5 },
   };
 
   const itemAnimation = {
     initial: { opacity: 0, y: 10 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, margin: "-20px" },
-    transition: { duration: 0.3 }
+    transition: { duration: 0.3 },
   };
 
   return (
@@ -342,10 +342,7 @@ export default function QuizSection() {
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          {...animationConfig}
-          className="text-center mb-16"
-        >
+        <motion.div {...animationConfig} className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white mb-4">
             {t.quiz_title}
           </h2>
@@ -354,315 +351,316 @@ export default function QuizSection() {
           </p>
         </motion.div>
 
-        <motion.div
-          {...cardAnimation}
-        >
-          <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm overflow-hidden min-h-[600px]">
-            <CardContent className="p-6 md:p-8">
-              <div className="space-y-6 mb-8">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Clock className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <div className="font-semibold text-neutral-900 dark:text-white">
-                        {interpolate(t.question_of, {
-                          step,
-                          total: totalSteps,
+      <motion.div
+  {...cardAnimation}
+  className="w-full max-w-full" // Убедимся, что внешний контейнер не выходит за ширину экрана
+>
+  {/* Добавлен overflow-x-hidden на внешний контейнер для гарантии отсутствия горизонтального скролла */}
+  <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm overflow-hidden min-h-[600px] w-full max-w-full mx-auto box-border">
+    <CardContent className="p-3 sm:p-4 md:p-6 box-border"> {/* Ещё уменьшены отступы на мобильных */}
+      <div className="space-y-4 mb-6"> {/* Уменьшены отступы */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4"> {/* Адаптив для заголовка */}
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0"> {/* Уменьшен gap на мобильных */}
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+            </div>
+            <div className="min-w-0"> {/* min-w-0 для предотвращения overflow */}
+              <div className="font-semibold text-neutral-900 dark:text-white break-words text-sm sm:text-base">
+                {interpolate(t.question_of, {
+                  step,
+                  total: totalSteps,
+                })}
+              </div>
+            </div>
+          </div>
+          <Badge
+            variant="secondary"
+            className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 whitespace-nowrap text-xs px-2 py-1" 
+          >
+            <Clock className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
+            {t.time_badge}
+          </Badge>
+        </div>
+        <Progress
+          value={quizDone ? 100 : progress}
+          className="h-1.5 sm:h-2 bg-neutral-200 dark:bg-neutral-700" // Уменьшена высота прогресса на мобильных
+        />
+      </div>
+
+      <AnimatePresence mode="wait">
+        {!quizDone ? (
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.4 }}
+            className="space-y-6 w-full max-w-full mx-0 box-border" // Убраны ограничения ширины, max-width и отступы
+          >
+            <div className="text-center space-y-3 px-1"> {/* Небольшие отступы по бокам для текста */}
+              {CurrentIcon && (
+                <div className="w-14 h-14 mx-auto bg-gradient-to-br from-blue-500/10 to-orange-500/10 rounded-2xl flex items-center justify-center">
+                  <CurrentIcon className="h-6 sm:h-8 w-6 sm:w-8 text-blue-600 dark:text-blue-400" />
+                </div>
+              )}
+              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-900 dark:text-white break-words leading-tight">
+                {currentQuestion?.question}
+              </h3>
+            </div>
+
+            <div className="grid gap-3 px-1"> {/* Небольшие отступы по бокам для кнопок */}
+              {currentQuestion?.options.map((option, index) => (
+                <motion.div
+                  key={option.value}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.08 }}
+                  className=""
+                >
+                  <Button
+                    variant="outline"
+                    className="w-full h-auto py-3 px-3 text-left border-2 border-neutral-200 dark:border-neutral-700 hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 group transition-all duration-300 min-h-[70px] break-words text-sm" 
+                    onClick={() =>
+                      pick(
+                        step === 1
+                          ? "amount"
+                          : step === 2
+                          ? "job"
+                          : step === 3
+                          ? "pension"
+                          : "debt",
+                        option.value
+                      )
+                    }
+                  >
+                    <div className="flex items-start gap-2 w-full"> {/* Уменьшен gap */}
+                      <div className="text-xl sm:text-2xl flex-shrink-0 mt-0.5"> {/* Уменьшен размер иконки и корректировка вертикального выравнивания */}
+                        {React.createElement(option.Icon, {
+                          className: "h-5 w-5 sm:h-6 sm:w-6 text-blue-500",
+                          size: 20, // Уменьшен размер иконки
                         })}
+                      </div>
+                      <div className="flex-1 text-left min-w-0">
+                        <div className="font-semibold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors break-words">
+                          {option.label}
+                        </div>
+                        <div className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 break-words"> {/* Уменьшен размер шрифта описания */}
+                          {option.description}
+                        </div>
+                      </div>
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-neutral-400 group-hover:text-blue-500 transition-colors flex-shrink-0 mt-0.5" />
+                    </div>
+                  </Button>
+                </motion.div>
+              ))}
+            </div>
+
+            {currentQuestion?.hint && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="text-center px-1" 
+              >
+                {step === 3 ? (
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 min-h-[36px] whitespace-nowrap text-sm" // Уменьшен размер кнопки подсказки
+                      >
+                        <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
+                        <span className="truncate">{currentQuestion.hint}</span> {/* truncate для текста подсказки */}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="w-[90%] max-w-[90%] mx-auto box-border"> {/* Ограниченная ширина диалога */}
+                      <DialogHeader>
+                        <DialogTitle className="text-base">{t.dialog_title}</DialogTitle> {/* Уменьшен размер заголовка диалога */}
+                        <DialogDescription className="text-xs">{t.dialog_desc}</DialogDescription> {/* Уменьшен размер описания диалога */}
+                      </DialogHeader>
+                      <div className="space-y-3 text-xs"> {/* Уменьшен размер текста внутри диалога */}
+                        {[
+                          t.dialog_step1,
+                          t.dialog_step2,
+                          t.dialog_step3,
+                          t.dialog_step4,
+                        ].map((text, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-start gap-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg break-words"
+                          >
+                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 text-xs sm:text-sm mt-0.5">
+                              {idx + 1}
+                            </div>
+                            <span className="leading-relaxed break-words">{text}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                ) : (
+                  <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 flex items-center justify-center gap-1 sm:gap-2 break-words">
+                    <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0" />
+                    {currentQuestion.hint}
+                  </p>
+                )}
+              </motion.div>
+            )}
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="text-center space-y-6 px-1" 
+          >
+            {isTop20 ? (
+              <>
+                <div className="space-y-4">
+                  <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-2xl shadow-green-500/25">
+                    <CheckCircle2 className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                  </div>
+
+                  <div className="space-y-3">
+                    <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400 break-words">
+                      {t.result_success_title}
+                    </h3>
+                    <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
+                      {t.result_success_text1}
+                    </p>
+                    <p className="text-sm sm:text-base md:text-lg text-neutral-700 dark:text-neutral-300 font-semibold break-words">
+                      {t.result_success_text2}{" "}
+                      <span className="text-base sm:text-lg md:text-xl text-green-600 dark:text-green-400">
+                        {getMaxAmountText()} млн ₸
+                      </span>{" "}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <Button
+                    onClick={scrollToBooking}
+                    size="lg"
+                    className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105 min-h-[44px] w-full max-w-[280px] sm:max-w-[320px] mx-auto"
+                  >
+                    <CalendarDays className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                    <span className="text-xs sm:text-sm md:text-base truncate">
+                      {t.result_success_cta}
+                    </span>
+                  </Button>
+
+                  <div className="p-2 sm:p-3 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200 dark:border-yellow-700 break-words">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3">
+                      <Zap className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+                      <div className="min-w-0">
+                        <div className="font-semibold text-yellow-800 dark:text-yellow-300 text-xs sm:text-sm">
+                          {t.result_bonus_title}
+                        </div>
+                        <div className="text-yellow-700 dark:text-yellow-400 text-xs leading-relaxed">
+                          {t.result_bonus_desc}
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <Badge
-                    variant="secondary"
-                    className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
-                  >
-                    <Clock className="h-3 w-3 mr-1" />
-                    {t.time_badge}
-                  </Badge>
                 </div>
-                <Progress
-                  value={quizDone ? 100 : progress}
-                  className="h-2 bg-neutral-200 dark:bg-neutral-700"
-                />
-              </div>
+              </>
+            ) : (
+              <>
+                <div className="space-y-4">
+                  <div className="w-16 h-16 mx-auto bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center shadow-2xl shadow-amber-500/25">
+                    <HelpCircle className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                  </div>
 
-              <AnimatePresence mode="wait">
-                {!quizDone ? (
-                  <motion.div
-                    key={step}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.4 }}
-                    className="space-y-8"
-                  >
-                    <div className="text-center space-y-4">
-                      {CurrentIcon && (
-                        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-blue-500/10 to-orange-500/10 rounded-2xl flex items-center justify-center">
-                          <CurrentIcon className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                        </div>
+                  <div className="space-y-3">
+                    <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-amber-600 dark:text-amber-400 break-words">
+                      {t.result_improve_title}
+                    </h3>
+                    <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
+                      {t.result_improve_text}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="text-left space-y-3 bg-white/50 dark:bg-neutral-800/50 rounded-2xl p-3 sm:p-4 min-h-[180px] break-words">
+                    <h4 className="font-semibold text-neutral-900 dark:text-white text-sm sm:text-base flex items-center gap-1 sm:gap-2">
+                      <Star className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500 flex-shrink-0" />
+                      {t.result_recommendations_title}
+                    </h4>
+                    <ul className="space-y-2">
+                      {getPersonalizedRecommendations().map(
+                        (rec, index) => (
+                          <motion.li
+                            key={index}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{
+                              duration: 0.3,
+                              delay: index * 0.1,
+                            }}
+                            className="flex items-start gap-1 sm:gap-2 text-sm text-neutral-700 dark:text-neutral-300 break-words"
+                          >
+                            <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                            <span className="leading-relaxed break-words">{rec}</span>
+                          </motion.li>
+                        )
                       )}
-                      <h3 className="text-2xl md:text-3xl font-bold text-neutral-900 dark:text-white">
-                        {currentQuestion?.question}
-                      </h3>
-                    </div>
+                    </ul>
+                  </div>
 
-                    <div className="grid gap-4">
-                      {currentQuestion?.options.map((option, index) => (
-                        <motion.div
-                          key={option.value}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.3, delay: index * 0.08 }}
-                        >
-                          <Button
-                            variant="outline"
-                            className="w-full h-auto py-6 px-6 text-left border-2 border-neutral-200 dark:border-neutral-700 hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 group transition-all duration-300 min-h-[80px]"
-                            onClick={() =>
-                              pick(
-                                step === 1
-                                  ? "amount"
-                                  : step === 2
-                                  ? "job"
-                                  : step === 3
-                                  ? "pension"
-                                  : "debt",
-                                option.value
-                              )
+                  <div className="space-y-3">
+                    <div className="text-center">
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-3 break-words">
+                        {t.result_phone_prompt}
+                      </p>
+                      <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 max-w-[260px] sm:max-w-xs md:max-w-md mx-auto px-1"> {/* Отступы для формы ввода, ограничена ширина контейнера */}
+                        <div className="relative flex-1">
+                          <Input
+                            placeholder={
+                              lang === "ru"
+                                ? "+7 (___) ___-__-__"
+                                : "+7 (___) ___-__-__"
                             }
-                          >
-                            <div className="flex items-center gap-4 w-full">
-                              <div className="text-2xl flex-shrink-0">
-                                {React.createElement(option.Icon, {
-                                  className: "h-6 w-6 text-blue-500",
-                                  size: 24,
-                                })}
-                              </div>
-                              <div className="flex-1 text-left min-w-0">
-                                <div className="font-semibold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
-                                  {option.label}
-                                </div>
-                                <div className="text-sm text-neutral-500 dark:text-neutral-400 mt-1 line-clamp-2">
-                                  {option.description}
-                                </div>
-                              </div>
-                              <ArrowRight className="h-5 w-5 text-neutral-400 group-hover:text-blue-500 transition-colors flex-shrink-0" />
-                            </div>
-                          </Button>
-                        </motion.div>
-                      ))}
+                            value={phoneNumber}
+                            onChange={(e) =>
+                              handlePhoneChange(e.target.value)
+                            }
+                            className={`flex-1 pr-3 sm:pr-4 min-h-[36px] sm:min-h-[40px] text-sm ${ // Уменьшен размер шрифта и высота
+                              phoneError
+                                ? "border-red-500 focus:border-red-500"
+                                : ""
+                            }`}
+                            maxLength={18}
+                          />
+                          {phoneError && (
+                            <p className="text-red-500 text-xs mt-1 absolute -bottom-5 left-0 break-words">
+                              {phoneError}
+                            </p>
+                          )}
+                        </div>
+                        <Button
+                          onClick={handlePhoneSubmit}
+                          disabled={isSubmitting || !isPhoneValid()}
+                          className="bg-orange-600 hover:bg-orange-700 text-white whitespace-nowrap min-h-[36px] sm:min-h-[40px] px-2 sm:px-3 text-sm" // Уменьшен размер кнопки
+                        >
+                          {isSubmitting ? (
+                            <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <Send className="h-3 w-3 sm:h-4 sm:w-4" />
+                          )}
+                        </Button>
+                      </div>
                     </div>
-
-                    {currentQuestion?.hint && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5, delay: 0.4 }}
-                        className="text-center"
-                      >
-                        {step === 3 ? (
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 min-h-[40px]"
-                              >
-                                <HelpCircle className="h-4 w-4 mr-2 flex-shrink-0" />
-                                {currentQuestion.hint}
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-md mx-4">
-                              <DialogHeader>
-                                <DialogTitle>{t.dialog_title}</DialogTitle>
-                                <DialogDescription>
-                                  {t.dialog_desc}
-                                </DialogDescription>
-                              </DialogHeader>
-                              <div className="space-y-4 text-sm">
-                                {[
-                                  t.dialog_step1,
-                                  t.dialog_step2,
-                                  t.dialog_step3,
-                                  t.dialog_step4,
-                                ].map((text, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg"
-                                  >
-                                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
-                                      {idx + 1}
-                                    </div>
-                                    <span className="leading-relaxed">{text}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </DialogContent>
-                          </Dialog>
-                        ) : (
-                          <p className="text-sm text-neutral-500 dark:text-neutral-400 flex items-center justify-center gap-2">
-                            <TrendingUp className="h-4 w-4 text-green-500 flex-shrink-0" />
-                            {currentQuestion.hint}
-                          </p>
-                        )}
-                      </motion.div>
-                    )}
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center space-y-8"
-                  >
-                    {isTop20 ? (
-                      <>
-                        <div className="space-y-6">
-                          <div className="w-24 h-24 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-2xl shadow-green-500/25">
-                            <CheckCircle2 className="h-12 w-12 text-white" />
-                          </div>
-
-                          <div className="space-y-4">
-                            <h3 className="text-3xl md:text-4xl font-bold text-green-600 dark:text-green-400">
-                              {t.result_success_title}
-                            </h3>
-                            <p className="text-xl text-neutral-600 dark:text-neutral-400">
-                              {t.result_success_text1}
-                            </p>
-                            <p className="text-lg text-neutral-700 dark:text-neutral-300 font-semibold">
-                              {t.result_success_text2}{" "}
-                              <span className="text-2xl text-green-600 dark:text-green-400">
-                                {getMaxAmountText()} млн ₸
-                              </span>{" "}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-6">
-                          <Button
-                            onClick={scrollToBooking}
-                            size="lg"
-                            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105 min-h-[56px]"
-                          >
-                            <CalendarDays className="mr-2 h-5 w-5 flex-shrink-0" />
-                            <span className=" text-[12px] md:text-base truncate">
-                              {t.result_success_cta}
-                            </span>
-                          </Button>
-
-                          <div className="p-4 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200 dark:border-yellow-700">
-                            <div className="flex items-center gap-3">
-                              <Zap className="h-5 w-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
-                              <div className="min-w-0">
-                                <div className="font-semibold text-yellow-800 dark:text-yellow-300 text-sm">
-                                  {t.result_bonus_title}
-                                </div>
-                                <div className="text-yellow-700 dark:text-yellow-400 text-xs leading-relaxed">
-                                  {t.result_bonus_desc}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="space-y-6">
-                          <div className="w-24 h-24 mx-auto bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center shadow-2xl shadow-amber-500/25">
-                            <HelpCircle className="h-12 w-12 text-white" />
-                          </div>
-
-                          <div className="space-y-4">
-                            <h3 className="text-3xl md:text-4xl font-bold text-amber-600 dark:text-amber-400">
-                              {t.result_improve_title}
-                            </h3>
-                            <p className="text-xl text-neutral-600 dark:text-neutral-400">
-                              {t.result_improve_text}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-6">
-                          <div className="text-left space-y-4 bg-white/50 dark:bg-neutral-800/50 rounded-2xl p-6 min-h-[200px]">
-                            <h4 className="font-semibold text-neutral-900 dark:text-white text-lg flex items-center gap-2">
-                              <Star className="h-5 w-5 text-blue-500 flex-shrink-0" />
-                              {t.result_recommendations_title}
-                            </h4>
-                            <ul className="space-y-3">
-                              {getPersonalizedRecommendations().map(
-                                (rec, index) => (
-                                  <motion.li
-                                    key={index}
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{
-                                      duration: 0.3,
-                                      delay: index * 0.1,
-                                    }}
-                                    className="flex items-start gap-3 text-neutral-700 dark:text-neutral-300"
-                                  >
-                                    <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                                    <span className="leading-relaxed">{rec}</span>
-                                  </motion.li>
-                                )
-                              )}
-                            </ul>
-                          </div>
-
-                          <div className="space-y-4">
-                            <div className="text-center">
-                              <p className="text-neutral-600 dark:text-neutral-400 mb-4">
-                                {t.result_phone_prompt}
-                              </p>
-                              <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                                <div className="relative flex-1">
-                                  <Input
-                                    placeholder={
-                                      lang === "ru"
-                                        ? "+7 (___) ___-__-__"
-                                        : "+7 (___) ___-__-__"
-                                    }
-                                    value={phoneNumber}
-                                    onChange={(e) =>
-                                      handlePhoneChange(e.target.value)
-                                    }
-                                    className={`flex-1 pr-4 min-h-[44px] ${
-                                      phoneError
-                                        ? "border-red-500 focus:border-red-500"
-                                        : ""
-                                    }`}
-                                    maxLength={18}
-                                  />
-                                  {phoneError && (
-                                    <p className="text-red-500 text-xs mt-1 absolute -bottom-5 left-0">
-                                      {phoneError}
-                                    </p>
-                                  )}
-                                </div>
-                                <Button
-                                  onClick={handlePhoneSubmit}
-                                  disabled={isSubmitting || !isPhoneValid()}
-                                  className="bg-orange-600 hover:bg-orange-700 text-white whitespace-nowrap min-h-[44px] min-w-[44px]"
-                                >
-                                  {isSubmitting ? (
-                                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                  ) : (
-                                    <Send className="h-4 w-4" />
-                                  )}
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </CardContent>
-          </Card>
-        </motion.div>
+                  </div>
+                </div>
+              </>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </CardContent>
+  </Card>
+</motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -693,7 +691,9 @@ export default function QuizSection() {
               transition={{ duration: 0.4, delay: index * 0.08 }}
               className="flex items-center gap-3 justify-center p-3 md:p-4 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200/50 dark:border-neutral-700/50 min-h-[70px]"
             >
-              <item.icon className={`h-4 w-4 md:h-5 md:w-5 ${item.color} flex-shrink-0`} />
+              <item.icon
+                className={`h-4 w-4 md:h-5 md:w-5 ${item.color} flex-shrink-0`}
+              />
               <span className="text-xs md:text-sm font-medium text-neutral-700 dark:text-neutral-300 text-center leading-tight">
                 {item.text}
               </span>
