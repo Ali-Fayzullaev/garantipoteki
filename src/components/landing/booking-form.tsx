@@ -14,7 +14,6 @@ import {
   Phone,
   ArrowRight,
   Shield,
-  X,
   Loader2,
   CheckCircle,
   Calendar,

@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   ShieldCheck,
   MapPin,
-  Star,
   Zap,
   TrendingUp,
   Target,
@@ -30,12 +29,6 @@ export default function BookingSection() {
     hours: 23,
     minutes: 59,
     seconds: 59,
-  });
-
-  // Generate time slots from 9:00 to 18:00
-  const timeSlots = Array.from({ length: 10 }, (_, i) => {
-    const hour = 9 + i;
-    return `${hour.toString().padStart(2, "0")}:00`;
   });
 
   // Countdown timer

@@ -95,13 +95,6 @@ export default function EducationSection() {
     transition: { duration: 0.6 }
   }
 
-  const cardAnimation = {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-30px" },
-    transition: { duration: 0.5 }
-  }
-
   return (
     <section className="py-20 bg-gradient-to-b from-neutral-50 to-white dark:from-neutral-900 dark:to-neutral-950 relative overflow-hidden">
       {/* Фоновые элементы с фиксированной позицией */}

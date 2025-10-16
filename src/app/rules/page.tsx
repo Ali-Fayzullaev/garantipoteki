@@ -16,23 +16,15 @@ import {
   Shield,
   Users,
   Home,
-  CreditCard,
-  MoveRight,
   MoveLeft,
-  Book,
 } from "lucide-react";
 import { useApp } from "@/components/providers/AppProvider";
-import { dict } from "@/lib/dictionary";
 import Link from "next/link";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import LanguageToggle from "@/components/ui/LanguageToggle";
-import { DialogContent, DialogTrigger } from "@radix-ui/react-dialog";
-import { Dialog } from "@/components/ui/dialog";
-import BookingForm from "@/components/landing/booking-form";
 
 export default function HowToUse() {
   const { lang } = useApp();
-  const t = dict[lang];
 
   const steps = [
     {
@@ -139,10 +131,6 @@ export default function HowToUse() {
           : "Тәжірибелі мамандар құжаттарды ресімдеуге және мақұлдау алуға көмектеседі",
     },
   ];
-
-  const scrollToBooking = () => {
-    document.getElementById("booking")?.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
     <section

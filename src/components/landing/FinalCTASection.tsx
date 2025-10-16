@@ -11,7 +11,6 @@ import {
   Zap,
   CalendarDays,
   Star,
-  Target,
   Crown,
 } from "lucide-react";
 import { useApp } from "@/components/providers/AppProvider";
@@ -27,7 +26,6 @@ export default function FinalCTASection() {
     const calculateTimeLeft = () => {
       const now = new Date();
       const targetDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-      const difference = targetDate.getTime() - now.getTime();
     };
 
     calculateTimeLeft();
