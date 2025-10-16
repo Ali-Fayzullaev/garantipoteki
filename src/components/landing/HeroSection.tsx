@@ -3,17 +3,31 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Play, Pause, Volume2, VolumeX, Maximize2 } from "lucide-react";
 import { useApp } from '@/components/providers/AppProvider';
-import { Switch } from '@/components/ui/switch';
-import { Moon, Sun } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { dict } from '@/lib/dictionary';
 
+// Типы для кросс-браузерных полноэкранных методов
+interface ExtendedDocument extends Document {
+  webkitExitFullscreen?: () => Promise<void>;
+  mozCancelFullScreen?: () => Promise<void>;
+  msExitFullscreen?: () => Promise<void>;
+}
+
+interface ExtendedHTMLDivElement extends HTMLDivElement {
+  webkitRequestFullscreen?: () => Promise<void>;
+  mozRequestFullScreen?: () => Promise<void>;
+  msRequestFullscreen?: () => Promise<void>;
+}
+
+interface ExtendedHTMLVideoElement extends HTMLVideoElement {
+  webkitEnterFullscreen?: () => void;
+}
+
 export default function VideoHero() {
-  const { dark, setDark, lang } = useApp();
+  const { dark, lang } = useApp();
   const t = dict[lang];
   
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<ExtendedHTMLVideoElement>(null);
+  const containerRef = useRef<ExtendedHTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -21,18 +35,6 @@ export default function VideoHero() {
   const [currentTime, setCurrentTime] = useState(0);
   const [showControls, setShowControls] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [windowHeight, setWindowHeight] = useState(0);
-
-  // Отслеживаем высоту окна для мобильных устройств
-  useEffect(() => {
-    const updateWindowHeight = () => {
-      setWindowHeight(window.innerHeight);
-    };
-
-    updateWindowHeight();
-    window.addEventListener('resize', updateWindowHeight);
-    return () => window.removeEventListener('resize', updateWindowHeight);
-  }, []);
 
   // Обработчик изменения полноэкранного режима
   useEffect(() => {
@@ -104,33 +106,35 @@ export default function VideoHero() {
     
     if (!container || !video) return;
 
+    const extendedDocument = document as ExtendedDocument;
+
     try {
       if (document.fullscreenElement) {
         // Выход из полноэкранного режима
         if (document.exitFullscreen) {
           await document.exitFullscreen();
-        } else if ((document as any).webkitExitFullscreen) {
-          await (document as any).webkitExitFullscreen();
-        } else if ((document as any).mozCancelFullScreen) {
-          await (document as any).mozCancelFullScreen();
-        } else if ((document as any).msExitFullscreen) {
-          await (document as any).msExitFullscreen();
+        } else if (extendedDocument.webkitExitFullscreen) {
+          await extendedDocument.webkitExitFullscreen();
+        } else if (extendedDocument.mozCancelFullScreen) {
+          await extendedDocument.mozCancelFullScreen();
+        } else if (extendedDocument.msExitFullscreen) {
+          await extendedDocument.msExitFullscreen();
         }
       } else {
         // Вход в полноэкранный режим
         // Пробуем разные методы для разных браузеров
         if (container.requestFullscreen) {
           await container.requestFullscreen();
-        } else if ((container as any).webkitRequestFullscreen) {
-          await (container as any).webkitRequestFullscreen();
-        } else if ((container as any).mozRequestFullScreen) {
-          await (container as any).mozRequestFullScreen();
-        } else if ((container as any).msRequestFullscreen) {
-          await (container as any).msRequestFullscreen();
+        } else if (container.webkitRequestFullscreen) {
+          await container.webkitRequestFullscreen();
+        } else if (container.mozRequestFullScreen) {
+          await container.mozRequestFullScreen();
+        } else if (container.msRequestFullscreen) {
+          await container.msRequestFullscreen();
         } else {
           // Fallback для мобильных - запускаем видео в полноэкранном режиме
-          if ((video as any).webkitEnterFullscreen) {
-            (video as any).webkitEnterFullscreen();
+          if (video.webkitEnterFullscreen) {
+            video.webkitEnterFullscreen();
           } else if (video.requestFullscreen) {
             await video.requestFullscreen();
           }
@@ -139,8 +143,8 @@ export default function VideoHero() {
     } catch (error) {
       console.error("Fullscreen error:", error);
       // Ultimate fallback для мобильных
-      if ((video as any).webkitEnterFullscreen) {
-        (video as any).webkitEnterFullscreen();
+      if (video.webkitEnterFullscreen) {
+        video.webkitEnterFullscreen();
       }
     }
   };
@@ -190,8 +194,8 @@ export default function VideoHero() {
       <div className="max-w-6xl mx-auto px-4">
         {/* Видео контейнер */}
         <div
-          ref={containerRef}
-          className={`relative mt-13  rounded-2xl md:rounded-3xl overflow-hidden ${containerBgClass} border shadow-2xl group transition-colors duration-500 ${getVideoHeight()}`}
+          ref={containerRef as React.RefObject<HTMLDivElement>}
+          className={`relative rounded-2xl mt-14 md:rounded-3xl overflow-hidden ${containerBgClass} border shadow-2xl group transition-colors duration-500 ${getVideoHeight()}`}
           onMouseEnter={() => setShowControls(true)}
           onMouseLeave={() => setShowControls(false)}
           onTouchStart={handleTouchStart}
@@ -199,11 +203,11 @@ export default function VideoHero() {
           {/* Градиентный ореол */}
           <div className={`absolute -inset-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-2xl md:rounded-3xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 -z-10`} />
 
-          <div className="relative w-full h-full bg-black flex items-center justify-center">
+          <div className="relative  w-full h-full bg-black flex items-center justify-center">
             {/* Видео с правильным aspect ratio */}
             <div className="w-full h-full flex items-center justify-center">
               <video
-                ref={videoRef}
+                ref={videoRef as React.RefObject<HTMLVideoElement>}
                 className="w-full h-full object-contain max-w-full max-h-full"
                 onTimeUpdate={handleTimeUpdate}
                 onLoadedMetadata={handleLoadedMetadata}
