@@ -375,12 +375,10 @@ export default function QuizSection() {
   return (
     <section
       id="quiz"
-      className="py-20 bg-gradient-to-br from-blue-50/30 via-white to-emerald-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-800 relative overflow-hidden"
+      className="py-20 bg-gradient-to-b from-white to-neutral-50 dark:from-neutral-950 dark:to-neutral-900 relative"
     >
-      {/* Декоративные элементы
-      <div className="absolute top-10 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-orange-500/5 rounded-full blur-2xl pointer-events-none" /> */}
+      {/* <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl pointer-events-none" /> */}
 
       <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
@@ -393,12 +391,12 @@ export default function QuizSection() {
         </div>
 
         <div className="w-full max-w-full">
-          <Card className=" shadow-2xl bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm overflow-hidden min-h-[600px] w-full max-w-full mx-auto box-border border border-white/20">
+          <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 overflow-hidden min-h-[600px] w-full max-w-full mx-auto box-border">
             <CardContent className="p-3 sm:p-4 md:p-6 box-border">
               <div className="space-y-4 mb-6">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                   <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
                       <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                     </div>
                     <div className="min-w-0">
@@ -412,7 +410,7 @@ export default function QuizSection() {
                   </div>
                   <Badge
                     variant="secondary"
-                    className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-700 dark:text-green-300 border-0 whitespace-nowrap text-xs px-3 py-1 shadow-sm"
+                    className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 whitespace-nowrap text-xs px-2 py-1"
                   >
                     <Clock className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
                     {t.time_badge}
@@ -428,7 +426,7 @@ export default function QuizSection() {
                 <div className="space-y-6 w-full max-w-full mx-0 box-border">
                   <div className="text-center space-y-3 px-1">
                     {CurrentIcon && (
-                      <div className="w-14 h-14 mx-auto bg-gradient-to-br from-blue-500/15 to-emerald-500/15 rounded-2xl flex items-center justify-center shadow-lg">
+                      <div className="w-14 h-14 mx-auto bg-gradient-to-br from-blue-500/10 to-orange-500/10 rounded-2xl flex items-center justify-center">
                         <CurrentIcon className="h-6 sm:h-8 w-6 sm:w-8 text-blue-600 dark:text-blue-400" />
                       </div>
                     )}
@@ -442,7 +440,7 @@ export default function QuizSection() {
                       <div key={option.value} className="">
                         <Button
                           variant="outline"
-                          className="w-full h-auto py-3 px-3 text-left border-2 border-neutral-200/80 dark:border-neutral-700/80 hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 min-h-[70px] break-words text-sm bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm transition-colors"
+                          className="w-full h-auto py-3 px-3 text-left border-2 border-neutral-200 dark:border-neutral-700 hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 min-h-[70px] break-words text-sm"
                           onClick={() =>
                             pick(
                               step === 1
@@ -486,7 +484,7 @@ export default function QuizSection() {
                           <DialogTrigger asChild>
                             <Button
                               variant="ghost"
-                              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 min-h-[36px] whitespace-nowrap text-sm bg-blue-50/50 dark:bg-blue-900/20 rounded-lg"
+                              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 min-h-[36px] whitespace-nowrap text-sm"
                             >
                               <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
                               <span className="truncate">
@@ -494,7 +492,7 @@ export default function QuizSection() {
                               </span>
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="w-[90%] max-w-[90%] mx-auto box-border bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border-0 shadow-2xl">
+                          <DialogContent className="w-[90%] max-w-[90%] mx-auto box-border">
                             <DialogHeader>
                               <DialogTitle className="text-base">
                                 {t.dialog_title}
@@ -512,9 +510,9 @@ export default function QuizSection() {
                               ].map((text, idx) => (
                                 <div
                                   key={idx}
-                                  className="flex items-start gap-2 p-2 bg-gradient-to-r from-blue-50 to-emerald-50 dark:from-blue-900/20 dark:to-emerald-900/20 rounded-lg break-words border border-blue-200/50 dark:border-blue-700/50"
+                                  className="flex items-start gap-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg break-words"
                                 >
-                                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 text-xs sm:text-sm mt-0.5">
+                                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 text-xs sm:text-sm mt-0.5">
                                     {idx + 1}
                                   </div>
                                   <span className="leading-relaxed break-words">
@@ -526,7 +524,7 @@ export default function QuizSection() {
                           </DialogContent>
                         </Dialog>
                       ) : (
-                        <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 flex items-center justify-center gap-1 sm:gap-2 break-words bg-neutral-50/50 dark:bg-neutral-800/50 rounded-lg py-2 px-3">
+                        <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 flex items-center justify-center gap-1 sm:gap-2 break-words">
                           <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0" />
                           {currentQuestion.hint}
                         </p>
@@ -540,7 +538,7 @@ export default function QuizSection() {
                     // Блок для отказа (на просрочке)
                     <>
                       <div className="space-y-4">
-                        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-red-500 to-orange-600 rounded-full flex items-center justify-center shadow-lg">
+                        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-red-500 to-orange-600 rounded-full flex items-center justify-center">
                           <Ban className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                         </div>
 
@@ -559,7 +557,7 @@ export default function QuizSection() {
                       </div>
 
                       <div className="space-y-4">
-                        <div className="text-left space-y-3 bg-gradient-to-br from-red-50/50 to-orange-50/50 dark:from-red-900/20 dark:to-orange-900/20 rounded-2xl p-3 sm:p-4 min-h-[120px] break-words border border-red-200/50 dark:border-red-700/50">
+                        <div className="text-left space-y-3 bg-white/50 dark:bg-neutral-800/50 rounded-2xl p-3 sm:p-4 min-h-[120px] break-words">
                           <h4 className="font-semibold text-neutral-900 dark:text-white text-sm sm:text-base flex items-center gap-1 sm:gap-2">
                             <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-500 flex-shrink-0" />
                             {lang === "ru"
@@ -599,7 +597,7 @@ export default function QuizSection() {
                     // Блок для клиентов с микрозаймами или просрочками
                     <>
                       <div className="space-y-4">
-                        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center shadow-lg">
+                        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center">
                           <HelpCircle className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                         </div>
 
@@ -614,7 +612,7 @@ export default function QuizSection() {
                       </div>
 
                       <div className="space-y-4">
-                        <div className="text-left space-y-3 bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl p-3 sm:p-4 min-h-[180px] break-words border border-amber-200/50 dark:border-amber-700/50">
+                        <div className="text-left space-y-3 bg-white/50 dark:bg-neutral-800/50 rounded-2xl p-3 sm:p-4 min-h-[180px] break-words">
                           <h4 className="font-semibold text-neutral-900 dark:text-white text-sm sm:text-base flex items-center gap-1 sm:gap-2">
                             <Star className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500 flex-shrink-0" />
                             {t.result_recommendations_title}
@@ -653,7 +651,7 @@ export default function QuizSection() {
                                   onChange={(e) =>
                                     handlePhoneChange(e.target.value)
                                   }
-                                  className={`flex-1 pr-3 sm:pr-4 min-h-[36px] sm:min-h-[40px] text-sm bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm ${
+                                  className={`flex-1 pr-3 sm:pr-4 min-h-[36px] sm:min-h-[40px] text-sm ${
                                     phoneError
                                       ? "border-red-500 focus:border-red-500"
                                       : ""
@@ -669,12 +667,12 @@ export default function QuizSection() {
                               <Button
                                 onClick={handlePhoneSubmit}
                                 disabled={isSubmitting || !isPhoneValid()}
-                                className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white whitespace-nowrap min-h-[36px] sm:min-h-[40px] px-2 sm:px-3 text-sm shadow-lg"
+                                className="bg-orange-600 hover:bg-orange-700 text-white whitespace-nowrap min-h-[36px] sm:min-h-[40px] px-2 sm:px-3 text-sm"
                               >
                                 {isSubmitting ? (
                                   <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                                 ) : (
-                                  <Send className="h-3 w-3  sm:h-4" />
+                                  <Send className="h-3 w-3 sm:h-4 sm:w-4" />
                                 )}
                               </Button>
                             </div>
@@ -686,7 +684,7 @@ export default function QuizSection() {
                     // Блок для успешных клиентов (все остальные случаи)
                     <>
                       <div className="space-y-4">
-                        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg">
+                        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
                           <CheckCircle2 className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                         </div>
 
@@ -714,7 +712,7 @@ export default function QuizSection() {
                         <Button
                           onClick={scrollToBooking}
                           size="lg"
-                          className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold min-h-[44px] w-full max-w-[280px] sm:max-w-[320px] mx-auto shadow-xl"
+                          className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold min-h-[44px] w-full max-w-[280px] sm:max-w-[320px] mx-auto"
                         >
                           <CalendarDays className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                           <span className="text-xs sm:text-sm md:text-base truncate">
@@ -722,7 +720,7 @@ export default function QuizSection() {
                           </span>
                         </Button>
 
-                        <div className="p-2 sm:p-3 rounded-2xl bg-gradient-to-r from-yellow-50/80 to-amber-50/80 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200/50 dark:border-yellow-700/50 backdrop-blur-sm break-words">
+                        <div className="p-2 sm:p-3 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200 dark:border-yellow-700 break-words">
                           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3">
                             <Zap className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
                             <div className="min-w-0">
@@ -747,13 +745,13 @@ export default function QuizSection() {
 
       {/* Success/Error Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-md mx-4 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border-0 shadow-2xl">
+        <DialogContent className="sm:max-w-md mx-4">
           <DialogHeader>
             <div
               className={`w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 rounded-full flex items-center justify-center ${
                 dialogType === "success"
-                  ? "bg-gradient-to-br from-green-500/20 to-emerald-500/20"
-                  : "bg-gradient-to-br from-red-500/20 to-orange-500/20"
+                  ? "bg-green-100 dark:bg-green-900"
+                  : "bg-red-100 dark:bg-red-900"
               }`}
             >
               {dialogType === "success" ? (
@@ -788,7 +786,7 @@ export default function QuizSection() {
 
           {dialogType === "success" && (
             <div className="space-y-4 text-sm">
-              <div className="p-3 md:p-4 rounded-xl bg-gradient-to-br from-neutral-50 to-blue-50/50 dark:from-neutral-800 dark:to-blue-900/20 min-h-[100px] border border-neutral-200/50 dark:border-neutral-700/50">
+              <div className="p-3 md:p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800 min-h-[100px]">
                 <div className="font-semibold text-neutral-900 dark:text-white mb-2 text-sm md:text-base">
                   {lang === "ru"
                     ? "Детали заявки:"
@@ -838,7 +836,7 @@ export default function QuizSection() {
                 </div>
               </div>
 
-              <div className="p-3 md:p-4 rounded-xl bg-gradient-to-r from-blue-50/80 to-emerald-50/80 dark:from-blue-900/20 dark:to-emerald-900/20 border border-blue-200/50 dark:border-blue-700/50 min-h-[100px]">
+              <div className="p-3 md:p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 min-h-[100px]">
                 <div className="flex items-center gap-2 text-blue-800 dark:text-blue-300 font-semibold mb-2 text-sm md:text-base">
                   <Zap className="h-4 w-4 flex-shrink-0" />
                   {lang === "ru" ? "Что дальше?" : "Әрі қарай не?"}
@@ -869,10 +867,10 @@ export default function QuizSection() {
 
           <Button
             onClick={handleDialogClose}
-            className={`w-full min-h-[44px] shadow-lg ${
+            className={`w-full min-h-[44px] ${
               dialogType === "success"
-                ? "bg-gradient-to-r from-blue-500 to-emerald-500 hover:from-blue-600 hover:to-emerald-600"
-                : "bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600"
+                ? "bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600"
+                : "bg-red-500 hover:bg-red-600"
             } text-white`}
           >
             {lang === "ru" ? "Понятно" : "Түсінікті"}
