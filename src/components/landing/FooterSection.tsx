@@ -1,125 +1,119 @@
-'use client'
+"use client";
 
-import React from 'react'
-import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { 
-  MapPin, 
-  Phone, 
-  Mail, 
-  Clock, 
-  Shield, 
+import React from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
   Award,
   Calculator,
   FileText,
   CheckCircle,
-  Star
-} from 'lucide-react'
-import { useApp } from '@/components/providers/AppProvider'
-import { dict } from '@/lib/dictionary'
-import Image from 'next/image'
+  Star,
+} from "lucide-react";
+import { useApp } from "@/components/providers/AppProvider";
+import { dict } from "@/lib/dictionary";
+import Image from "next/image";
+import { Badge } from "../ui/badge";
 
 export default function FooterSection() {
-  const { lang } = useApp()
-  const t = dict[lang]
+  const { lang } = useApp();
+  const t = dict[lang];
 
   const companyInfo = {
     name: t.footer_company_name,
     description: t.footer_company_desc,
     bin: t.footer_bin,
-    founded: t.footer_founded_year
-  }
+    founded: t.footer_founded_year,
+  };
 
   const contactInfo = {
-    phone: '+7 (777) 123-45-67',
-    email: 'info@garantipoteki.kz',
+    phone: "+7 (###) ###-##-##",
+    email: "###@garantipoteki.kz",
     address: t.footer_address_short,
-    hours: lang === 'ru' 
-      ? 'Пн-Пт: 9:00-18:00, Сб: 10:00-16:00' 
-      : 'Дс-Жм: 9:00-18:00, Сб: 10:00-16:00'
-  }
+    hours:
+      lang === "ru"
+        ? "Пн-Пт: 9:00-18:00, Сб: 10:00-16:00"
+        : "Дс-Жм: 9:00-18:00, Сб: 10:00-16:00",
+  };
 
   const usefulLinks = [
     {
       icon: Calculator,
       name: t.footer_link1,
-      href: '#booking'
+      href: "#booking",
     },
     {
       icon: CheckCircle,
       name: t.footer_link2,
-      href: '#quiz'
+      href: "#quiz",
     },
     {
       icon: FileText,
       name: t.footer_link3,
-      href: '#faq'
+      href: "#faq",
     },
     {
       icon: Star,
       name: t.footer_link4,
-      href: '#reviews'
-    }
-  ]
+      href: "#reviews",
+    },
+  ];
 
   const documents = [
     {
       name: t.footer_doc1,
-      href: '/consent'
+      href: "/consent",
     },
     {
       name: t.footer_doc2,
-      href: '/consent'
+      href: "/consent",
     },
     {
       name: t.footer_doc3,
-      href: '/consent'
+      href: "/consent",
     },
     {
       name: t.footer_doc4,
-      href: '/rules'
-    }
-  ]
+      href: "/rules",
+    },
+  ];
 
   const trustBadges = [
-    { 
-      icon: Award, 
-      text: t.footer_trust2.replace('{{year}}', companyInfo.founded) 
+    {
+      icon: Award,
+      text: t.footer_trust2.replace("{{year}}", companyInfo.founded),
     },
-    { icon: Clock, text: t.footer_trust3 }
-  ]
+    { icon: Clock, text: t.footer_trust3 },
+  ];
 
   const scrollToBooking = () => {
-    const bookingElement = document.getElementById('booking')
+    const bookingElement = document.getElementById("booking");
     if (bookingElement) {
-      bookingElement.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      })
+      bookingElement.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
-  }
+  };
 
-  // Конфигурация анимаций для предотвращения прыжков
-  const animationConfig = {
-    initial: { opacity: 0, y: 30 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-50px" },
-    transition: { duration: 0.6 }
-  }
 
   const columnAnimation = {
     initial: { opacity: 0, y: 20 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, margin: "-40px" },
-    transition: { duration: 0.5 }
-  }
+    transition: { duration: 0.5 },
+  };
 
   const itemAnimation = {
     initial: { opacity: 0, x: -10 },
     whileInView: { opacity: 1, x: 0 },
     viewport: { once: true, margin: "-20px" },
-    transition: { duration: 0.3 }
-  }
+    transition: { duration: 0.3 },
+  };
 
   return (
     <footer className="bg-gradient-to-b from-neutral-900 to-neutral-950 text-white">
@@ -134,8 +128,8 @@ export default function FooterSection() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Image 
-                      src="/logo.png" 
+                    <Image
+                      src="/logo.png"
                       alt="Гарант Ипотеки"
                       width={30}
                       height={30}
@@ -143,9 +137,13 @@ export default function FooterSection() {
                     />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-xl font-bold text-white truncate">Гарант Ипотеки</h3>
+                    <h3 className="text-xl font-bold text-white truncate">
+                      Гарант Ипотеки
+                    </h3>
                     <p className="text-neutral-400 text-sm">
-                      {lang === 'ru' ? 'Профессиональное кредитное сопровождение' : 'Кәсіби несиелік қолдау'}
+                      {lang === "ru"
+                        ? "Профессиональное кредитное сопровождение"
+                        : "Кәсіби несиелік қолдау"}
                     </p>
                   </div>
                 </div>
@@ -156,15 +154,13 @@ export default function FooterSection() {
                   <p className="text-neutral-400 text-sm font-medium">
                     {companyInfo.name}
                   </p>
-                  <p className="text-neutral-500 text-xs">
-                    {companyInfo.bin}
-                  </p>
+                  <p className="text-neutral-500 text-xs">{companyInfo.bin}</p>
                 </div>
               </div>
 
               <div className="space-y-3">
                 {trustBadges.map((badge, index) => (
-                  <motion.div 
+                  <motion.div
                     key={index}
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -173,7 +169,9 @@ export default function FooterSection() {
                     className="flex items-center gap-3"
                   >
                     <badge.icon className="h-4 w-4 text-blue-400 flex-shrink-0" />
-                    <span className="text-neutral-300 text-sm">{badge.text}</span>
+                    <span className="text-neutral-300 text-sm">
+                      {badge.text}
+                    </span>
                   </motion.div>
                 ))}
               </div>
@@ -189,46 +187,130 @@ export default function FooterSection() {
                 <Phone className="h-5 w-5 text-blue-400" />
                 {t.footer_contact_title}
               </h4>
-              
+
               <div className="space-y-4">
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <Phone className="h-4 w-4 text-green-400 flex-shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-white text-sm font-medium truncate">{contactInfo.phone}</p>
-                      <p className="text-neutral-400 text-xs">{t.footer_phone_label}</p>
+                      <p className="text-white text-sm font-medium truncate">
+                        {contactInfo.phone}
+                      </p>
+                      <p className="text-neutral-400 text-xs">
+                        {t.footer_phone_label}
+                      </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-3">
                     <Mail className="h-4 w-4 text-blue-400 flex-shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-white text-sm font-medium truncate">{contactInfo.email}</p>
-                      <p className="text-neutral-400 text-xs">{t.footer_email_label}</p>
+                      <p className="text-white text-sm font-medium truncate">
+                        {contactInfo.email}
+                      </p>
+                      <p className="text-neutral-400 text-xs">
+                        {t.footer_email_label}
+                      </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="space-y-3 pt-4 border-t border-neutral-800">
-                  <div className="flex items-start gap-3">
-                    <MapPin className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
-                    <div className="min-w-0">
-                      <p className="text-white text-sm font-medium">{t.footer_address_label}</p>
-                      <p className="text-neutral-400 text-xs">{contactInfo.address}</p>
-                    </div>
-                  </div>
-                  
+                <div className="space-y-4 pt-4 border-t border-neutral-800">
+                  {/* График работы */}
                   <div className="flex items-start gap-3">
                     <Clock className="h-4 w-4 text-yellow-400 flex-shrink-0 mt-0.5" />
                     <div className="min-w-0">
-                      <p className="text-white text-sm font-medium">{t.footer_hours_label}</p>
-                      <p className="text-neutral-400 text-xs">{contactInfo.hours}</p>
+                      <p className="text-white text-sm font-medium mb-2">
+                        {t.footer_hours_label}
+                      </p>
+                      <div className="space-y-1 text-neutral-400 text-xs">
+                        <div className="flex justify-between">
+                          <span>
+                            {lang === "ru" ? "Будни" : "Дүйсенбі-Жұма"}
+                          </span>
+                          <span className="text-white">10:00–19:00</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>{lang === "ru" ? "Суббота" : "Сенбі"}</span>
+                          <span className="text-white">10:00–17:00</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="mr-3">
+                            {lang === "ru" ? "Воскресенье " : "Жексенбі "}
+                          </span>
+                          <span className="text-red-400">
+                            {lang === "ru" ? "Выходной" : "Демалыс"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Адреса офисов */}
+                  <div className="flex items-start gap-3">
+                    <MapPin className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
+                    <div className="min-w-0">
+                      <p className="text-white text-sm font-medium mb-2">
+                        {t.footer_address_label}
+                      </p>
+                      <div className="space-y-2 text-neutral-400 text-xs">
+                        {/* Офис 1 */}
+                        <div className="flex items-start gap-2">
+                          <Badge
+                            variant="outline"
+                            className="bg-blue-500/20 text-blue-300 border-blue-400 text-[10px] px-1 h-4"
+                          >
+                            1
+                          </Badge>
+                          <div>
+                            <p className="text-white text-xs">
+                              {lang === "ru"
+                                ? "Проспект Бауыржан Момышулы, 2/52 этаж"
+                                : "Бауыржан Момышулы даңғылы, 2/52 қабат"}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Офис 2 */}
+                        <div className="flex items-start gap-2">
+                          <Badge
+                            variant="outline"
+                            className="bg-green-500/20 text-green-300 border-green-400 text-[10px] px-1 h-4"
+                          >
+                            2
+                          </Badge>
+                          <div>
+                            <p className="text-white text-xs">
+                              {lang === "ru"
+                                ? "Улица Сыганак, 54а, 112 офис; 1 этаж"
+                                : "Сығанақ көшесі, 54а, 112 офис; 1 қабат"}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Офис 3 */}
+                        <div className="flex items-start gap-2">
+                          <Badge
+                            variant="outline"
+                            className="bg-purple-500/20 text-purple-300 border-purple-400 text-[10px] px-1 h-4"
+                          >
+                            3
+                          </Badge>
+                          <div>
+                            <p className="text-white text-xs">
+                              {lang === "ru"
+                                ? "Проспект Богенбай батыра, 56а, 703 офис; 7 этаж"
+                                : "Бөгенбай батыр даңғылы, 56а, 703 офис; 7 қабат"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <Button 
+              <Button
                 onClick={scrollToBooking}
                 className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white font-semibold transition-all duration-300 hover:scale-105 min-h-[44px]"
               >
@@ -243,8 +325,10 @@ export default function FooterSection() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="space-y-6 min-h-[250px]"
             >
-              <h4 className="font-semibold text-white text-lg">{t.footer_useful_title}</h4>
-              
+              <h4 className="font-semibold text-white text-lg">
+                {t.footer_useful_title}
+              </h4>
+
               <div className="space-y-3">
                 {usefulLinks.map((link, index) => (
                   <motion.a
@@ -267,8 +351,10 @@ export default function FooterSection() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="space-y-6 min-h-[250px]"
             >
-              <h4 className="font-semibold text-white text-lg">{t.footer_docs_title}</h4>
-              
+              <h4 className="font-semibold text-white text-lg">
+                {t.footer_docs_title}
+              </h4>
+
               <div className="space-y-3">
                 {documents.map((doc, index) => (
                   <motion.a
@@ -282,12 +368,6 @@ export default function FooterSection() {
                   </motion.a>
                 ))}
               </div>
-
-              <div className="pt-4 border-t border-neutral-800">
-                <div className="space-y-2 text-xs text-neutral-500">
-                  <p className="leading-relaxed">{t.footer_license}</p>
-                </div>
-              </div>
             </motion.div>
           </div>
         </div>
@@ -296,7 +376,7 @@ export default function FooterSection() {
       {/* Bottom Footer */}
       <div className="border-t border-neutral-800 py-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4">
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -305,27 +385,18 @@ export default function FooterSection() {
               className="text-center md:text-left"
             >
               <p className="text-neutral-400 text-sm">
-                {t.footer_copyright.replace('{{year}}', new Date().getFullYear().toString())}
+                {t.footer_copyright.replace(
+                  "{{year}}",
+                  new Date().getFullYear().toString()
+                )}
               </p>
               <p className="text-neutral-500 text-xs mt-1 leading-relaxed">
                 {t.footer_disclaimer}
               </p>
             </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: "-30px" }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-neutral-400 text-sm text-center"
-            >
-              <span className="truncate">{contactInfo.address}</span>
-              <span className="hidden sm:block">•</span>
-              <span>{t.footer_license}</span>
-            </motion.div>
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }

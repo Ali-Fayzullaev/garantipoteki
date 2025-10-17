@@ -57,10 +57,11 @@ export default function BookingForm() {
   const [dealId, setDealId] = useState<string | null>(null);
   const [selectedService, setSelectedService] = useState<string>("");
 
+
   const trustBadges = [
-    { text: t.final_trust1, icon: CheckCircle2 },
-    { text: t.final_trust3, icon: Shield },
-    { text: t.final_trust4, icon: CheckCircle2 },
+    { text: t.security_1_text, icon: Shield },
+    { text: t.security_2_text, icon: CheckCircle2 },
+    { text: t.security_3_text, icon: Calendar },
   ];
 
   const handleInputChange = (field: string, value: string) => {
@@ -234,25 +235,37 @@ export default function BookingForm() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="sticky top-2 md:top-8 mx-auto max-w-full"
         >
-          <Card className="border-0 shadow-lg md:shadow-2xl bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 mx-1 sm:mx-0 min-h-[500px]">
+          <Card className="border-0 shadow-lg md:shadow-2xl bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 mx-1 sm:mx-0">
             <CardHeader className="text-center pb-3 md:pb-4 px-3 md:px-6">
               <div className="w-12 h-12 md:w-20 md:h-20 mx-auto mb-2 md:mb-4 bg-gradient-to-br from-blue-500 to-green-500 rounded-xl md:rounded-2xl flex items-center justify-center shadow-md md:shadow-lg">
-                <Zap className="h-4 w-4 md:h-8 md:w-8 text-white" />
+                <Calendar className="h-4 w-4 md:h-8 md:w-8 text-white" />
               </div>
               <CardTitle className="text-lg md:text-2xl font-bold text-neutral-900 dark:text-white">
-                {t.final_form_title}
+                {t.booking_form_title}
               </CardTitle>
-              <p className="text-neutral-600 dark:text-neutral-400 text-xs md:text-base mt-1">
-                {t.final_form_subtitle}
-              </p>
             </CardHeader>
 
             <CardContent className="px-3 md:px-6 pb-4 md:pb-6">
+              {/* Информация о консультации */}
+              <div className="mb-6 space-y-3">
+                <div className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
+                  <Clock className="h-4 w-4 text-blue-500" />
+                  <span>{t.booking_form_note1}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
+                  <Zap className="h-4 w-4 text-green-500" />
+                  <span>{t.booking_form_note2}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
+                  <CheckCircle2 className="h-4 w-4 text-purple-500" />
+                  <span>{t.booking_form_note3}</span>
+                </div>
+              </div>
               <form onSubmit={handleSubmit} className="space-y-3 md:space-y-6">
                 <div className="space-y-2 md:space-y-4">
                   <div className="relative">
                     <Input
-                      placeholder={t.final_form_name_placeholder}
+                      placeholder={t.booking_form_name_placeholder}
                       value={formData.name}
                       onChange={(e) =>
                         handleInputChange("name", e.target.value)
@@ -265,7 +278,7 @@ export default function BookingForm() {
 
                   <div className="relative">
                     <Input
-                      placeholder={t.final_form_phone_placeholder}
+                      placeholder={t.booking_form_phone_placeholder}
                       value={formData.phone}
                       onChange={(e) =>
                         handleInputChange("phone", e.target.value)
@@ -285,24 +298,21 @@ export default function BookingForm() {
                   </div>
 
                   <Textarea
-                    placeholder={t.final_form_comment_placeholder}
+                    placeholder={t.booking_form_comment_placeholder}
                     value={formData.comment}
                     onChange={(e) =>
                       handleInputChange("comment", e.target.value)
                     }
-                    className="min-h-[80px] md:min-h-[120px] resize-none text-sm md:text-lg p-2 md:p-4 border-neutral-200 dark:border-neutral-700"
+                    className="min-h-[60px] md:min-h-[80px] resize-none text-sm md:text-lg p-2 md:p-4 border-neutral-200 dark:border-neutral-700"
                   />
                 </div>
 
-                <div className="p-2 md:p-4 rounded-lg md:rounded-xl bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border border-green-200 dark:border-green-700">
+                <div className="p-2 md:p-4 rounded-lg md:rounded-xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200 dark:border-yellow-700">
                   <div className="flex items-center gap-1 md:gap-3">
-                    <Clock className="h-3 w-3 md:h-5 md:w-5 text-green-600 dark:text-green-400 flex-shrink-0" />
+                    <Zap className="h-3 w-3 md:h-5 md:w-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
                     <div>
-                      <div className="font-semibold text-green-800 dark:text-green-300 text-xs">
-                        {t.final_form_urgency_title}
-                      </div>
-                      <div className="text-green-700 dark:text-green-400 text-[10px] md:text-xs">
-                        {t.final_form_urgency_desc}
+                      <div className="font-semibold text-yellow-800 dark:text-yellow-300 text-xs">
+                        {t.booking_form_submit_hint}
                       </div>
                     </div>
                   </div>
@@ -323,14 +333,14 @@ export default function BookingForm() {
                   ) : (
                     <>
                       <span className="text-xs md:text-base">
-                        {t.final_form_submit_button}
+                        {t.booking_form_submit_button}
                       </span>
                       <ArrowRight className="ml-1 md:ml-2 h-3 w-3 md:h-5 md:w-5" />
                     </>
                   )}
                 </Button>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 md:gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 md:gap-3">
                   {trustBadges.map((badge, index) => (
                     <motion.div
                       key={index}
@@ -347,10 +357,6 @@ export default function BookingForm() {
                     </motion.div>
                   ))}
                 </div>
-
-                <p className="text-center text-[10px] md:text-xs text-neutral-500 dark:text-neutral-400">
-                  {t.final_form_consent}
-                </p>
               </form>
             </CardContent>
           </Card>
@@ -412,7 +418,7 @@ export default function BookingForm() {
     );
   }
 
-  // Шаг 3: Загрузка
+  // Шаг 3: Загрузка (остается без изменений)
   if (step === 3) {
     return (
       <section className="px-2 sm:px-0">

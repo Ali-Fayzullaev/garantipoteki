@@ -218,6 +218,9 @@ export default function QuizSection() {
   // Проверяем, топ ли клиент (ИП/ТОО с пенсионными отчислениями)
   const isTopClient = answers.job === "d" && answers.pension !== "c";
 
+  // Проверяем, есть ли микрозаймы или просрочки (но не полная просрочка)
+  const hasMicroLoansOrDelays = answers.debt === "c" || answers.debt === "d";
+
   // Получаем максимальную сумму на основе выбора в первом вопросе
   const getMaxAmountText = () => {
     if (isRejected) return "0";
@@ -289,6 +292,8 @@ export default function QuizSection() {
         comment: `Результат квиза: ${score}/20 баллов. ${
           isRejected
             ? "Отказ - на просрочке"
+            : hasMicroLoansOrDelays
+            ? "Есть микрозаймы/просрочки"
             : isTopClient
             ? "Топ клиент ИП/ТОО"
             : "Стандартный клиент"
@@ -301,6 +306,8 @@ export default function QuizSection() {
         comment: `Результат квиза: ${score}/20 баллов. ${
           isRejected
             ? "Отказ - на просрочке"
+            : hasMicroLoansOrDelays
+            ? "Есть микрозаймы/просрочки"
             : isTopClient
             ? "Топ клиент ИП/ТОО"
             : "Стандартный клиент"
@@ -379,13 +386,6 @@ export default function QuizSection() {
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, margin: "-40px" },
     transition: { duration: 0.5 },
-  };
-
-  const itemAnimation = {
-    initial: { opacity: 0, y: 10 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-20px" },
-    transition: { duration: 0.3 },
   };
 
   return (
@@ -633,112 +633,8 @@ export default function QuizSection() {
                           </div>
                         </div>
                       </>
-                    ) : isTopClient ? (
-                      // Блок для ИП/ТОО с пенсионными отчислениями
-                      <>
-                        <div className="space-y-4">
-                          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center shadow-2xl shadow-purple-500/25">
-                            <Crown className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
-                          </div>
-
-                          <div className="space-y-3">
-                            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-600 dark:text-purple-400 break-words">
-                              {t.result_success_title}
-                            </h3>
-                            <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
-                              {lang === "ru"
-                                ? "Как владелец бизнеса с подтвержденными доходами вы получаете максимальные условия"
-                                : "Расталған табысы бар бизнес иесі ретінде сіз максималды шарттарды аласыз"}
-                            </p>
-                            <p className="text-sm sm:text-base md:text-lg text-neutral-700 dark:text-neutral-300 font-semibold break-words">
-                              {t.result_success_text2}{" "}
-                              <span className="text-base sm:text-lg md:text-xl text-purple-600 dark:text-purple-400">
-                                {getMaxAmountText()} млн ₸
-                              </span>{" "}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-4">
-                          <Button
-                            onClick={scrollToBooking}
-                            size="lg"
-                            className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold shadow-2xl shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300 hover:scale-105 min-h-[44px] w-full max-w-[280px] sm:max-w-[320px] mx-auto"
-                          >
-                            <CalendarDays className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                            <span className="text-xs sm:text-sm md:text-base truncate">
-                              {t.result_success_cta}
-                            </span>
-                          </Button>
-
-                          <div className="p-2 sm:p-3 rounded-2xl bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border border-purple-200 dark:border-purple-700 break-words">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3">
-                              <Zap className="h-3 w-3 sm:h-4 sm:w-4 text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" />
-                              <div className="min-w-0">
-                                <div className="font-semibold text-purple-800 dark:text-purple-300 text-xs sm:text-sm">
-                                  {t.result_bonus_title}
-                                </div>
-                                <div className="text-purple-700 dark:text-purple-400 text-xs leading-relaxed">
-                                  {t.result_bonus_desc}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    ) : score >= 15 ? (
-                      // Блок для успешных клиентов (не ИП/ТОО)
-                      <>
-                        <div className="space-y-4">
-                          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-2xl shadow-green-500/25">
-                            <CheckCircle2 className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
-                          </div>
-
-                          <div className="space-y-3">
-                            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400 break-words">
-                              {t.result_success_title}
-                            </h3>
-                            <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
-                              {t.result_success_text1}
-                            </p>
-                            <p className="text-sm sm:text-base md:text-lg text-neutral-700 dark:text-neutral-300 font-semibold break-words">
-                              {t.result_success_text2}{" "}
-                              <span className="text-base sm:text-lg md:text-xl text-green-600 dark:text-green-400">
-                                {getMaxAmountText()} млн ₸
-                              </span>{" "}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-4">
-                          <Button
-                            onClick={scrollToBooking}
-                            size="lg"
-                            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105 min-h-[44px] w-full max-w-[280px] sm:max-w-[320px] mx-auto"
-                          >
-                            <CalendarDays className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                            <span className="text-xs sm:text-sm md:text-base truncate">
-                              {t.result_success_cta}
-                            </span>
-                          </Button>
-
-                          <div className="p-2 sm:p-3 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200 dark:border-yellow-700 break-words">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3">
-                              <Zap className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
-                              <div className="min-w-0">
-                                <div className="font-semibold text-yellow-800 dark:text-yellow-300 text-xs sm:text-sm">
-                                  {t.result_bonus_title}
-                                </div>
-                                <div className="text-yellow-700 dark:text-yellow-400 text-xs leading-relaxed">
-                                  {t.result_bonus_desc}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      // Блок для клиентов, которым нужно улучшить условия
+                    ) : hasMicroLoansOrDelays ? (
+                      // Блок для клиентов с микрозаймами или просрочками
                       <>
                         <div className="space-y-4">
                           <div className="w-16 h-16 mx-auto bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center shadow-2xl shadow-amber-500/25">
@@ -830,51 +726,67 @@ export default function QuizSection() {
                           </div>
                         </div>
                       </>
+                    ) : (
+                      // Блок для успешных клиентов (все остальные случаи)
+                      <>
+                        <div className="space-y-4">
+                          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-2xl shadow-green-500/25">
+                            <CheckCircle2 className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                          </div>
+
+                          <div className="space-y-3">
+                            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400 break-words">
+                              {t.result_success_title}
+                            </h3>
+                            <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
+                              {isTopClient
+                                ? lang === "ru"
+                                  ? "Как владелец бизнеса с подтвержденными доходами вы получаете максимальные условия"
+                                  : "Расталған табысы бар бизнес иесі ретінде сіз максималды шарттарды аласыз"
+                                : t.result_success_text1}
+                            </p>
+                            <p className="text-sm sm:text-base md:text-lg text-neutral-700 dark:text-neutral-300 font-semibold break-words">
+                              {t.result_success_text2}{" "}
+                              <span className="text-base sm:text-lg md:text-xl text-green-600 dark:text-green-400">
+                                {getMaxAmountText()} млн ₸
+                              </span>{" "}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          <Button
+                            onClick={scrollToBooking}
+                            size="lg"
+                            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105 min-h-[44px] w-full max-w-[280px] sm:max-w-[320px] mx-auto"
+                          >
+                            <CalendarDays className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm md:text-base truncate">
+                              {t.result_success_cta}
+                            </span>
+                          </Button>
+
+                          <div className="p-2 sm:p-3 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200 dark:border-yellow-700 break-words">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3">
+                              <Zap className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+                              <div className="min-w-0">
+                                <div className="font-semibold text-yellow-800 dark:text-yellow-300 text-xs sm:text-sm">
+                                  {t.result_bonus_title}
+                                </div>
+                                <div className="text-yellow-700 dark:text-yellow-400 text-xs leading-relaxed">
+                                  {t.result_bonus_desc}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
                     )}
                   </motion.div>
                 )}
               </AnimatePresence>
             </CardContent>
           </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-30px" }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-12"
-        >
-          {[
-            {
-              icon: Shield,
-              text: t.trust_confidential,
-              color: "text-blue-500",
-            },
-            { icon: Clock, text: t.trust_60sec, color: "text-green-500" },
-            {
-              icon: CheckCircle2,
-              text: t.trust_no_spam,
-              color: "text-emerald-500",
-            },
-            { icon: Star, text: t.trust_accurate, color: "text-amber-500" },
-          ].map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-15px" }}
-              transition={{ duration: 0.4, delay: index * 0.08 }}
-              className="flex items-center gap-3 justify-center p-3 md:p-4 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200/50 dark:border-neutral-700/50 min-h-[70px]"
-            >
-              <item.icon
-                className={`h-4 w-4 md:h-5 md:w-5 ${item.color} flex-shrink-0`}
-              />
-              <span className="text-xs md:text-sm font-medium text-neutral-700 dark:text-neutral-300 text-center leading-tight">
-                {item.text}
-              </span>
-            </motion.div>
-          ))}
         </motion.div>
       </div>
 
@@ -944,28 +856,28 @@ export default function QuizSection() {
                       className={`font-semibold ${
                         isRejected
                           ? "text-red-600"
+                          : hasMicroLoansOrDelays
+                          ? "text-amber-600"
                           : isTopClient
                           ? "text-purple-600"
-                          : score >= 15
-                          ? "text-green-600"
-                          : "text-amber-600"
+                          : "text-green-600"
                       }`}
                     >
                       {isRejected
                         ? lang === "ru"
                           ? "Отказ"
                           : "Бас тарту"
+                        : hasMicroLoansOrDelays
+                        ? lang === "ru"
+                          ? "Нужна консультация"
+                          : "Кеңесү қажет"
                         : isTopClient
                         ? lang === "ru"
                           ? "Топ клиент"
                           : "Топ клиент"
-                        : score >= 15
-                        ? lang === "ru"
-                          ? "Топ 20%"
-                          : "Топ 20%"
                         : lang === "ru"
-                        ? "Нужна консультация"
-                        : "Кеңесү қажет"}
+                        ? "Одобрено"
+                        : "Бекітілді"}
                     </span>
                   </div>
                 </div>

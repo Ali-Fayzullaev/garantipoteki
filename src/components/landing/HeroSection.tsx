@@ -122,7 +122,6 @@ export default function VideoHero() {
         }
       } else {
         // Вход в полноэкранный режим
-        // Пробуем разные методы для разных браузеров
         if (container.requestFullscreen) {
           await container.requestFullscreen();
         } else if (container.webkitRequestFullscreen) {
@@ -132,7 +131,6 @@ export default function VideoHero() {
         } else if (container.msRequestFullscreen) {
           await container.msRequestFullscreen();
         } else {
-          // Fallback для мобильных - запускаем видео в полноэкранном режиме
           if (video.webkitEnterFullscreen) {
             video.webkitEnterFullscreen();
           } else if (video.requestFullscreen) {
@@ -142,7 +140,6 @@ export default function VideoHero() {
       }
     } catch (error) {
       console.error("Fullscreen error:", error);
-      // Ultimate fallback для мобильных
       if (video.webkitEnterFullscreen) {
         video.webkitEnterFullscreen();
       }
@@ -165,46 +162,31 @@ export default function VideoHero() {
     }
   }, [showControls, isPlaying]);
 
-  // Адаптивная высота для мобильных устройств
-  const getVideoHeight = () => {
-    if (typeof window === 'undefined') return "h-64 md:h-[500px] lg:h-[600px]";
-    
-    const isMobile = window.innerWidth < 768;
-    if (isMobile) {
-      // На мобильных используем 70% высоты экрана
-      return `h-[70vh] max-h-[600px]`;
-    }
-    return "h-[500px] lg:h-[600px]";
-  };
-
   // Классы для тем
   const bgClass = dark
-    ? "bg-gradient-to-b from-slate-950 via-slate-900 to-black"
-    : "bg-gradient-to-b from-gray-50 via-white to-gray-100";
+    ? "bg-slate-950"
+    : "bg-gray-50";
 
   const textClass = dark ? "text-white" : "text-slate-900";
-  const containerBgClass = dark ? "bg-black border-gray-800" : "bg-white border-gray-200";
-  const overlayClass = dark ? "from-black via-black/50" : "from-white/80 via-white/40";
-  const hoverBgClass = dark ? "hover:bg-white/20" : "hover:bg-black/20";
-  const playOverlayClass = dark ? "bg-black/30 hover:bg-black/50" : "bg-white/30 hover:bg-white/50";
-  const playButtonBgClass = dark ? "bg-white/20 hover:bg-white/30" : "bg-black/20 hover:bg-black/30";
+  const containerBgClass = dark ? "bg-black" : "bg-white";
+  const overlayClass = dark ? "from-black/80" : "from-white/80";
+  const hoverBgClass = dark ? "hover:bg-white/10" : "hover:bg-black/10";
+  const playOverlayClass = dark ? "bg-black/40" : "bg-white/40";
+  const playButtonBgClass = dark ? "bg-white/20" : "bg-black/20";
 
   return (
-    <div className={`min-h-screen ${bgClass} transition-colors duration-500 pt-8 md:pt-20 pb-8 md:pb-20`}>
+    <div className={`min-h-screen ${bgClass} pt-8 md:pt-20 pb-8 md:pb-20`}>
       <div className="max-w-6xl mx-auto px-4">
         {/* Видео контейнер */}
         <div
           ref={containerRef as React.RefObject<HTMLDivElement>}
-          className={`relative rounded-2xl mt-14 md:rounded-3xl overflow-hidden ${containerBgClass} border shadow-2xl group transition-colors duration-500 ${getVideoHeight()}`}
+          className={`relative rounded-2xl mt-14 md:rounded-3xl overflow-hidden ${containerBgClass} border shadow-xl ${dark ? 'border-gray-800' : 'border-gray-200'} h-64 md:h-[500px] lg:h-[600px]`}
           onMouseEnter={() => setShowControls(true)}
           onMouseLeave={() => setShowControls(false)}
           onTouchStart={handleTouchStart}
         >
-          {/* Градиентный ореол */}
-          <div className={`absolute -inset-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-2xl md:rounded-3xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 -z-10`} />
-
-          <div className="relative  w-full h-full bg-black flex items-center justify-center">
-            {/* Видео с правильным aspect ratio */}
+          <div className="relative w-full h-full bg-black flex items-center justify-center">
+            {/* Видео */}
             <div className="w-full h-full flex items-center justify-center">
               <video
                 ref={videoRef as React.RefObject<HTMLVideoElement>}
@@ -226,14 +208,14 @@ export default function VideoHero() {
             {/* Play overlay */}
             {!isPlaying && (
               <div
-                className={`absolute inset-0 flex items-center justify-center ${playOverlayClass} cursor-pointer transition-colors duration-300 group`}
+                className={`absolute inset-0 flex items-center justify-center ${playOverlayClass} cursor-pointer`}
                 onClick={togglePlay}
                 onTouchEnd={(e) => {
                   e.preventDefault();
                   togglePlay();
                 }}
               >
-                <div className={`w-16 h-16 md:w-24 md:h-24 lg:w-32 lg:h-32 ${playButtonBgClass} backdrop-blur-md rounded-full flex items-center justify-center transition-all transform group-hover:scale-110 active:scale-95`}>
+                <div className={`w-16 h-16 md:w-24 md:h-24 lg:w-32 lg:h-32 ${playButtonBgClass} backdrop-blur-md rounded-full flex items-center justify-center`}>
                   <Play className="w-6 h-6 md:w-8 md:h-8 lg:w-12 lg:h-12 text-white fill-white ml-1" />
                 </div>
               </div>
@@ -241,13 +223,13 @@ export default function VideoHero() {
 
             {/* Контролы */}
             <div
-              className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t ${overlayClass} to-transparent p-3 md:p-4 lg:p-6 transition-opacity duration-300 ${
+              className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t ${overlayClass} to-transparent p-3 md:p-4 lg:p-6 ${
                 showControls || !isPlaying ? "opacity-100" : "opacity-0"
               }`}
             >
               {/* Progress bar */}
               <div
-                className={`w-full h-1 md:h-1.5 ${dark ? "bg-gray-600" : "bg-gray-300"} rounded-full cursor-pointer mb-3 md:mb-4 overflow-hidden group/progress hover:h-2 md:hover:h-2 transition-all touch-none`}
+                className={`w-full h-1.5 ${dark ? "bg-gray-600" : "bg-gray-300"} rounded-full cursor-pointer mb-3 md:mb-4 overflow-hidden`}
                 onClick={handleProgressChange}
                 onTouchStart={(e) => {
                   e.preventDefault();
@@ -264,54 +246,52 @@ export default function VideoHero() {
                 }}
               >
                 <div
-                  className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all relative"
+                  className="h-full bg-blue-500 rounded-full"
                   style={{ width: `${progress}%` }}
-                >
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 md:w-3 md:h-3 lg:w-4 lg:h-4 bg-white rounded-full shadow-lg opacity-0 group-hover/progress:opacity-100" />
-                </div>
+                />
               </div>
 
               {/* Controls row */}
               <div className={`flex items-center justify-between ${textClass} text-xs md:text-sm`}>
-                <div className="flex items-center gap-1 md:gap-2 lg:gap-3">
+                <div className="flex items-center gap-2 md:gap-3">
                   <button
                     onClick={togglePlay}
-                    className={`p-1.5 md:p-2 lg:p-3 ${hoverBgClass} rounded-lg transition-colors active:scale-95 touch-manipulation`}
-                    title={isPlaying ? "Пауза" :  "Воспроизвести"}
-                    aria-label={isPlaying ?  "Пауза" :  "Воспроизвести"}
+                    className={`p-2 ${hoverBgClass} rounded-lg`}
+                    title={isPlaying ? "Пауза" : "Воспроизвести"}
+                    aria-label={isPlaying ? "Пауза" : "Воспроизвести"}
                   >
                     {isPlaying ? (
-                      <Pause className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
+                      <Pause className="w-4 h-4 md:w-5 md:h-5" />
                     ) : (
-                      <Play className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
+                      <Play className="w-4 h-4 md:w-5 md:h-5" />
                     )}
                   </button>
 
                   <button
                     onClick={toggleMute}
-                    className={`p-1.5 md:p-2 lg:p-3 ${hoverBgClass} rounded-lg transition-colors active:scale-95 touch-manipulation`}
+                    className={`p-2 ${hoverBgClass} rounded-lg`}
                     title={isMuted ? "Включить звук" : "Выключить звук"}
-                    aria-label={isMuted ?  "Включить звук" : "Выключить звук"}
+                    aria-label={isMuted ? "Включить звук" : "Выключить звук"}
                   >
                     {isMuted ? (
-                      <VolumeX className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
+                      <VolumeX className="w-4 h-4 md:w-5 md:h-5" />
                     ) : (
-                      <Volume2 className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
+                      <Volume2 className="w-4 h-4 md:w-5 md:h-5" />
                     )}
                   </button>
 
-                  <span className="text-xs md:text-sm font-medium min-w-[60px] md:min-w-[80px]">
+                  <span className="font-medium min-w-[80px]">
                     {formatTime(currentTime)} / {formatTime(duration)}
                   </span>
                 </div>
 
                 <button
                   onClick={toggleFullscreen}
-                  className={`p-1.5 md:p-2 lg:p-3 ${hoverBgClass} rounded-lg transition-colors active:scale-95 touch-manipulation`}
-                  title={isFullscreen ?  "Выйти из полноэкранного режима" : "Полноэкранный режим"}
-                  aria-label={isFullscreen ?  "Выйти из полноэкранного режима" :  "Полноэкранный режим"}
+                  className={`p-2 ${hoverBgClass} rounded-lg`}
+                  title={isFullscreen ? "Выйти из полноэкранного режима" : "Полноэкранный режим"}
+                  aria-label={isFullscreen ? "Выйти из полноэкранного режима" : "Полноэкранный режим"}
                 >
-                  <Maximize2 className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
+                  <Maximize2 className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
               </div>
             </div>
@@ -321,7 +301,7 @@ export default function VideoHero() {
         {/* CTA */}
         <div className="text-center mt-8 md:mt-16">
           <button 
-            className="px-6 py-3 md:px-8 md:py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-full transition-all hover:shadow-xl hover:shadow-blue-500/50 transform hover:scale-105 active:scale-95 text-sm md:text-base touch-manipulation"
+            className="px-6 py-3 md:px-8 md:py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full text-sm md:text-base"
             onClick={() => document.getElementById('quiz')?.scrollIntoView({ behavior: 'smooth' })}
           >
             {t.scroll_indicator}

@@ -46,7 +46,7 @@ export const dict = {
     floating_quiz_desc: "Узнайте вашу сумму за 1 мин",
     floating_quiz_cta: "Начать сейчас",
 
-    scroll_indicator: "Узнать больше",
+    scroll_indicator: "Пройти тест",
 
     // Quiz Section
     quiz_title:
@@ -146,12 +146,6 @@ export const dict = {
     rec_amount_lower:
       "Рассмотрите возможность запроса меньшей суммы для повышения шансов одобрения",
 
-    // Trust Badges
-    trust_confidential: "Конфиденциально",
-    trust_60sec: "1 минут",
-    trust_no_spam: "Без спама",
-    trust_accurate: "Точный расчет",
-
     // ... предыдущие ключи ...
 
     // Education Section
@@ -159,7 +153,7 @@ export const dict = {
     education_subtitle:
       '"То, что я сейчас расскажу, изменит ваше представление о работе банков..."',
 
-      cta_title: "Закрывающий призыв:",
+    cta_title: "Закрывающий призыв:",
 
     // Video Thumbnail
     video_secrets_subtitle:
@@ -270,15 +264,8 @@ export const dict = {
     security4_desc: "Никаких скрытых комиссий и платежей",
 
     office_title: "Наши офисы в Астане",
-    office_left: "Левый берег",
-    office_left_address: "пр. Кабанбай батыра, 15",
-    office_right: "Правый берег",
-    office_right_address: "ул. Достык, 12",
     office_map: "Карта",
-    office_hours: "Работаем ежедневно с 9:00 до 18:00",
     office_cta: "Записаться на консультацию",
-
-  
 
     // Final CTA
     final_title: "Узнайте, какую сумму можете получить вы",
@@ -286,7 +273,6 @@ export const dict = {
       "Присоединяйтесь к тысячам довольных клиентов, которые уже получили максимальные суммы на лучших условиях",
     final_cta1: "Записаться на консультацию",
     final_cta2: "Посмотреть все кейсы",
-
 
     // Success Stories Carousel
     carousel_badge: "Реальные истории успеха",
@@ -361,12 +347,7 @@ export const dict = {
     minutes: "минут",
     seconds: "секунд",
 
-    offices_title: "Наши офисы в Астане",
-    office_left_bank: "Левый берег",
-    office_left_addressBook: "г. Астана, пр. Кабанбай батыра, 15",
-    office_right_bank: "Правый берег",
-    office_right_addressBook: "г. Астана, ул. Достык, 12",
-    office_hoursBook: "9:00-18:00",
+   
 
     office_features_parking: "Бесплатная парковка",
     office_features_metro: "Метро рядом",
@@ -615,16 +596,16 @@ export const dict = {
 
     footer_copyright: "© {{year}} Гарант Ипотеки. Все права защищены.",
     footer_disclaimer: "Информация на сайте не является публичной офертой",
-    footer_license: "Лицензия №1234567890",
     footer_address_short: "г. Астана, пр. Кабанбай батыра, 15",
 
     about_badge: "О компании",
-about_title: "Гарант Ипотеки - Ваш надежный партнер в получении жилья",
-about_subtitle: "Профессиональное сопровождение ипотечных сделок с 2018 года...",
-about_clients: "Довольных клиентов",
-about_cases: "Успешных кейсов",
-about_approval: "Одобрения ипотеки",
-about_time: "Среднее время одобрения",
+    about_title: "Гарант Ипотеки - Ваш надежный партнер в получении жилья",
+    about_subtitle:
+      "Профессиональное сопровождение ипотечных сделок с 2018 года...",
+    about_clients: "Довольных клиентов",
+    about_cases: "Успешных кейсов",
+    about_approval: "Одобрения ипотеки",
+    about_time: "Среднее время одобрения",
   },
   kz: {
     themaLight: "Жарық",
@@ -672,7 +653,7 @@ about_time: "Среднее время одобрения",
     floating_quiz_desc: "Сіздің сомаңызды 1 минутта біліңіз",
     floating_quiz_cta: "Қазір бастау",
 
-    scroll_indicator: "Көбірек білу",
+    scroll_indicator: "Тесттен өту",
 
     // Quiz Section
     quiz_title: "1 минут ішінде бүгін қанша ақша ала алатыныңызды біліңіз",
@@ -766,17 +747,12 @@ about_time: "Среднее время одобрения",
     rec_pension: "2–3 ай бойы зейнетақы аударымдарын көбейтіңіз",
     rec_job:
       "Ресми жұмыс орнын табыңыз немесе табысты растайтын құжаттарды дайындаңыз",
-    rec_pension_partial: "Өтінімнің өтуі үшін зейнетақы жарналары кем дегенде 4 айға түсуі керек",
+    rec_pension_partial:
+      "Өтінімнің өтуі үшін зейнетақы жарналары кем дегенде 4 айға түсуі керек",
     rec_debt_clear:
       "Ағымдағы микроқарыздар мен кешіккен төлемдерді өтініш берер алдында төлеп тастаңыз",
     rec_amount_lower:
       "Бекіту мүмкіндігін арттыру үшін кішірек сома сұрау туралы ойланыңыз",
-
-    // Trust Badges
-    trust_confidential: "Құпиялылық",
-    trust_60sec: "1 минут",
-    trust_no_spam: "Спамсыз",
-    trust_accurate: "Дәл есептеу",
 
     // Education Section
     education_title: "Банктер несін жасырғанын 3 құпия",
@@ -891,15 +867,9 @@ about_time: "Среднее время одобрения",
     security4_title: "Барлық шарттардың ашықтығы",
     security4_desc: "Жасырын комиссиялар мен төлемдер жоқ",
 
-    office_title: "Астанадағы офисіміз",
-    office_left: "Сол жақ жағалау",
-    office_left_address: "Қабанбай батыр даңғылы, 15",
-    office_right: "Оң жақ жағалау",
-    office_right_address: "Достық көшесі, 12",
+    office_title: "Астанадағы біздің кеңселер",
     office_map: "Карта",
-    office_hours: "Күн сайын 9:00-ден 18:00-ге дейін жұмыс істейміз",
     office_cta: "Кеңеске тіркелу",
-
 
     // Final CTA
     final_title: "Сіз қанша ақша ала алатыныңызды біліңіз",
@@ -983,12 +953,6 @@ about_time: "Среднее время одобрения",
     minutes: "минут",
     seconds: "секунд",
 
-    offices_title: "Астанадағы біздің кеңселеріміз",
-    office_left_bank: "Сол жақ жағалау",
-    office_left_addressBook: "Астана қ., Қабанбай батыр даңғылы, 15",
-    office_right_bank: "Оң жақ жағалау",
-    office_right_addressBook: "Астана қ., Достық көшесі, 12",
-    office_hoursBook: "9:00-18:00",
 
     office_features_parking: "Тегін автотұрақ",
     office_features_metro: "Метро жақын",
@@ -1235,7 +1199,6 @@ about_time: "Среднее время одобрения",
 
     footer_copyright: "© {{year}} Гарант Ипотеки. Барлық құқықтар қорғалған.",
     footer_disclaimer: "Сайттағы ақпарат қоғамға ашық ұсыныс болып табылмайды",
-    footer_license: "Лицензия №1234567890",
     footer_address_short: "Астана қ., Қабанбай батыр даңғылы, 15",
   },
 };

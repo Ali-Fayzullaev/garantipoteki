@@ -66,7 +66,7 @@ export default function SuccessStoriesCarousel() {
       setCurrentIndex((prevIndex) =>
         prevIndex === successStories.length - 1 ? 0 : prevIndex + 1
       );
-    }, 6000);
+    }, 7000);
 
     return () => clearInterval(interval);
   }, [currentIndex, isAutoPlaying, successStories.length]);
@@ -92,21 +92,21 @@ export default function SuccessStoriesCarousel() {
     initial: { opacity: 0, y: 30 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, margin: "-50px" },
-    transition: { duration: 0.6 }
+    transition: { duration: 0.6 },
   };
 
   const cardAnimation = {
     initial: { opacity: 0, x: 100 },
     animate: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -100 },
-    transition: { duration: 0.4 }
+    transition: { duration: 0.4 },
   };
 
   const statsAnimation = {
     initial: { opacity: 0, scale: 0.8 },
     whileInView: { opacity: 1, scale: 1 },
     viewport: { once: true, margin: "-30px" },
-    transition: { duration: 0.4 }
+    transition: { duration: 0.4 },
   };
 
   return (
@@ -116,10 +116,7 @@ export default function SuccessStoriesCarousel() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          {...animationConfig}
-          className="text-center mb-12 md:mb-16"
-        >
+        <motion.div {...animationConfig} className="text-center mb-12 md:mb-16">
           <Badge className="bg-gradient-to-r from-blue-500/10 to-green-500/10 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-700/50 px-4 py-2 md:py-3 mb-4 backdrop-blur-sm">
             <TrendingUp className="w-4 h-4 mr-2 flex-shrink-0" />
             {t.carousel_badge}
@@ -133,7 +130,7 @@ export default function SuccessStoriesCarousel() {
         </motion.div>
 
         {/* Carousel Container */}
-        <div 
+        <div
           className="relative mb-12 md:mb-16"
           onMouseEnter={() => setIsAutoPlaying(false)}
           onMouseLeave={() => setIsAutoPlaying(true)}
@@ -158,7 +155,7 @@ export default function SuccessStoriesCarousel() {
           </Button>
 
           {/* Mobile Navigation */}
-          <div className="flex md:hidden justify-center gap-4 mb-6">
+          <div className="flex md:hidden justify-center gap-50 mb-6">
             <Button
               variant="outline"
               size="icon"
@@ -180,10 +177,7 @@ export default function SuccessStoriesCarousel() {
           {/* Carousel Content */}
           <div className="w-full max-w-6xl mx-auto min-h-[400px] md:min-h-[450px]">
             <AnimatePresence mode="wait">
-              <motion.div
-                key={currentIndex}
-                {...cardAnimation}
-              >
+              <motion.div key={currentIndex} {...cardAnimation}>
                 <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm hover:shadow-3xl transition-all duration-500 group mx-4 md:mx-0 min-h-[350px] md:min-h-[400px]">
                   <CardContent className="p-6 md:p-8 h-full">
                     <div className="flex flex-col lg:flex-row gap-6 md:gap-8 h-full">
@@ -192,22 +186,29 @@ export default function SuccessStoriesCarousel() {
                         <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-blue-500/10 to-green-500/10 rounded-2xl md:rounded-3xl flex items-center justify-center group-hover:from-blue-500/20 group-hover:to-green-500/20 transition-all duration-500 flex-shrink-0">
                           <CheckCircle2 className="h-8 w-8 md:h-10 md:w-10 text-green-500 group-hover:text-green-600 transition-colors duration-300 flex-shrink-0" />
                         </div>
-                        
+
                         <div className="text-center lg:text-left">
                           <div className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-br from-green-600 to-blue-600 text-transparent bg-clip-text mb-2">
                             {successStories[currentIndex].amount}
                           </div>
                           <div className="flex items-center justify-center lg:justify-start gap-1 text-sm text-neutral-600 dark:text-neutral-400 mb-2">
                             <Clock className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
-                            <span className="font-medium">{successStories[currentIndex].duration}</span>
+                            <span className="font-medium">
+                              {successStories[currentIndex].duration}
+                            </span>
                           </div>
                         </div>
 
                         {/* Rating - Mobile */}
                         <div className="flex lg:hidden items-center gap-1">
-                          {[...Array(successStories[currentIndex].rating)].map((_, i) => (
-                            <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400 flex-shrink-0" />
-                          ))}
+                          {[...Array(successStories[currentIndex].rating)].map(
+                            (_, i) => (
+                              <Star
+                                key={i}
+                                className="h-4 w-4 fill-yellow-400 text-yellow-400 flex-shrink-0"
+                              />
+                            )
+                          )}
                         </div>
 
                         <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 shadow-lg text-sm md:text-base min-h-[28px]">
@@ -220,38 +221,47 @@ export default function SuccessStoriesCarousel() {
                       <div className="flex-1 space-y-4 md:space-y-6 min-w-0">
                         {/* Client Info */}
                         <div>
-                          <h4 className="font-bold text-neutral-900 dark:text-white text-xl md:text-2xl mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 truncate">
+                          <h4 className="font-bold text-neutral-900 dark:text-white text-xl md:text-2xl mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
                             {successStories[currentIndex].name}
                           </h4>
                           <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400 mb-3">
                             <MapPin className="h-4 w-4 flex-shrink-0" />
-                            <span className="text-sm md:text-base truncate">{successStories[currentIndex].location}</span>
-                            
+                            <span className="text-sm md:text-base">
+                              {successStories[currentIndex].location}
+                            </span>
+
                             {/* Rating - Desktop */}
                             <div className="hidden lg:flex items-center gap-1 ml-4">
-                              {[...Array(successStories[currentIndex].rating)].map((_, i) => (
-                                <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400 flex-shrink-0" />
+                              {[
+                                ...Array(successStories[currentIndex].rating),
+                              ].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className="h-4 w-4 fill-yellow-400 text-yellow-400 flex-shrink-0"
+                                />
                               ))}
                             </div>
                           </div>
                         </div>
 
                         {/* Story */}
-                        <p className="text-neutral-700 dark:text-neutral-300 text-base md:text-lg leading-relaxed md:leading-loose line-clamp-4 md:line-clamp-5">
+                        <p className="text-neutral-700 dark:text-neutral-300 text-base md:text-lg leading-relaxed md:leading-loose">
                           {successStories[currentIndex].story}
                         </p>
 
                         {/* Badges */}
                         <div className="flex flex-wrap gap-2">
-                          {successStories[currentIndex].badges.map((badge, badgeIndex) => (
-                            <Badge
-                              key={badgeIndex}
-                              variant="secondary"
-                              className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 text-xs md:text-sm px-3 py-1 border-0 shadow-sm min-h-[24px]"
-                            >
-                              <span className="truncate">{badge}</span>
-                            </Badge>
-                          ))}
+                          {successStories[currentIndex].badges.map(
+                            (badge, badgeIndex) => (
+                              <Badge
+                                key={badgeIndex}
+                                variant="secondary"
+                                className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 text-xs md:text-sm px-3 py-1 border-0 shadow-sm min-h-[24px]"
+                              >
+                                <span>{badge}</span>
+                              </Badge>
+                            )
+                          )}
                         </div>
                       </div>
                     </div>
@@ -285,23 +295,64 @@ export default function SuccessStoriesCarousel() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="text-center"
         >
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-5xl mx-auto">
             {[
-              { value: "47+", label: t.stat_cases },
-              { value: "92%", label: t.stat_approval },
-              { value: lang === "ru" ? "1 день" : "1 күн", label: t.stat_time },
-              { value: "9.8 млн ₸", label: t.stat_amount },
+              {
+                value: "47+",
+                label: t.stat_cases,
+                badge: lang === "ru" ? "за неделю" : "апталық",
+                gradient: "from-blue-500 to-cyan-500",
+                badgeColor: "bg-gradient-to-r from-blue-500 to-cyan-500",
+              },
+              {
+                value: "92%",
+                label: t.stat_approval,
+                badge: lang === "ru" ? "одобрение" : "мақұлдау",
+                gradient: "from-green-500 to-emerald-500",
+                badgeColor: "bg-gradient-to-r from-green-500 to-emerald-500",
+              },
+              {
+                value: lang === "ru" ? "1 день" : "1 күн",
+                label: t.stat_time,
+                badge: lang === "ru" ? "обработка" : "өңдеу",
+                gradient: "from-orange-500 to-amber-500",
+                badgeColor: "bg-gradient-to-r from-orange-500 to-amber-500",
+              },
+              {
+                value: "9.8 млн ₸",
+                label: t.stat_amount,
+                badge: lang === "ru" ? "средняя сумма" : "орташа сома",
+                gradient: "from-purple-500 to-pink-500",
+                badgeColor: "bg-gradient-to-r from-purple-500 to-pink-500",
+              },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
-                {...statsAnimation}
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="text-center p-4 md:p-6 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 min-h-[100px] md:min-h-[120px] flex flex-col justify-center"
+                className="text-center p-5 md:p-6 rounded-2xl bg-white/70 dark:bg-neutral-800/70 backdrop-blur-sm border border-neutral-200/50 dark:border-neutral-700/50 min-h-[110px] md:min-h-[130px] flex flex-col justify-center relative group hover:shadow-xl hover:scale-105 transition-all duration-300"
               >
-                <div className="text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-br from-blue-600 to-green-600 text-transparent bg-clip-text mb-2">
+                {/* Бейдж с градиентом */}
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                  <div
+                    className={`${stat.badgeColor} text-white text-xs font-semibold px-3 py-1.5 rounded-full whitespace-nowrap shadow-lg border border-white/20 backdrop-blur-sm`}
+                  >
+                    {stat.badge}
+                  </div>
+                </div>
+
+                {/* Градиентный фон при ховере */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300`}
+                />
+
+                <div
+                  className={`text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-br ${stat.gradient} text-transparent bg-clip-text mb-2 group-hover:scale-110 transition-transform duration-300`}
+                >
                   {stat.value}
                 </div>
-                <div className="text-neutral-600 dark:text-neutral-400 text-sm md:text-base leading-tight">
+                <div className="text-neutral-700 dark:text-neutral-300 text-sm md:text-base leading-tight font-medium">
                   {stat.label}
                 </div>
               </motion.div>

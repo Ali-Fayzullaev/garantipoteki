@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,12 +9,11 @@ import {
   Clock,
   CheckCircle2,
   ShieldCheck,
-  MapPin,
   Zap,
-  TrendingUp,
   Target,
-  FileText,
   Building2,
+  TrendingUp,
+  FileText,
 } from "lucide-react";
 import { useApp } from "@/components/providers/AppProvider";
 import { dict } from "@/lib/dictionary";
@@ -23,7 +22,6 @@ import BookingForm from "./booking-form";
 export default function BookingSection() {
   const { lang } = useApp();
   const t = dict[lang];
-  const sectionRef = useRef(null);
 
   const [timeLeft, setTimeLeft] = useState({
     hours: 23,
@@ -104,34 +102,9 @@ export default function BookingSection() {
     },
   ];
 
-  const officeLocations = [
-    {
-      name: t.office_left_bank,
-      address: t.office_left_address,
-      hours: t.office_hours,
-      features: [
-        t.office_features_parking,
-        t.office_features_metro,
-        t.office_features_elevator,
-        t.office_features_ac,
-      ],
-    },
-    {
-      name: t.office_right_bank,
-      address: t.office_right_address,
-      hours: t.office_hours,
-      features: [
-        t.office_features_parking,
-        t.office_features_center,
-        t.office_features_elevator,
-        t.office_features_wifi,
-      ],
-    },
-  ];
-
   return (
-    <section 
-      ref={sectionRef}
+    <section
+      id="booking"
       className="py-20 bg-gradient-to-b from-neutral-50 to-white dark:from-neutral-900 dark:to-neutral-950 overflow-hidden"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -150,9 +123,6 @@ export default function BookingSection() {
           <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white mb-4">
             {t.booking_title}
           </h2>
-          <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto">
-            {t.booking_subtitle}
-          </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
@@ -164,8 +134,8 @@ export default function BookingSection() {
             transition={{ duration: 0.7 }}
             className="space-y-8"
           >
-            {/* Benefits */}
-            <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm min-h-[300px]">
+            {/* Секция 1: Преимущества консультации */}
+            <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-xl">
                   <Zap className="h-5 w-5 text-yellow-500" />
@@ -198,8 +168,8 @@ export default function BookingSection() {
               </CardContent>
             </Card>
 
-            {/* Special Offers */}
-            <Card className="border-0 shadow-2xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 min-h-[300px]">
+            {/* Секция 4: Срочность и специальное предложение */}
+            <Card className="border-0 shadow-2xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-xl">
                   <Zap className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
@@ -228,7 +198,7 @@ export default function BookingSection() {
                   </motion.div>
                 ))}
 
-                {/* Countdown Timer */}
+                {/* Таймер обратного отсчета */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
@@ -243,21 +213,21 @@ export default function BookingSection() {
                     <div className="flex justify-center gap-3 text-amber-900 dark:text-amber-200">
                       <div className="text-center">
                         <div className="text-2xl font-bold">
-                          {timeLeft.hours}
+                          {timeLeft.hours.toString().padStart(2, "0")}
                         </div>
                         <div className="text-xs">{t.hours}</div>
                       </div>
                       <div className="text-2xl font-bold">:</div>
                       <div className="text-center">
                         <div className="text-2xl font-bold">
-                          {timeLeft.minutes}
+                          {timeLeft.minutes.toString().padStart(2, "0")}
                         </div>
                         <div className="text-xs">{t.minutes}</div>
                       </div>
                       <div className="text-2xl font-bold">:</div>
                       <div className="text-center">
                         <div className="text-2xl font-bold">
-                          {timeLeft.seconds}
+                          {timeLeft.seconds.toString().padStart(2, "0")}
                         </div>
                         <div className="text-xs">{t.seconds}</div>
                       </div>
@@ -267,72 +237,18 @@ export default function BookingSection() {
               </CardContent>
             </Card>
 
-            {/* Office Locations */}
-            <Card
-              id="adress"
-              className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm min-h-[300px]"
-            >
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-xl">
-                  <MapPin className="h-5 w-5 text-blue-500" />
-                  {t.offices_title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {officeLocations.map((office, index) => (
-                  <motion.div
-                    key={office.name}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: "-20px" }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:border-blue-500/50 transition-colors duration-300"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h4 className="font-semibold text-neutral-900 dark:text-white">
-                          {office.name}
-                        </h4>
-                        <p className="text-neutral-600 dark:text-neutral-400 text-sm">
-                          {office.address}
-                        </p>
-                      </div>
-                      <Badge
-                        variant="secondary"
-                        className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
-                      >
-                        <Clock className="h-3 w-3 mr-1" />
-                        <span className="text-[8px] sm:text-sm">{office.hours}</span>
-                      </Badge>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {office.features.map((feature, featureIndex) => (
-                        <Badge
-                          key={featureIndex}
-                          variant="outline"
-                          className="text-xs bg-blue-50 dark:bg-blue-900/20"
-                        >
-                          {feature}
-                        </Badge>
-                      ))}
-                    </div>
-                  </motion.div>
-                ))}
-              </CardContent>
-            </Card>
-
-            {/* Security Features */}
+            {/* Секция 5: Гарантии безопасности */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-20px" }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <Card className="border-0 shadow-2xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 min-h-[200px]">
+              <Card className="border-0 shadow-2xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <ShieldCheck className="h-5 w-5 text-green-500" />
-                    {t.security_title}
+                    {t.security_titleBook}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -355,7 +271,7 @@ export default function BookingSection() {
           </motion.div>
 
           {/* Right Column - Booking Form */}
-          <BookingForm/>
+          <BookingForm />
         </div>
       </div>
     </section>
