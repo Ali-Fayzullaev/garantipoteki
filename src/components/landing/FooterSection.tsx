@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   MapPin,
@@ -100,31 +99,13 @@ export default function FooterSection() {
     }
   };
 
-
-  const columnAnimation = {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-40px" },
-    transition: { duration: 0.5 },
-  };
-
-  const itemAnimation = {
-    initial: { opacity: 0, x: -10 },
-    whileInView: { opacity: 1, x: 0 },
-    viewport: { once: true, margin: "-20px" },
-    transition: { duration: 0.3 },
-  };
-
   return (
     <footer className="bg-gradient-to-b from-neutral-900 to-neutral-950 text-white">
       <div className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
             {/* Колонка 1: О компании */}
-            <motion.div
-              {...columnAnimation}
-              className="space-y-6 min-h-[300px]"
-            >
+            <div className="space-y-6 min-h-[300px]">
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center flex-shrink-0">
@@ -160,29 +141,21 @@ export default function FooterSection() {
 
               <div className="space-y-3">
                 {trustBadges.map((badge, index) => (
-                  <motion.div
+                  <div
                     key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: "-10px" }}
-                    transition={{ duration: 0.4, delay: index * 0.08 }}
                     className="flex items-center gap-3"
                   >
                     <badge.icon className="h-4 w-4 text-blue-400 flex-shrink-0" />
                     <span className="text-neutral-300 text-sm">
                       {badge.text}
                     </span>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
             {/* Колонка 2: Контакты */}
-            <motion.div
-              {...columnAnimation}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="space-y-6 min-h-[300px]"
-            >
+            <div className="space-y-6 min-h-[300px]">
               <h4 className="font-semibold text-white text-lg flex items-center gap-2">
                 <Phone className="h-5 w-5 text-blue-400" />
                 {t.footer_contact_title}
@@ -312,63 +285,51 @@ export default function FooterSection() {
 
               <Button
                 onClick={scrollToBooking}
-                className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white font-semibold transition-all duration-300 hover:scale-105 min-h-[44px]"
+                className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white font-semibold min-h-[44px]"
               >
                 <Phone className="mr-2 h-4 w-4" />
                 {t.footer_cta_button}
               </Button>
-            </motion.div>
+            </div>
 
             {/* Колонка 3: Полезное */}
-            <motion.div
-              {...columnAnimation}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="space-y-6 min-h-[250px]"
-            >
+            <div className="space-y-6 min-h-[250px]">
               <h4 className="font-semibold text-white text-lg">
                 {t.footer_useful_title}
               </h4>
 
               <div className="space-y-3">
                 {usefulLinks.map((link, index) => (
-                  <motion.a
+                  <a
                     key={index}
                     href={link.href}
-                    {...itemAnimation}
-                    transition={{ duration: 0.3, delay: index * 0.06 }}
-                    className="flex items-center gap-3 group text-neutral-400 hover:text-white transition-all duration-200 p-2 rounded-lg hover:bg-neutral-800/50"
+                    className="flex items-center gap-3 group text-neutral-400 hover:text-white p-2 rounded-lg hover:bg-neutral-800/50"
                   >
-                    <link.icon className="h-4 w-4 text-blue-400 group-hover:text-blue-300 transition-colors duration-200 flex-shrink-0" />
+                    <link.icon className="h-4 w-4 text-blue-400 group-hover:text-blue-300 flex-shrink-0" />
                     <span className="text-sm truncate">{link.name}</span>
-                  </motion.a>
+                  </a>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
             {/* Колонка 4: Документы */}
-            <motion.div
-              {...columnAnimation}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="space-y-6 min-h-[250px]"
-            >
+            <div className="space-y-6 min-h-[250px]">
               <h4 className="font-semibold text-white text-lg">
                 {t.footer_docs_title}
               </h4>
 
               <div className="space-y-3">
                 {documents.map((doc, index) => (
-                  <motion.a
+                  <a
                     key={index}
                     href={doc.href}
-                    {...itemAnimation}
-                    transition={{ duration: 0.3, delay: index * 0.06 }}
-                    className="block text-neutral-400 hover:text-white text-sm py-1 hover:pl-2 transition-all duration-200 truncate"
+                    className="block text-neutral-400 hover:text-white text-sm py-1 hover:pl-2 truncate"
                   >
                     {doc.name}
-                  </motion.a>
+                  </a>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
@@ -377,13 +338,7 @@ export default function FooterSection() {
       <div className="border-t border-neutral-800 py-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: "-30px" }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-center md:text-left"
-            >
+            <div className="text-center md:text-left">
               <p className="text-neutral-400 text-sm">
                 {t.footer_copyright.replace(
                   "{{year}}",
@@ -393,7 +348,7 @@ export default function FooterSection() {
               <p className="text-neutral-500 text-xs mt-1 leading-relaxed">
                 {t.footer_disclaimer}
               </p>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,7 +55,6 @@ export default function BookingForm() {
   const [services, setServices] = useState<ServiceType[]>([]);
   const [dealId, setDealId] = useState<string | null>(null);
   const [selectedService, setSelectedService] = useState<string>("");
-
 
   const trustBadges = [
     { text: t.security_1_text, icon: Shield },
@@ -228,13 +226,7 @@ export default function BookingForm() {
   if (step === 1) {
     return (
       <section id="booking" className="px-2 sm:px-0">
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="sticky top-2 md:top-8 mx-auto max-w-full"
-        >
+        <div className="sticky top-2 md:top-8 mx-auto max-w-full">
           <Card className="border-0 shadow-lg md:shadow-2xl bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 mx-1 sm:mx-0">
             <CardHeader className="text-center pb-3 md:pb-4 px-3 md:px-6">
               <div className="w-12 h-12 md:w-20 md:h-20 mx-auto mb-2 md:mb-4 bg-gradient-to-br from-blue-500 to-green-500 rounded-xl md:rounded-2xl flex items-center justify-center shadow-md md:shadow-lg">
@@ -261,6 +253,7 @@ export default function BookingForm() {
                   <span>{t.booking_form_note3}</span>
                 </div>
               </div>
+
               <form onSubmit={handleSubmit} className="space-y-3 md:space-y-6">
                 <div className="space-y-2 md:space-y-4">
                   <div className="relative">
@@ -321,7 +314,7 @@ export default function BookingForm() {
                 <Button
                   type="submit"
                   disabled={isSubmitting || !isFormValid()}
-                  className="w-full h-12 md:h-16 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white text-sm md:text-lg font-bold shadow-lg md:shadow-2xl shadow-blue-500/25 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full h-12 md:h-16 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white text-sm md:text-lg font-bold shadow-lg md:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center gap-1 md:gap-2">
@@ -342,25 +335,21 @@ export default function BookingForm() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 md:gap-3">
                   {trustBadges.map((badge, index) => (
-                    <motion.div
+                    <div
                       key={index}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true, margin: "-10px" }}
-                      transition={{ duration: 0.3, delay: index * 0.1 }}
                       className="flex items-center gap-1 text-[10px] md:text-xs text-neutral-600 dark:text-neutral-400"
                     >
                       <badge.icon className="h-2.5 w-2.5 md:h-3 md:w-3 text-green-500 flex-shrink-0" />
                       <span className="text-[10px] md:text-xs">
                         {badge.text}
                       </span>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </form>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </section>
     );
   }
@@ -369,11 +358,7 @@ export default function BookingForm() {
   if (step === 2) {
     return (
       <section className="px-2 sm:px-0">
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="sticky top-2 md:top-8 mx-auto max-w-full"
-        >
+        <div className="sticky top-2 md:top-8 mx-auto max-w-full">
           <Card className="border-0 shadow-lg md:shadow-2xl bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 mx-1 sm:mx-0 min-h-[400px]">
             <CardHeader className="text-center pb-3 md:pb-4 px-3 md:px-6">
               <div className="w-12 h-12 md:w-20 md:h-20 mx-auto mb-2 md:mb-4 bg-gradient-to-br from-blue-500 to-green-500 rounded-xl md:rounded-2xl flex items-center justify-center shadow-md md:shadow-lg">
@@ -390,18 +375,16 @@ export default function BookingForm() {
             <CardContent className="px-3 md:px-6 pb-4 md:pb-6">
               <div className="space-y-3 md:space-y-4">
                 {services.map((service) => (
-                  <motion.button
+                  <button
                     key={service.id}
                     onClick={() =>
                       handleServiceSelect(service.id, service.name)
                     }
                     disabled={isSubmitting}
-                    className="w-full h-12 md:h-16 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white text-sm md:text-lg font-bold shadow-lg md:shadow-xl rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-transparent hover:border-white"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="w-full h-12 md:h-16 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white text-sm md:text-lg font-bold shadow-lg md:shadow-xl rounded-lg disabled:opacity-50 disabled:cursor-not-allowed border-2 border-transparent"
                   >
                     {service.name}
-                  </motion.button>
+                  </button>
                 ))}
               </div>
 
@@ -413,81 +396,30 @@ export default function BookingForm() {
               )}
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </section>
     );
   }
 
-  // Шаг 3: Загрузка (остается без изменений)
+  // Шаг 3: Загрузка
   if (step === 3) {
     return (
       <section className="px-2 sm:px-0">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="sticky top-2 md:top-8 mx-auto max-w-full"
-        >
+        <div className="sticky top-2 md:top-8 mx-auto max-w-full">
           <Card className="border-0 shadow-lg md:shadow-2xl bg-gradient-to-br from-white to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 mx-1 sm:mx-0 min-h-[600px]">
             <CardContent className="p-0">
               <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 opacity-60"></div>
 
-              <div className="absolute inset-0 overflow-hidden">
-                {[...Array(20)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full"
-                    initial={{
-                      y: -20,
-                      x: Math.random() * 100 - 50,
-                      opacity: 0,
-                      scale: 0,
-                    }}
-                    animate={{
-                      y: 400,
-                      x: Math.random() * 100 - 50,
-                      opacity: [0, 1, 0],
-                      scale: [0, 1, 0],
-                      rotate: Math.random() * 360,
-                    }}
-                    transition={{
-                      duration: 2,
-                      delay: i * 0.1,
-                      repeatDelay: 3,
-                    }}
-                  />
-                ))}
-              </div>
-
               <div className="relative z-10 p-6 md:p-8 text-center">
-                <motion.div
-                  initial={{ scale: 0, rotate: -180 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 200,
-                    damping: 15,
-                    delay: 0.2,
-                  }}
-                  className="w-20 h-20 md:w-28 md:h-28 mx-auto mb-4 md:mb-6 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center shadow-lg"
-                >
+                <div className="w-20 h-20 md:w-28 md:h-28 mx-auto mb-4 md:mb-6 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center shadow-lg">
                   <CheckCircle className="w-10 h-10 md:w-14 md:h-14 text-white" />
-                </motion.div>
+                </div>
 
-                <motion.h2
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-3 md:mb-4"
-                >
+                <h2 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-3 md:mb-4">
                   {t.booking_loading_title}
-                </motion.h2>
+                </h2>
 
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                  className="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 mb-6 md:mb-8"
-                >
+                <p className="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 mb-6 md:mb-8">
                   {t.booking_loading_thanks.replace("{{name}}", formData.name)}
                   <br />
                   {t.booking_loading_desc}
@@ -495,14 +427,9 @@ export default function BookingForm() {
                   <span className="font-semibold text-blue-600">
                     {formData.phone}
                   </span>
-                </motion.p>
+                </p>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8 }}
-                  className="bg-white/70 dark:bg-neutral-800/70 backdrop-blur-sm rounded-2xl p-4 md:p-6 mb-6 md:mb-8 border border-green-200 dark:border-green-800"
-                >
+                <div className="bg-white/70 dark:bg-neutral-800/70 backdrop-blur-sm rounded-2xl p-4 md:p-6 mb-6 md:mb-8 border border-green-200 dark:border-green-800">
                   <h3 className="font-semibold text-neutral-800 dark:text-neutral-200 mb-3 md:mb-4 flex items-center justify-center gap-2">
                     <Calendar className="w-4 h-4 md:w-5 md:h-5 text-green-500" />
                     {t.booking_details_title}
@@ -535,14 +462,9 @@ export default function BookingForm() {
                       </div>
                     )}
                   </div>
-                </motion.div>
+                </div>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1 }}
-                  className="bg-blue-50/70 dark:bg-blue-900/20 backdrop-blur-sm rounded-2xl p-4 md:p-6 mb-6 md:mb-8 border border-blue-200 dark:border-blue-800"
-                >
+                <div className="bg-blue-50/70 dark:bg-blue-900/20 backdrop-blur-sm rounded-2xl p-4 md:p-6 mb-6 md:mb-8 border border-blue-200 dark:border-blue-800">
                   <h3 className="font-semibold text-blue-800 dark:text-blue-300 mb-3 md:mb-4 flex items-center justify-center gap-2">
                     <Star className="w-4 h-4 md:w-5 md:h-5 text-blue-500" />
                     {t.booking_next_steps_title}
@@ -561,25 +483,19 @@ export default function BookingForm() {
                       <span>{t.booking_step_next3}</span>
                     </div>
                   </div>
-                </motion.div>
+                </div>
 
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 1.2 }}
+                <Button
+                  onClick={handleReset}
+                  className="w-full md:w-auto h-12 md:h-14 px-8 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white text-base md:text-lg font-bold shadow-lg"
                 >
-                  <Button
-                    onClick={handleReset}
-                    className="w-full md:w-auto h-12 md:h-14 px-8 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white text-base md:text-lg font-bold shadow-lg transition-all duration-300 hover:scale-105"
-                  >
-                    <Zap className="w-4 h-4 md:w-5 md:h-5 mr-2" />
-                    {t.booking_new_request}
-                  </Button>
-                </motion.div>
+                  <Zap className="w-4 h-4 md:w-5 md:h-5 mr-2" />
+                  {t.booking_new_request}
+                </Button>
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </section>
     );
   }

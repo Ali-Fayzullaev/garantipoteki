@@ -164,7 +164,7 @@ export default function VideoHero() {
 
   // Классы для тем
   const bgClass = dark
-    ? "bg-slate-950"
+    ? "bg-muted"
     : "bg-gray-50";
 
   const textClass = dark ? "text-white" : "text-slate-900";
@@ -180,7 +180,7 @@ export default function VideoHero() {
         {/* Видео контейнер */}
         <div
           ref={containerRef as React.RefObject<HTMLDivElement>}
-          className={`relative rounded-2xl mt-14 md:rounded-3xl overflow-hidden ${containerBgClass} border shadow-xl ${dark ? 'border-gray-800' : 'border-gray-200'} h-64 md:h-[500px] lg:h-[600px]`}
+          className={`relative rounded-2xl mt-14 md:rounded-3xl overflow-hidden ${containerBgClass} border shadow-xl ${dark ? 'border-gray-800' : 'border-gray-200'} h-[60vh] md:h-[500px] lg:h-[600px] min-h-[300px] max-h-[700px]`}
           onMouseEnter={() => setShowControls(true)}
           onMouseLeave={() => setShowControls(false)}
           onTouchStart={handleTouchStart}
@@ -208,14 +208,14 @@ export default function VideoHero() {
             {/* Play overlay */}
             {!isPlaying && (
               <div
-                className={`absolute inset-0 flex items-center justify-center ${playOverlayClass} cursor-pointer`}
+                className={`absolute inset-0 flex items-center justify-center  cursor-pointer`}
                 onClick={togglePlay}
                 onTouchEnd={(e) => {
                   e.preventDefault();
                   togglePlay();
                 }}
               >
-                <div className={`w-16 h-16 md:w-24 md:h-24 lg:w-32 lg:h-32 ${playButtonBgClass} backdrop-blur-md rounded-full flex items-center justify-center`}>
+                <div className={`w-16 h-16 md:w-24 md:h-24 lg:w-32 lg:h-32 backdrop-blur-md rounded-full flex items-center justify-center`}>
                   <Play className="w-6 h-6 md:w-8 md:h-8 lg:w-12 lg:h-12 text-white fill-white ml-1" />
                 </div>
               </div>

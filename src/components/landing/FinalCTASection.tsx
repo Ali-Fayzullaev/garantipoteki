@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -90,42 +89,17 @@ export default function FinalCTASection() {
     },
   ];
 
-  // Конфигурация анимаций для предотвращения прыжков
-  const animationConfig = {
-    initial: { opacity: 0, y: 30 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-50px" },
-    transition: { duration: 0.6 }
-  };
-
-  const cardAnimation = {
-    initial: { opacity: 0, x: -30 },
-    whileInView: { opacity: 1, x: 0 },
-    viewport: { once: true, margin: "-40px" },
-    transition: { duration: 0.7 }
-  };
-
-  const itemAnimation = {
-    initial: { opacity: 0, scale: 0.9 },
-    whileInView: { opacity: 1, scale: 1 },
-    viewport: { once: true, margin: "-20px" },
-    transition: { duration: 0.4 }
-  };
-
   return (
     <section
       id="final-cta"
-      className="py-8 md:py-20 bg-gradient-to-br from-blue-50 via-green-50 to-blue-100 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900 relative overflow-hidden"
+      className="py-8 md:py-20 bg-gradient-to-br from-blue-50 via-green-50 to-blue-100 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900 relative"
     >
-      <div className="absolute top-0 left-0 w-48 h-48 md:w-72 md:h-72 bg-blue-200/30 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-green-200/30 rounded-full blur-3xl pointer-events-none" />
+      {/* <div className="absolute top-0 left-0 w-48 h-48 md:w-72 md:h-72 bg-blue-200/30 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-green-200/30 rounded-full blur-3xl pointer-events-none" /> */}
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          {...animationConfig}
-          className="text-center mb-6 md:mb-16"
-        >
-          <Badge className="bg-gradient-to-r from-blue-500/20 to-green-500/20 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-700/50 px-3 py-1.5 md:px-4 md:py-3 mb-3 md:mb-4 backdrop-blur-sm text-xs">
+        <div className="text-center mb-6 md:mb-16">
+          <Badge className="bg-gradient-to-r from-blue-500/20 to-green-500/20 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-700/50 px-3 py-1.5 md:px-4 md:py-3 mb-3 md:mb-4 text-xs">
             <Zap className="w-3 h-3 mr-1 md:mr-2" />
             {t.final_cta_badge}
           </Badge>
@@ -135,15 +109,12 @@ export default function FinalCTASection() {
           <p className="text-sm md:text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto px-2 leading-relaxed">
             {t.final_cta_subtitle}
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-12 items-start">
-          <motion.div
-            {...cardAnimation}
-            className="space-y-3 md:space-y-8"
-          >
+          <div className="space-y-3 md:space-y-8">
             {/* Urgency Card */}
-            <Card className="border-0 shadow-md md:shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm min-h-[180px] md:min-h-[200px]">
+            <Card className="border-0 shadow-md md:shadow-2xl bg-white/80 dark:bg-neutral-800/80 min-h-[180px] md:min-h-[200px]">
               <CardHeader className="text-center pb-2 md:pb-4">
                 <CardTitle className="flex items-center justify-center gap-1 text-sm md:text-xl">
                   <Zap className="h-3 w-3 md:h-4 md:w-4 text-blue-500" />
@@ -168,13 +139,7 @@ export default function FinalCTASection() {
                     />
                   </div>
 
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-10px" }}
-                    transition={{ duration: 0.4, delay: 0.2 }}
-                    className="p-2 rounded-lg md:rounded-xl bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border border-orange-200 dark:border-orange-700"
-                  >
+                  <div className="p-2 rounded-lg md:rounded-xl bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border border-orange-200 dark:border-orange-700">
                     <div className="flex items-center gap-1">
                       <Zap className="h-3 w-3 text-orange-600 dark:text-orange-400 flex-shrink-0" />
                       <div className="text-left">
@@ -186,13 +151,13 @@ export default function FinalCTASection() {
                         </div>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Stats Card */}
-            <Card className="border-0 shadow-md md:shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm min-h-[180px] md:min-h-[200px]">
+            <Card className="border-0 shadow-md md:shadow-2xl bg-white/80 dark:bg-neutral-800/80 min-h-[180px] md:min-h-[200px]">
               <CardHeader className="pb-2 md:pb-4">
                 <CardTitle className="flex items-center gap-1 text-sm md:text-xl">
                   <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-blue-500" />
@@ -202,12 +167,8 @@ export default function FinalCTASection() {
               <CardContent className="pt-0">
                 <div className="grid grid-cols-1 gap-1 md:gap-4">
                   {weekStats.map((stat, index) => (
-                    <motion.div
+                    <div
                       key={stat.label}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true, margin: "-15px" }}
-                      transition={{ duration: 0.4, delay: index * 0.08 }}
                       className="flex items-center gap-1 p-2 md:p-4 rounded-lg md:rounded-xl bg-gradient-to-br from-neutral-50 to-white dark:from-neutral-700 dark:to-neutral-800 border border-neutral-200 dark:border-neutral-600"
                     >
                       <stat.icon
@@ -221,14 +182,14 @@ export default function FinalCTASection() {
                           {stat.label}
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
 
             {/* Steps Card */}
-            <Card className="border-0 shadow-md md:shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm min-h-[220px] md:min-h-[250px]">
+            <Card className="border-0 shadow-md md:shadow-2xl bg-white/80 dark:bg-neutral-800/80 min-h-[220px] md:min-h-[250px]">
               <CardHeader className="pb-2 md:pb-4">
                 <CardTitle className="flex items-center gap-1 text-sm md:text-xl">
                   <CheckCircle2 className="h-3 w-3 md:h-4 md:w-4 text-blue-500" />
@@ -237,12 +198,8 @@ export default function FinalCTASection() {
               </CardHeader>
               <CardContent className="pt-0 space-y-2 md:space-y-6">
                 {steps.map((step, index) => (
-                  <motion.div
+                  <div
                     key={step.step}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: "-15px" }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
                     className="flex items-start gap-1 md:gap-4"
                   >
                     <div className="flex-shrink-0 w-5 h-5 md:w-10 md:h-10 bg-gradient-to-br from-blue-500/10 to-green-500/10 rounded-full flex items-center justify-center mt-0.5">
@@ -261,7 +218,7 @@ export default function FinalCTASection() {
                         {step.description}
                       </p>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </CardContent>
             </Card>
@@ -276,12 +233,8 @@ export default function FinalCTASection() {
               </CardHeader>
               <CardContent className="pt-0 space-y-1 md:space-y-4">
                 {specialOffers.map((offer, index) => (
-                  <motion.div
+                  <div
                     key={offer.title}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-10px" }}
-                    transition={{ duration: 0.3, delay: index * 0.08 }}
                     className="flex items-center gap-1 p-1.5 md:p-3 rounded-lg md:rounded-xl bg-white/50 dark:bg-neutral-800/50"
                   >
                     <offer.icon
@@ -295,11 +248,11 @@ export default function FinalCTASection() {
                         {offer.description}
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
 
           {/* Booking Form */}
           <div className="mt-3 md:mt-0">

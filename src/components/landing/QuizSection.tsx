@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -373,46 +372,33 @@ export default function QuizSection() {
   const currentQuestion = questions[step - 1];
   const CurrentIcon = currentQuestion?.icon;
 
-  // Конфигурация анимаций
-  const animationConfig = {
-    initial: { opacity: 0, y: 30 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-50px" },
-    transition: { duration: 0.6 },
-  };
-
-  const cardAnimation = {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-40px" },
-    transition: { duration: 0.5 },
-  };
-
   return (
     <section
       id="quiz"
-      className="py-20 bg-gradient-to-b from-white to-neutral-50 dark:from-neutral-950 dark:to-neutral-900 relative overflow-hidden"
+      className="py-20 bg-gradient-to-br from-blue-50/30 via-white to-emerald-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-800 relative overflow-hidden"
     >
-      <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl pointer-events-none" />
+      {/* Декоративные элементы
+      <div className="absolute top-10 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-orange-500/5 rounded-full blur-2xl pointer-events-none" /> */}
 
       <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <motion.div {...animationConfig} className="text-center mb-16">
+        <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white mb-4">
             {t.quiz_title}
           </h2>
           <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
             {t.quiz_subtitle}
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div {...cardAnimation} className="w-full max-w-full">
-          <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm overflow-hidden min-h-[600px] w-full max-w-full mx-auto box-border">
+        <div className="w-full max-w-full">
+          <Card className=" shadow-2xl bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm overflow-hidden min-h-[600px] w-full max-w-full mx-auto box-border border border-white/20">
             <CardContent className="p-3 sm:p-4 md:p-6 box-border">
               <div className="space-y-4 mb-6">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                   <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
                       <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                     </div>
                     <div className="min-w-0">
@@ -426,7 +412,7 @@ export default function QuizSection() {
                   </div>
                   <Badge
                     variant="secondary"
-                    className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 whitespace-nowrap text-xs px-2 py-1"
+                    className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-700 dark:text-green-300 border-0 whitespace-nowrap text-xs px-3 py-1 shadow-sm"
                   >
                     <Clock className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
                     {t.time_badge}
@@ -438,367 +424,336 @@ export default function QuizSection() {
                 />
               </div>
 
-              <AnimatePresence mode="wait">
-                {!quizDone ? (
-                  <motion.div
-                    key={step}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.4 }}
-                    className="space-y-6 w-full max-w-full mx-0 box-border"
-                  >
-                    <div className="text-center space-y-3 px-1">
-                      {CurrentIcon && (
-                        <div className="w-14 h-14 mx-auto bg-gradient-to-br from-blue-500/10 to-orange-500/10 rounded-2xl flex items-center justify-center">
-                          <CurrentIcon className="h-6 sm:h-8 w-6 sm:w-8 text-blue-600 dark:text-blue-400" />
-                        </div>
-                      )}
-                      <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-900 dark:text-white break-words leading-tight">
-                        {currentQuestion?.question}
-                      </h3>
-                    </div>
+              {!quizDone ? (
+                <div className="space-y-6 w-full max-w-full mx-0 box-border">
+                  <div className="text-center space-y-3 px-1">
+                    {CurrentIcon && (
+                      <div className="w-14 h-14 mx-auto bg-gradient-to-br from-blue-500/15 to-emerald-500/15 rounded-2xl flex items-center justify-center shadow-lg">
+                        <CurrentIcon className="h-6 sm:h-8 w-6 sm:w-8 text-blue-600 dark:text-blue-400" />
+                      </div>
+                    )}
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-900 dark:text-white break-words leading-tight">
+                      {currentQuestion?.question}
+                    </h3>
+                  </div>
 
-                    <div className="grid gap-3 px-1">
-                      {currentQuestion?.options.map((option, index) => (
-                        <motion.div
-                          key={option.value}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.3, delay: index * 0.08 }}
-                          className=""
+                  <div className="grid gap-3 px-1">
+                    {currentQuestion?.options.map((option, index) => (
+                      <div key={option.value} className="">
+                        <Button
+                          variant="outline"
+                          className="w-full h-auto py-3 px-3 text-left border-2 border-neutral-200/80 dark:border-neutral-700/80 hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 min-h-[70px] break-words text-sm bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm transition-colors"
+                          onClick={() =>
+                            pick(
+                              step === 1
+                                ? "amount"
+                                : step === 2
+                                ? "job"
+                                : step === 3
+                                ? "pension"
+                                : "debt",
+                              option.value
+                            )
+                          }
                         >
-                          <Button
-                            variant="outline"
-                            className="w-full h-auto py-3 px-3 text-left border-2 border-neutral-200 dark:border-neutral-700 hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 group transition-all duration-300 min-h-[70px] break-words text-sm"
-                            onClick={() =>
-                              pick(
-                                step === 1
-                                  ? "amount"
-                                  : step === 2
-                                  ? "job"
-                                  : step === 3
-                                  ? "pension"
-                                  : "debt",
-                                option.value
-                              )
-                            }
-                          >
-                            <div className="flex items-start gap-2 w-full">
-                              <div className="text-xl sm:text-2xl flex-shrink-0 mt-0.5">
-                                {React.createElement(option.Icon, {
-                                  className:
-                                    "h-5 w-5 sm:h-6 sm:w-6 text-blue-500",
-                                  size: 20,
-                                })}
-                              </div>
-                              <div className="flex-1 text-left min-w-0">
-                                <div className="font-semibold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors break-words whitespace-normal word-break break-word">
-                                  {option.label}
-                                </div>
-                                <div className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 break-words whitespace-normal word-break break-word leading-relaxed">
-                                  {option.description}
-                                </div>
-                              </div>
-                              <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-neutral-400 group-hover:text-blue-500 transition-colors flex-shrink-0 mt-0.5" />
+                          <div className="flex items-start gap-2 w-full">
+                            <div className="text-xl sm:text-2xl flex-shrink-0 mt-0.5">
+                              {React.createElement(option.Icon, {
+                                className:
+                                  "h-5 w-5 sm:h-6 sm:w-6 text-blue-500",
+                                size: 20,
+                              })}
                             </div>
-                          </Button>
-                        </motion.div>
-                      ))}
-                    </div>
-
-                    {currentQuestion?.hint && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5, delay: 0.4 }}
-                        className="text-center px-1"
-                      >
-                        {step === 3 ? (
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 min-h-[36px] whitespace-nowrap text-sm"
-                              >
-                                <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
-                                <span className="truncate">
-                                  {currentQuestion.hint}
-                                </span>
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="w-[90%] max-w-[90%] mx-auto box-border">
-                              <DialogHeader>
-                                <DialogTitle className="text-base">
-                                  {t.dialog_title}
-                                </DialogTitle>
-                                <DialogDescription className="text-xs">
-                                  {t.dialog_desc}
-                                </DialogDescription>
-                              </DialogHeader>
-                              <div className="space-y-3 text-xs">
-                                {[
-                                  t.dialog_step1,
-                                  t.dialog_step2,
-                                  t.dialog_step3,
-                                  t.dialog_step4,
-                                ].map((text, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="flex items-start gap-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg break-words"
-                                  >
-                                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 text-xs sm:text-sm mt-0.5">
-                                      {idx + 1}
-                                    </div>
-                                    <span className="leading-relaxed break-words">
-                                      {text}
-                                    </span>
-                                  </div>
-                                ))}
+                            <div className="flex-1 text-left min-w-0">
+                              <div className="font-semibold text-neutral-900 dark:text-white break-words whitespace-normal word-break break-word">
+                                {option.label}
                               </div>
-                            </DialogContent>
-                          </Dialog>
-                        ) : (
-                          <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 flex items-center justify-center gap-1 sm:gap-2 break-words">
-                            <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0" />
-                            {currentQuestion.hint}
-                          </p>
-                        )}
-                      </motion.div>
-                    )}
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center space-y-6 px-1"
-                  >
-                    {isRejected ? (
-                      // Блок для отказа (на просрочке)
-                      <>
-                        <div className="space-y-4">
-                          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-red-500 to-orange-600 rounded-full flex items-center justify-center shadow-2xl shadow-red-500/25">
-                            <Ban className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                              <div className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 break-words whitespace-normal word-break break-word leading-relaxed">
+                                {option.description}
+                              </div>
+                            </div>
+                            <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-neutral-400 flex-shrink-0 mt-0.5" />
                           </div>
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
 
-                          <div className="space-y-3">
-                            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-red-600 dark:text-red-400 break-words">
-                              {lang === "ru"
-                                ? "К сожалению, мы не можем вам помочь"
-                                : "Өкінішке орай, біз сізге көмектесе алмаймыз"}
-                            </h3>
-                            <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
-                              {lang === "ru"
-                                ? "В настоящее время мы не рассматриваем заявки от клиентов с текущими просрочками по платежам"
-                                : "Қазіргі уақытта біз төлемдер бойынша ағымдағы кешігулері бар клиенттердің өтініштерін қарамаймыз"}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-4">
-                          <div className="text-left space-y-3 bg-white/50 dark:bg-neutral-800/50 rounded-2xl p-3 sm:p-4 min-h-[120px] break-words">
-                            <h4 className="font-semibold text-neutral-900 dark:text-white text-sm sm:text-base flex items-center gap-1 sm:gap-2">
-                              <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-500 flex-shrink-0" />
-                              {lang === "ru"
-                                ? "Что делать?"
-                                : "Не істеу керек?"}
-                            </h4>
-                            <ul className="space-y-2">
-                              <li className="flex items-start gap-1 sm:gap-2 text-sm text-neutral-700 dark:text-neutral-300 break-words">
-                                <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0 mt-0.5" />
-                                <span className="leading-relaxed break-words">
-                                  {lang === "ru"
-                                    ? "Погасите все текущие просрочки"
-                                    : "Барлық ағымдағы кешігулерді төлеп тастаңыз"}
-                                </span>
-                              </li>
-                              <li className="flex items-start gap-1 sm:gap-2 text-sm text-neutral-700 dark:text-neutral-300 break-words">
-                                <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0 mt-0.5" />
-                                <span className="leading-relaxed break-words">
-                                  {lang === "ru"
-                                    ? "Подождите 1-2 месяца после погашения"
-                                    : "Төлемнен кейін 1-2 ай күтіңіз"}
-                                </span>
-                              </li>
-                              <li className="flex items-start gap-1 sm:gap-2 text-sm text-neutral-700 dark:text-neutral-300 break-words">
-                                <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0 mt-0.5" />
-                                <span className="leading-relaxed break-words">
-                                  {lang === "ru"
-                                    ? "Подайте заявку снова после улучшения кредитной истории"
-                                    : "Несие тарихы жақсарғаннан кейін қайтадан өтініш беріңіз"}
-                                </span>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </>
-                    ) : hasMicroLoansOrDelays ? (
-                      // Блок для клиентов с микрозаймами или просрочками
-                      <>
-                        <div className="space-y-4">
-                          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center shadow-2xl shadow-amber-500/25">
-                            <HelpCircle className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
-                          </div>
-
-                          <div className="space-y-3">
-                            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-amber-600 dark:text-amber-400 break-words">
-                              {t.result_improve_title}
-                            </h3>
-                            <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
-                              {t.result_improve_text}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-4">
-                          <div className="text-left space-y-3 bg-white/50 dark:bg-neutral-800/50 rounded-2xl p-3 sm:p-4 min-h-[180px] break-words">
-                            <h4 className="font-semibold text-neutral-900 dark:text-white text-sm sm:text-base flex items-center gap-1 sm:gap-2">
-                              <Star className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500 flex-shrink-0" />
-                              {t.result_recommendations_title}
-                            </h4>
-                            <ul className="space-y-2">
-                              {getPersonalizedRecommendations().map(
-                                (rec, index) => (
-                                  <motion.li
-                                    key={index}
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{
-                                      duration: 0.3,
-                                      delay: index * 0.1,
-                                    }}
-                                    className="flex items-start gap-1 sm:gap-2 text-sm text-neutral-700 dark:text-neutral-300 break-words"
-                                  >
-                                    <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0 mt-0.5" />
-                                    <span className="leading-relaxed break-words">
-                                      {rec}
-                                    </span>
-                                  </motion.li>
-                                )
-                              )}
-                            </ul>
-                          </div>
-
-                          <div className="space-y-3">
-                            <div className="text-center">
-                              <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-3 break-words">
-                                {t.result_phone_prompt}
-                              </p>
-                              <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 max-w-[260px] sm:max-w-xs md:max-w-md mx-auto px-1">
-                                <div className="relative flex-1">
-                                  <Input
-                                    placeholder={
-                                      lang === "ru"
-                                        ? "+7 (___) ___-__-__"
-                                        : "+7 (___) ___-__-__"
-                                    }
-                                    value={phoneNumber}
-                                    onChange={(e) =>
-                                      handlePhoneChange(e.target.value)
-                                    }
-                                    className={`flex-1 pr-3 sm:pr-4 min-h-[36px] sm:min-h-[40px] text-sm ${
-                                      phoneError
-                                        ? "border-red-500 focus:border-red-500"
-                                        : ""
-                                    }`}
-                                    maxLength={18}
-                                  />
-                                  {phoneError && (
-                                    <p className="text-red-500 text-xs mt-1 absolute -bottom-5 left-0 break-words">
-                                      {phoneError}
-                                    </p>
-                                  )}
-                                </div>
-                                <Button
-                                  onClick={handlePhoneSubmit}
-                                  disabled={isSubmitting || !isPhoneValid()}
-                                  className="bg-orange-600 hover:bg-orange-700 text-white whitespace-nowrap min-h-[36px] sm:min-h-[40px] px-2 sm:px-3 text-sm"
+                  {currentQuestion?.hint && (
+                    <div className="text-center px-1">
+                      {step === 3 ? (
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 min-h-[36px] whitespace-nowrap text-sm bg-blue-50/50 dark:bg-blue-900/20 rounded-lg"
+                            >
+                              <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
+                              <span className="truncate">
+                                {currentQuestion.hint}
+                              </span>
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="w-[90%] max-w-[90%] mx-auto box-border bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border-0 shadow-2xl">
+                            <DialogHeader>
+                              <DialogTitle className="text-base">
+                                {t.dialog_title}
+                              </DialogTitle>
+                              <DialogDescription className="text-xs">
+                                {t.dialog_desc}
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="space-y-3 text-xs">
+                              {[
+                                t.dialog_step1,
+                                t.dialog_step2,
+                                t.dialog_step3,
+                                t.dialog_step4,
+                              ].map((text, idx) => (
+                                <div
+                                  key={idx}
+                                  className="flex items-start gap-2 p-2 bg-gradient-to-r from-blue-50 to-emerald-50 dark:from-blue-900/20 dark:to-emerald-900/20 rounded-lg break-words border border-blue-200/50 dark:border-blue-700/50"
                                 >
-                                  {isSubmitting ? (
-                                    <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                  ) : (
-                                    <Send className="h-3 w-3 sm:h-4 sm:w-4" />
-                                  )}
-                                </Button>
+                                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 text-xs sm:text-sm mt-0.5">
+                                    {idx + 1}
+                                  </div>
+                                  <span className="leading-relaxed break-words">
+                                    {text}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      ) : (
+                        <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 flex items-center justify-center gap-1 sm:gap-2 break-words bg-neutral-50/50 dark:bg-neutral-800/50 rounded-lg py-2 px-3">
+                          <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0" />
+                          {currentQuestion.hint}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center space-y-6 px-1">
+                  {isRejected ? (
+                    // Блок для отказа (на просрочке)
+                    <>
+                      <div className="space-y-4">
+                        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-red-500 to-orange-600 rounded-full flex items-center justify-center shadow-lg">
+                          <Ban className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                        </div>
+
+                        <div className="space-y-3">
+                          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-red-600 dark:text-red-400 break-words">
+                            {lang === "ru"
+                              ? "К сожалению, мы не можем вам помочь"
+                              : "Өкінішке орай, біз сізге көмектесе алмаймыз"}
+                          </h3>
+                          <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
+                            {lang === "ru"
+                              ? "В настоящее время мы не рассматриваем заявки от клиентов с текущими просрочками по платежам"
+                              : "Қазіргі уақытта біз төлемдер бойынша ағымдағы кешігулері бар клиенттердің өтініштерін қарамаймыз"}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="text-left space-y-3 bg-gradient-to-br from-red-50/50 to-orange-50/50 dark:from-red-900/20 dark:to-orange-900/20 rounded-2xl p-3 sm:p-4 min-h-[120px] break-words border border-red-200/50 dark:border-red-700/50">
+                          <h4 className="font-semibold text-neutral-900 dark:text-white text-sm sm:text-base flex items-center gap-1 sm:gap-2">
+                            <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-500 flex-shrink-0" />
+                            {lang === "ru"
+                              ? "Что делать?"
+                              : "Не істеу керек?"}
+                          </h4>
+                          <ul className="space-y-2">
+                            <li className="flex items-start gap-1 sm:gap-2 text-sm text-neutral-700 dark:text-neutral-300 break-words">
+                              <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                              <span className="leading-relaxed break-words">
+                                {lang === "ru"
+                                  ? "Погасите все текущие просрочки"
+                                  : "Барлық ағымдағы кешігулерді төлеп тастаңыз"}
+                              </span>
+                            </li>
+                            <li className="flex items-start gap-1 sm:gap-2 text-sm text-neutral-700 dark:text-neutral-300 break-words">
+                              <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                              <span className="leading-relaxed break-words">
+                                {lang === "ru"
+                                  ? "Подождите 1-2 месяца после погашения"
+                                  : "Төлемнен кейін 1-2 ай күтіңіз"}
+                              </span>
+                            </li>
+                            <li className="flex items-start gap-1 sm:gap-2 text-sm text-neutral-700 dark:text-neutral-300 break-words">
+                              <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                              <span className="leading-relaxed break-words">
+                                {lang === "ru"
+                                  ? "Подайте заявку снова после улучшения кредитной истории"
+                                  : "Несие тарихы жақсарғаннан кейін қайтадан өтініш беріңіз"}
+                              </span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </>
+                  ) : hasMicroLoansOrDelays ? (
+                    // Блок для клиентов с микрозаймами или просрочками
+                    <>
+                      <div className="space-y-4">
+                        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center shadow-lg">
+                          <HelpCircle className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                        </div>
+
+                        <div className="space-y-3">
+                          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-amber-600 dark:text-amber-400 break-words">
+                            {t.result_improve_title}
+                          </h3>
+                          <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
+                            {t.result_improve_text}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="text-left space-y-3 bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl p-3 sm:p-4 min-h-[180px] break-words border border-amber-200/50 dark:border-amber-700/50">
+                          <h4 className="font-semibold text-neutral-900 dark:text-white text-sm sm:text-base flex items-center gap-1 sm:gap-2">
+                            <Star className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500 flex-shrink-0" />
+                            {t.result_recommendations_title}
+                          </h4>
+                          <ul className="space-y-2">
+                            {getPersonalizedRecommendations().map(
+                              (rec, index) => (
+                                <li
+                                  key={index}
+                                  className="flex items-start gap-1 sm:gap-2 text-sm text-neutral-700 dark:text-neutral-300 break-words"
+                                >
+                                  <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                                  <span className="leading-relaxed break-words">
+                                    {rec}
+                                  </span>
+                                </li>
+                              )
+                            )}
+                          </ul>
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="text-center">
+                            <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-3 break-words">
+                              {t.result_phone_prompt}
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 max-w-[260px] sm:max-w-xs md:max-w-md mx-auto px-1">
+                              <div className="relative flex-1">
+                                <Input
+                                  placeholder={
+                                    lang === "ru"
+                                      ? "+7 (___) ___-__-__"
+                                      : "+7 (___) ___-__-__"
+                                  }
+                                  value={phoneNumber}
+                                  onChange={(e) =>
+                                    handlePhoneChange(e.target.value)
+                                  }
+                                  className={`flex-1 pr-3 sm:pr-4 min-h-[36px] sm:min-h-[40px] text-sm bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm ${
+                                    phoneError
+                                      ? "border-red-500 focus:border-red-500"
+                                      : ""
+                                  }`}
+                                  maxLength={18}
+                                />
+                                {phoneError && (
+                                  <p className="text-red-500 text-xs mt-1 absolute -bottom-5 left-0 break-words">
+                                    {phoneError}
+                                  </p>
+                                )}
+                              </div>
+                              <Button
+                                onClick={handlePhoneSubmit}
+                                disabled={isSubmitting || !isPhoneValid()}
+                                className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white whitespace-nowrap min-h-[36px] sm:min-h-[40px] px-2 sm:px-3 text-sm shadow-lg"
+                              >
+                                {isSubmitting ? (
+                                  <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                ) : (
+                                  <Send className="h-3 w-3  sm:h-4" />
+                                )}
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    // Блок для успешных клиентов (все остальные случаи)
+                    <>
+                      <div className="space-y-4">
+                        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg">
+                          <CheckCircle2 className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                        </div>
+
+                        <div className="space-y-3">
+                          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400 break-words">
+                            {t.result_success_title}
+                          </h3>
+                          <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
+                            {isTopClient
+                              ? lang === "ru"
+                                ? "Как владелец бизнеса с подтвержденными доходами вы получаете максимальные условия"
+                                : "Расталған табысы бар бизнес иесі ретінде сіз максималды шарттарды аласыз"
+                              : t.result_success_text1}
+                          </p>
+                          <p className="text-sm sm:text-base md:text-lg text-neutral-700 dark:text-neutral-300 font-semibold break-words">
+                            {t.result_success_text2}{" "}
+                            <span className="text-base sm:text-lg md:text-xl text-green-600 dark:text-green-400">
+                              {getMaxAmountText()} млн ₸
+                            </span>{" "}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <Button
+                          onClick={scrollToBooking}
+                          size="lg"
+                          className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold min-h-[44px] w-full max-w-[280px] sm:max-w-[320px] mx-auto shadow-xl"
+                        >
+                          <CalendarDays className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                          <span className="text-xs sm:text-sm md:text-base truncate">
+                            {t.result_success_cta}
+                          </span>
+                        </Button>
+
+                        <div className="p-2 sm:p-3 rounded-2xl bg-gradient-to-r from-yellow-50/80 to-amber-50/80 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200/50 dark:border-yellow-700/50 backdrop-blur-sm break-words">
+                          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3">
+                            <Zap className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+                            <div className="min-w-0">
+                              <div className="font-semibold text-yellow-800 dark:text-yellow-300 text-xs sm:text-sm">
+                                {t.result_bonus_title}
+                              </div>
+                              <div className="text-yellow-700 dark:text-yellow-400 text-xs leading-relaxed">
+                                {t.result_bonus_desc}
                               </div>
                             </div>
                           </div>
                         </div>
-                      </>
-                    ) : (
-                      // Блок для успешных клиентов (все остальные случаи)
-                      <>
-                        <div className="space-y-4">
-                          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-2xl shadow-green-500/25">
-                            <CheckCircle2 className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
-                          </div>
-
-                          <div className="space-y-3">
-                            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400 break-words">
-                              {t.result_success_title}
-                            </h3>
-                            <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 break-words">
-                              {isTopClient
-                                ? lang === "ru"
-                                  ? "Как владелец бизнеса с подтвержденными доходами вы получаете максимальные условия"
-                                  : "Расталған табысы бар бизнес иесі ретінде сіз максималды шарттарды аласыз"
-                                : t.result_success_text1}
-                            </p>
-                            <p className="text-sm sm:text-base md:text-lg text-neutral-700 dark:text-neutral-300 font-semibold break-words">
-                              {t.result_success_text2}{" "}
-                              <span className="text-base sm:text-lg md:text-xl text-green-600 dark:text-green-400">
-                                {getMaxAmountText()} млн ₸
-                              </span>{" "}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-4">
-                          <Button
-                            onClick={scrollToBooking}
-                            size="lg"
-                            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-105 min-h-[44px] w-full max-w-[280px] sm:max-w-[320px] mx-auto"
-                          >
-                            <CalendarDays className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                            <span className="text-xs sm:text-sm md:text-base truncate">
-                              {t.result_success_cta}
-                            </span>
-                          </Button>
-
-                          <div className="p-2 sm:p-3 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200 dark:border-yellow-700 break-words">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3">
-                              <Zap className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
-                              <div className="min-w-0">
-                                <div className="font-semibold text-yellow-800 dark:text-yellow-300 text-xs sm:text-sm">
-                                  {t.result_bonus_title}
-                                </div>
-                                <div className="text-yellow-700 dark:text-yellow-400 text-xs leading-relaxed">
-                                  {t.result_bonus_desc}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
 
       {/* Success/Error Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-md mx-4">
+        <DialogContent className="sm:max-w-md mx-4 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border-0 shadow-2xl">
           <DialogHeader>
             <div
               className={`w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 rounded-full flex items-center justify-center ${
                 dialogType === "success"
-                  ? "bg-green-100 dark:bg-green-900"
-                  : "bg-red-100 dark:bg-red-900"
+                  ? "bg-gradient-to-br from-green-500/20 to-emerald-500/20"
+                  : "bg-gradient-to-br from-red-500/20 to-orange-500/20"
               }`}
             >
               {dialogType === "success" ? (
@@ -833,7 +788,7 @@ export default function QuizSection() {
 
           {dialogType === "success" && (
             <div className="space-y-4 text-sm">
-              <div className="p-3 md:p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800 min-h-[100px]">
+              <div className="p-3 md:p-4 rounded-xl bg-gradient-to-br from-neutral-50 to-blue-50/50 dark:from-neutral-800 dark:to-blue-900/20 min-h-[100px] border border-neutral-200/50 dark:border-neutral-700/50">
                 <div className="font-semibold text-neutral-900 dark:text-white mb-2 text-sm md:text-base">
                   {lang === "ru"
                     ? "Детали заявки:"
@@ -883,7 +838,7 @@ export default function QuizSection() {
                 </div>
               </div>
 
-              <div className="p-3 md:p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 min-h-[100px]">
+              <div className="p-3 md:p-4 rounded-xl bg-gradient-to-r from-blue-50/80 to-emerald-50/80 dark:from-blue-900/20 dark:to-emerald-900/20 border border-blue-200/50 dark:border-blue-700/50 min-h-[100px]">
                 <div className="flex items-center gap-2 text-blue-800 dark:text-blue-300 font-semibold mb-2 text-sm md:text-base">
                   <Zap className="h-4 w-4 flex-shrink-0" />
                   {lang === "ru" ? "Что дальше?" : "Әрі қарай не?"}
@@ -914,10 +869,10 @@ export default function QuizSection() {
 
           <Button
             onClick={handleDialogClose}
-            className={`w-full min-h-[44px] ${
+            className={`w-full min-h-[44px] shadow-lg ${
               dialogType === "success"
-                ? "bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600"
-                : "bg-red-500 hover:bg-red-600"
+                ? "bg-gradient-to-r from-blue-500 to-emerald-500 hover:from-blue-600 hover:to-emerald-600"
+                : "bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600"
             } text-white`}
           >
             {lang === "ru" ? "Понятно" : "Түсінікті"}

@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
@@ -55,22 +54,12 @@ export default function FAQSection() {
     }
   }
 
-  const animationConfig = {
-    initial: { opacity: 0, y: 30 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-50px" },
-    transition: { duration: 0.6 }
-  }
-
   return (
     <section id="faq" className="py-20 bg-gradient-to-b from-white to-neutral-50 dark:from-neutral-900 dark:to-neutral-800">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          {...animationConfig}
-          className="text-center mb-16"
-        >
-          <Badge className="bg-gradient-to-r from-blue-500/10 to-green-500/10 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-700/50 px-4 py-3 mb-4 backdrop-blur-sm">
+        <div className="text-center mb-16">
+          <Badge className="bg-gradient-to-r from-blue-500/10 to-green-500/10 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-700/50 px-4 py-3 mb-4">
             <HelpCircle className="w-4 h-4 mr-2" />
             {t.faq_badge}
           </Badge>
@@ -80,16 +69,11 @@ export default function FAQSection() {
           <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto">
             {t.faq_subtitle}
           </p>
-        </motion.div>
+        </div>
 
         {/* FAQ Accordion */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.7 }}
-        >
-          <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm">
+        <div>
+          <Card className="border-0 shadow-2xl bg-white/80 dark:bg-neutral-800/80">
             <CardHeader>
               <CardTitle className="text-2xl flex items-center gap-2">
                 <HelpCircle className="h-6 w-6 text-blue-500" />
@@ -99,16 +83,10 @@ export default function FAQSection() {
             <CardContent>
               <Accordion type="single" collapsible className="space-y-4">
                 {faqItems.map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-20px" }}
-                    transition={{ duration: 0.4, delay: index * 0.08 }}
-                  >
+                  <div key={index}>
                     <AccordionItem 
                       value={`item-${index}`}
-                      className="border border-neutral-200 dark:border-neutral-700 rounded-2xl px-4 sm:px-6 hover:border-blue-500/50 transition-all duration-300 bg-white dark:bg-neutral-800"
+                      className="border border-neutral-200 dark:border-neutral-700 rounded-2xl px-4 sm:px-6 bg-white dark:bg-neutral-800"
                     >
                       <AccordionTrigger className="hover:no-underline py-4 sm:py-6">
                         <div className="text-left w-full">
@@ -123,21 +101,15 @@ export default function FAQSection() {
                         </div>
                       </AccordionContent>
                     </AccordionItem>
-                  </motion.div>
+                  </div>
                 ))}
               </Accordion>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
         {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-30px" }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="text-center mt-16"
-        >
+        <div className="text-center mt-16">
           <Card className="border-0 shadow-2xl bg-gradient-to-r from-blue-500 to-green-500 text-white overflow-hidden">
             <CardContent className="p-6 sm:p-8 relative">
               <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent pointer-events-none" />
@@ -151,7 +123,7 @@ export default function FAQSection() {
                 <Button 
                   onClick={scrollToBooking}
                   size="lg" 
-                  className="bg-white text-blue-600 hover:bg-white/90 px-6 sm:px-8 font-semibold transition-all duration-300 hover:scale-105 min-h-[48px]"
+                  className="bg-white text-blue-600 hover:bg-white/90 px-6 sm:px-8 font-semibold min-h-[48px]"
                 >
                   <CalendarDays className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                   <span className='text-xs sm:text-sm'>{t.faq_cta_button}</span>
@@ -159,8 +131,8 @@ export default function FAQSection() {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
     </section>
   )
-} 
+}
