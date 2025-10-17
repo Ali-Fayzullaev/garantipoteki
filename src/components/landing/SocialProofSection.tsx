@@ -17,14 +17,14 @@ import {
   Star,
   CheckSquare,
 } from "lucide-react";
-import { useApp } from "@/components/providers/AppProvider";
+import { useApp } from "@/components/providers/AppProvider"; // Исправленный путь
 import { dict } from "@/lib/dictionary";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 
 export default function SocialProofSection() {
   const { lang } = useApp();
-  const t = dict[lang];
+  const t = dict[lang as keyof typeof dict]; // Добавлено приведение типа
 
   const [currentReview, setCurrentReview] = useState(0);
 
@@ -61,9 +61,9 @@ export default function SocialProofSection() {
     },
   ];
 
-  const nextReview = () => {
+  const nextReview = useCallback(() => {
     setCurrentReview((prev) => (prev === reviews.length - 1 ? 0 : prev + 1));
-  };
+  }, [reviews.length]);
 
   const prevReview = () => {
     setCurrentReview((prev) => (prev === 0 ? reviews.length - 1 : prev - 1));
@@ -75,7 +75,7 @@ export default function SocialProofSection() {
       nextReview();
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [nextReview]);
 
   const offices = [
     {
@@ -124,12 +124,17 @@ export default function SocialProofSection() {
   return (
     <section
       id="proof"
-      className="py-20 bg-muted dark:from-neutral-900 dark:to-neutral-800"
+      className="py-20 bg-gradient-to-br from-blue-50/30 via-white to-emerald-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-800 relative overflow-hidden"
     >
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      {/* Декоративные элементы */}
+      <div className="absolute top-10 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-orange-500/5 rounded-full blur-2xl pointer-events-none" />
+
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <Badge className="bg-gradient-to-r from-blue-500/15 to-green-500/15 text-blue-600 dark:text-blue-400 border border-blue-200/50 dark:border-blue-700/50 px-4 py-3 mb-4 backdrop-blur-sm">
+          <Badge className="bg-gradient-to-r from-blue-500/15 to-emerald-500/15 text-blue-600 dark:text-blue-400 border border-blue-200/50 dark:border-blue-700/50 px-4 py-2 mb-4 backdrop-blur-sm">
             {t.social_badge}
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white mb-4">
@@ -175,7 +180,7 @@ export default function SocialProofSection() {
               <div className="md:col-span-2">
                 <div className="bg-white/60 dark:bg-neutral-800/60 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
                   <blockquote className="text-lg italic text-neutral-700 dark:text-neutral-300 mb-6 leading-relaxed border-l-4 border-blue-500 pl-4">
-                    "{t.story_quote}"
+                    &ldquo;{t.story_quote}&rdquo;
                   </blockquote>
                   <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
                     {t.story_text}
@@ -309,7 +314,7 @@ export default function SocialProofSection() {
                             <span className="text-white font-bold text-sm">
                               {reviews[currentReview].name
                                 .split(" ")
-                                .map((n) => n[0])
+                                .map((n: string) => n[0]) // Добавлена типизация
                                 .join("")}
                             </span>
                           </div>
